@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="iots-webapp">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="iots-manager-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-manager/iots-manager">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="iots-perception-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-perception/iots-perception">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dahuangit-util-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dahuangit-util/dahuangit-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dahuangit-base-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dahuangit-base/dahuangit-base">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="iots-app-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-app/iots-app">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="iots"/>
+        <property name="java-output-path" value="/iots-webapp/target/classes"/>
+    </wb-module>
+</project-modules>

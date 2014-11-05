@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+	 "http://castor.org/mapping.dtd">
+<mapping>
+	<description>XML的映射</description>
+
+	<class
+		name="com.dahuangit.iots.perception.dto.oxm.request.RemoteCtrlMachineRequest">
+		<map-to xml="request" />
+		<field name="machineAddr" />
+		<field name="opt" type="java.lang.Integer" />
+	</class>
+
+	<class
+		name="com.dahuangit.iots.perception.dto.oxm.response.RemoteCtrlMachineResponse"
+		auto-complete="true">
+		<map-to xml="response" />
+		<field name="success" type="java.lang.Boolean" />
+		<field name="msg" />
+	</class>
+
+	<class
+		name="com.dahuangit.iots.perception.dto.oxm.response.RemoteQueryMachineResponse"
+		auto-complete="true">
+		<map-to xml="response" />
+		<field name="success" type="java.lang.Boolean" />
+		<field name="msg" />
+	</class>
+</mapping>

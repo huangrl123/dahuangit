@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+	 "http://castor.org/mapping.dtd">
+<mapping>
+	<description>XML的映射</description>
+
+	<class
+		name="com.dahuangit.seobi.proxy.dto.oxm.response.DoRequestByProxyResponse"
+		auto-complete="true">
+		<map-to xml="response" />
+		<field name="success" type="java.lang.Boolean" />
+		<field name="msg" />
+	</class>
+
+	<class
+		name="com.dahuangit.seobi.proxy.dto.oxm.request.DoRequestByProxyRequest"
+		auto-complete="true">
+		<map-to xml="request" />
+	</class>
+</mapping>

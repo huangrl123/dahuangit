@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN/EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="checkAndSetProxyStatusJob"
+		class="com.dahuangit.seobi.proxy.service.impl.CheckAndSetProxyStatusJob" />
+
+	<bean id="scheduledTerminalJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="checkAndSetProxyStatusJob" />
+		</property>
+		<property name="targetMethod">
+			<value>CheckAndSetProxyStatus</value>
+		</property>
+	</bean>
+
+	<bean id="cronTerminalTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduledTerminalJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每15分钟执行一次 -->
+			<value>0 0/15 * * * ?</value>
+		</property>
+	</bean>
+
+	<bean id="proxyScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTerminalTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

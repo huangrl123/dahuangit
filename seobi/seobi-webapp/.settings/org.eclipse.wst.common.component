@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="seobi-webapp">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test"/>
+        <dependent-module archiveName="dahuangit-util-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dahuangit-util/dahuangit-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dahuangit-base-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dahuangit-base/dahuangit-base">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="seobi-receiver-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/seobi-receiver/seobi-receiver">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="seobi-analyzer-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/seobi-analyzer/seobi-analyzer">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="seobi-proxy-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/seobi-proxy/seobi-proxy">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="seobi"/>
+        <property name="java-output-path" value="/seobi-webapp/target/classes"/>
+    </wb-module>
+</project-modules>
