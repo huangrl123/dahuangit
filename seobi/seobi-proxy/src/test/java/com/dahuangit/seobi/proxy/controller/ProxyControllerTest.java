@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.dahuangit.util.log.Log4jUtils;
-import com.dahuangit.util.net.HttpKit;
+import com.dahuangit.util.net.http.HttpKit;
 import com.dahuangit.util.xml.XmlUtils;
 
 public class ProxyControllerTest {

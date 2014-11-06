@@ -219,8 +219,8 @@ public class BaseDao<T extends BaseModel, PK extends Serializable> {
 	 * @param hql
 	 * @return
 	 */
-	public Integer findRecordsCount(String hql) {
-		return (Integer) createQuery(hql).uniqueResult();
+	public Long findRecordsCount(String hql) {
+		return (Long) createQuery(hql).uniqueResult();
 	}
 
 	/**

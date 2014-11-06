@@ -2,6 +2,9 @@ package com.dahuangit.seobi.proxy.dto.opm.response;
 
 import java.util.Date;
 
+import com.dahuangit.util.bean.dto.Dto;
+
+@Dto
 public class ProxyResponse {
 	private Integer pid = null;
 
@@ -11,9 +14,9 @@ public class ProxyResponse {
 
 	private String protocol = null;
 
-	private Boolean available = false;
+	private String available = null;
 
-	private Date lastTestTime = new Date();
+	private String lastTestTime = null;
 
 	private String remark = null;
 
@@ -49,19 +52,19 @@ public class ProxyResponse {
 		this.protocol = protocol;
 	}
 
-	public Boolean getAvailable() {
+	public String getAvailable() {
 		return available;
 	}
 
-	public void setAvailable(Boolean available) {
+	public void setAvailable(String available) {
 		this.available = available;
 	}
 
-	public Date getLastTestTime() {
+	public String getLastTestTime() {
 		return lastTestTime;
 	}
 
-	public void setLastTestTime(Date lastTestTime) {
+	public void setLastTestTime(String lastTestTime) {
 		this.lastTestTime = lastTestTime;
 	}
 

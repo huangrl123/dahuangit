@@ -3,11 +3,14 @@
 	 "http://castor.org/mapping.dtd">
 <mapping>
 	<description>XML的映射</description>
-	
-	<class name="com.dahuangit.base.dto.Response">
+
+	<class name="com.dahuangit.base.dto.Response" auto-complete="true">
+	    <field name="success" type="java.lang.Boolean"/>
 		<map-to xml="response" />
-		<field name="success" type="boolean" />
-		<field name="msg" />
 	</class>
 
+	<class name="com.dahuangit.base.dto.oxm.response.OxResponse"
+		extends="com.dahuangit.base.dto.Response" auto-complete="true">
+		<map-to xml="response" />
+	</class>
 </mapping>

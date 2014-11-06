@@ -37,8 +37,8 @@ public class Proxy extends BaseModel {
 	private String protocol = null;
 
 	/** 是否可用 */
-	@Column(name = "availabe")
-	@Type(type = "yes_no")
+	@Column(name = "proxy_available")
+	@org.hibernate.annotations.Type(type="yes_no")
 	private Boolean available = false;
 
 	/** 最后测试时间,默认值为当前时间 */

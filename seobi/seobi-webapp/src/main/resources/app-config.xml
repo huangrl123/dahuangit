@@ -30,6 +30,9 @@
 	<!-- 数据库访问配置 -->
 	<import resource="data-access-config.xml" />
 
+	<!-- mina通配 -->
+	<import resource="classpath*:/mina/*-config.xml" />
+
 	<!-- 定时任务配置 -->
 	<import resource="classpath*:/quartz/*-quartz-config.xml" />
 

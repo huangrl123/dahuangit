@@ -15,15 +15,12 @@ public class ProxyDao extends BaseDao<Proxy, Long> {
 	 * 
 	 * @return
 	 */
-	public Proxy getAarliestLastTestTimeAvailateProxy() {
-		String hql = "from Proxy p where p.available=? order by p.lastTestTime asc";
+	public List<Proxy> getAvailateProxyOrderByLastTestTime() {
+		String hql = "from Proxy p where p.available=? order by p.lastTestTime asc desc,p.available desc";
+
 		List<Proxy> proxyList = this.find(hql, true);
 
-		if (null != proxyList && proxyList.isEmpty()) {
-			return proxyList.get(0);
-		}
-
-		return null;
+		return proxyList;
 	}
 
 	public List<Proxy> findProxyByPage(Integer start, Integer limit) {
@@ -31,8 +28,13 @@ public class ProxyDao extends BaseDao<Proxy, Long> {
 		return this.findByPage(hql, start, limit);
 	}
 
-	public Integer findProxyCount() {
+	public Long findProxyCount() {
 		String hql = "from Proxy";
 		return this.findRecordsCount(hql);
+	}
+
+	public Proxy findByIpAndPort(String ip, Integer port) {
+		String hql = "from Proxy p where p.proxyIp=? and p.proxyPort=?";
+		return this.findUnique(hql, ip, port);
 	}
 }

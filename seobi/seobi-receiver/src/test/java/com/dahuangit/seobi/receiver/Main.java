@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 
-import com.dahuangit.util.net.HttpKit;
+import com.dahuangit.util.net.http.HttpKit;
 
 public class Main {
 	public static void main(String[] args) {

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN/EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="checkAndSetProxyStatusJob"
-		class="com.dahuangit.seobi.proxy.service.impl.CheckAndSetProxyStatusJob" />
+	<bean id="proxyJobService"
+		class="com.dahuangit.seobi.proxy.service.impl.ProxyJobServiceImpl" />
 
 	<bean id="scheduledTerminalJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="checkAndSetProxyStatusJob" />
+			<ref bean="proxyJobService" />
 		</property>
 		<property name="targetMethod">
-			<value>CheckAndSetProxyStatus</value>
+			<value>checkAndSetProxyStatus</value>
 		</property>
 	</bean>
 
