@@ -9,7 +9,7 @@
 			<ref bean="analyzeService" />
 		</property>
 		<property name="targetMethod">
-			<value>analyzeBaiduOriginarityPercent</value>
+			<value>analyzeQQTalkMsgBaiduOriginatyPercent</value>
 		</property>
 	</bean>
 

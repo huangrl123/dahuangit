@@ -34,13 +34,13 @@ public class AnalyzeController extends BaseController {
 		return this.responseToXml(response);
 	}
 
-	@RequestMapping(value = "/analyzeBaiduOriginarityPercent")
+	@RequestMapping(value = "/analyzeShuoshuoBaiduOriginarityPercent")
 	@ResponseBody
-	public String analyzeBaiduOriginarityPercent(String content) throws Exception {
+	public String analyzeShuoshuoBaiduOriginarityPercent(String content) throws Exception {
 		OxResponse response = new OxResponse();
 
 		try {
-			this.analyzeService.analyzeBaiduOriginarityPercent();
+			this.analyzeService.analyzeQQTalkMsgBaiduOriginatyPercent();
 		} catch (Exception e) {
 			response.setSuccess(false);
 			e.printStackTrace();

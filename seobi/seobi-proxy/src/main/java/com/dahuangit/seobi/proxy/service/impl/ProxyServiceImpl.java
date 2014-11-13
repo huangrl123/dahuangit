@@ -28,6 +28,7 @@ import com.dahuangit.util.log.Log4jUtils;
 import com.dahuangit.util.net.http.HostInfo;
 import com.dahuangit.util.net.http.HttpHeaderInfo;
 import com.dahuangit.util.net.http.HttpKit;
+import com.dahuangit.util.net.http.ProxyHttpResponse;
 
 @Component
 @Transactional
@@ -156,11 +157,13 @@ public class ProxyServiceImpl implements ProxyService {
 		proxyHost.setPort(proxy.getProxyPort());
 		proxyHost.setEncode(headerInfo.getEncode());
 
-		String content = null;
-
+		ProxyHttpResponse proxyHttpResponse  = null;
+        String content = null;
+        
 		if ("GET".equalsIgnoreCase(method)) {
 			try {
-				content = HttpKit.doGetByProxy(url, proxyHost, headerInfo.getHeaders());
+				proxyHttpResponse = HttpKit.doGetByProxy(url, proxyHost, headerInfo.getHeaders());
+				content = proxyHttpResponse.getContent();
 			} catch (Exception e) {
 				content = e.getMessage();
 				e.printStackTrace();
@@ -168,7 +171,8 @@ public class ProxyServiceImpl implements ProxyService {
 
 		} else if ("POST".equalsIgnoreCase(method)) {
 			try {
-				content = HttpKit.doPostByProxy(url, proxyHost, null, headerInfo.getHeaders());
+				proxyHttpResponse = HttpKit.doPostByProxy(url, proxyHost, null, headerInfo.getHeaders());
+				content = proxyHttpResponse.getContent();
 			} catch (Exception e) {
 				content = e.getMessage();
 				e.printStackTrace();
@@ -192,8 +196,12 @@ public class ProxyServiceImpl implements ProxyService {
 		sb.append("\r");
 		sb.append("\n");
 
-//		sb.append("Content-Type: text/html;charset=" + headerInfo.getEncode());
-		sb.append("Content-Type: text/html;charset=gb2312");
+		sb.append("Content-Type: text/html; charset=gb2312");
+//		if(null == proxyHttpResponse) {
+//			sb.append("Content-Type: text/html; charset=UTF-8");
+//		} else {
+//			sb.append("Content-Type: " + proxyHttpResponse.getContentType());
+//		}
 		sb.append("\r");
 		sb.append("\n");
 

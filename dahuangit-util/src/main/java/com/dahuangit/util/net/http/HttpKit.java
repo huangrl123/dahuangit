@@ -38,9 +38,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.Node;
 
-import com.dahuangit.util.log.Log4jUtils;
+import com.dahuangit.util.xml.XpathUtils;
 
 /**
  * 专门处理http请求与响应的工具
@@ -67,8 +69,6 @@ public class HttpKit {
 		Validate.notNull(proxyHost, "proxyHost不能为null");
 
 		CloseableHttpClient httpclient = null;
-		BufferedReader read = null;
-		InputStreamReader inputStreamReader = null;
 
 		try {
 			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
@@ -89,33 +89,13 @@ public class HttpKit {
 			HttpResponse response = httpclient.execute(httpGet);
 
 			if (200 == response.getStatusLine().getStatusCode()) {
-//				InputStream in = response.getEntity().getContent();
-//				inputStreamReader = new InputStreamReader(in, HTTP.UTF_8);
-//				read = new BufferedReader(inputStreamReader);
-//				
-//				StringBuffer responseContent = new StringBuffer();
-//				String inputLine = null;
-//				while ((inputLine = read.readLine()) != null) {
-//					responseContent.append(inputLine);
-//				}
-//				
-//				inputStreamReader.close();
-//				read.close();
-//				httpclient.getConnectionManager().shutdown();
-				
-				
+
+				httpclient.getConnectionManager().shutdown();
+
 				return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
-		} finally {
-			try {
-				httpclient.close();
-				read.close();
-				inputStreamReader.close();
-			} catch (Exception e) {
-			}
 		}
 
 		return false;
@@ -133,10 +113,12 @@ public class HttpKit {
 		Validate.notNull(url, "url不能为null");
 		Validate.notNull(proxyHost, "proxyHost不能为null");
 
+		CloseableHttpClient httpclient = null;
+
 		try {
 			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
-			CloseableHttpClient httpclient = httpClientBuilder.build();
+			httpclient = httpClientBuilder.build();
 
 			// 依次是代理地址，代理端口号，协议类型
 			HttpHost proxy = new HttpHost(proxyHost.getAddr(), proxyHost.getPort());
@@ -151,6 +133,8 @@ public class HttpKit {
 			HttpResponse response = httpclient.execute(httpost);
 
 			if (200 == response.getStatusLine().getStatusCode()) {
+				httpclient.getConnectionManager().shutdown();
+
 				return true;
 			}
 		} catch (Exception e) {
@@ -606,7 +590,7 @@ public class HttpKit {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String doPostByProxy(String host, HostInfo proxyHost, Map<String, String> params,
+	public static ProxyHttpResponse doPostByProxy(String host, HostInfo proxyHost, Map<String, String> params,
 			List<BasicHeader> headers) throws IOException {
 		Validate.notNull(host, "主机地址不能为null");
 		Validate.notNull(proxyHost, "代理服务器不能为null");
@@ -657,16 +641,48 @@ public class HttpKit {
 		BufferedReader read = new BufferedReader(inputStreamReader);
 
 		String responseContent = "";
-		String inputLine = "";
-		while ((inputLine = read.readLine()) != null) {
-			responseContent += inputLine;
+		String line = null;
+		String contentType = "text/html; charset=UTF-8";
+
+		while ((line = read.readLine()) != null) {
+			responseContent += line;
+
+			if (line.contains("http-equiv=\"Content-Type\"")) {
+				Node node = null;
+
+				try {
+					node = XpathUtils.findUnique(line, "./@content");
+				} catch (DocumentException e) {
+					continue;
+				}
+
+				if (null == node) {
+					continue;
+				}
+
+				String text = node.getText();
+				if (null == text) {
+					continue;
+				}
+
+				String[] arr = text.split(";");
+				if (arr.length != 2) {
+					continue;
+				}
+
+				contentType = text;
+			}
 		}
 
 		inputStreamReader.close();
 		read.close();
 		httpclient.getConnectionManager().shutdown();
 
-		return responseContent;
+		ProxyHttpResponse r = new ProxyHttpResponse();
+		r.setContentType(contentType);
+		r.setContent(responseContent);
+
+		return r;
 	}
 
 	/**
@@ -681,7 +697,7 @@ public class HttpKit {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String doGetByProxy(String host, HostInfo proxyHost, List<BasicHeader> headers) throws IOException {
+	public static ProxyHttpResponse doGetByProxy(String host, HostInfo proxyHost, List<BasicHeader> headers) throws IOException {
 		Validate.notNull(host, "主机地址不能为null");
 		Validate.notNull(proxyHost, "代理服务器不能为null");
 
@@ -718,16 +734,47 @@ public class HttpKit {
 		BufferedReader reader = new BufferedReader(in);
 		String line = null;
 		String content = "";
+		String contentType = "text/html; charset=UTF-8";
 
 		while (null != (line = reader.readLine())) {
 			content += line;
+
+			if (line.contains("http-equiv=\"Content-Type\"")) {
+				Node node = null;
+
+				try {
+					node = XpathUtils.findUnique(line, "./@content");
+				} catch (DocumentException e) {
+					continue;
+				}
+
+				if (null == node) {
+					continue;
+				}
+
+				String text = node.getText();
+				if (null == text) {
+					continue;
+				}
+
+				String[] arr = text.split(";");
+				if (arr.length != 2) {
+					continue;
+				}
+
+				contentType = text;
+			}
 		}
 
 		in.close();
 		reader.close();
 		httpclient.getConnectionManager().shutdown();
 
-		return content;
+		ProxyHttpResponse r = new ProxyHttpResponse();
+		r.setContentType(contentType);
+		r.setContent(content);
+		
+		return r;
 	}
 
 }

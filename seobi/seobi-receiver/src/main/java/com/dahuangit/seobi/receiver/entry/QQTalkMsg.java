@@ -18,10 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dahuangit.base.entry.BaseModel;
-import com.opensymphony.xwork2.interceptor.annotations.Allowed;
 
 /**
  * 说说信息表
