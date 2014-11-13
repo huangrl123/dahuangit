@@ -28,7 +28,7 @@ import com.dahuangit.util.date.DateUtils;
 @Transactional
 public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgService {
 
-	private final Logger LOG = Logger.getLogger(getClass());
+	private final Logger log = Logger.getLogger(getClass());
 
 	@Autowired
 	private QQAccountDao accountDao = null;

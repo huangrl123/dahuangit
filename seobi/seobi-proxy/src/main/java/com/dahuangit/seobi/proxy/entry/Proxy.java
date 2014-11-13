@@ -32,14 +32,20 @@ public class Proxy extends BaseModel {
 	@Column(name = "proxy_port")
 	private Integer proxyPort = null;
 
-	/** 代理服务器通信协议 */
-	@Column(name = "protocol")
-	private String protocol = null;
+	/** telnet是否通 */
+	@Column(name = "telnet_available")
+	@Type(type = "yes_no")
+	private Boolean isTelnetAvailable = false;
 
-	/** 是否可用 */
-	@Column(name = "proxy_available")
-	@org.hibernate.annotations.Type(type="yes_no")
-	private Boolean available = false;
+	/** http get方法是否可用 */
+	@Column(name = "http_get_available")
+	@Type(type = "yes_no")
+	private Boolean isHttpGetAvailable = false;
+
+	/** http post方法是否可用 */
+	@Column(name = "http_post_available")
+	@Type(type = "yes_no")
+	private Boolean isHttpPostAvailable = false;
 
 	/** 最后测试时间,默认值为当前时间 */
 	@Column(name = "last_test_time")
@@ -74,22 +80,6 @@ public class Proxy extends BaseModel {
 		this.proxyPort = proxyPort;
 	}
 
-	public String getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(String protocol) {
-		this.protocol = protocol;
-	}
-
-	public Boolean getAvailable() {
-		return available;
-	}
-
-	public void setAvailable(Boolean available) {
-		this.available = available;
-	}
-
 	public Date getLastTestTime() {
 		return lastTestTime;
 	}
@@ -104,6 +94,30 @@ public class Proxy extends BaseModel {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public Boolean getIsTelnetAvailable() {
+		return isTelnetAvailable;
+	}
+
+	public void setIsTelnetAvailable(Boolean isTelnetAvailable) {
+		this.isTelnetAvailable = isTelnetAvailable;
+	}
+
+	public Boolean getIsHttpGetAvailable() {
+		return isHttpGetAvailable;
+	}
+
+	public void setIsHttpGetAvailable(Boolean isHttpGetAvailable) {
+		this.isHttpGetAvailable = isHttpGetAvailable;
+	}
+
+	public Boolean getIsHttpPostAvailable() {
+		return isHttpPostAvailable;
+	}
+
+	public void setIsHttpPostAvailable(Boolean isHttpPostAvailable) {
+		this.isHttpPostAvailable = isHttpPostAvailable;
 	}
 
 }

@@ -3,7 +3,8 @@ Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.panel.*', 'Ext.layout.container.Bo
 
 Ext.onReady(function() {
 			var store = Ext.create('Ext.data.Store', {
-						fields : ['pid', 'proxyIp', 'proxyPort', 'protocol', 'available', 'lastTestTime', 'remark'],
+						fields : ['pid', 'proxyIp', 'proxyPort', 'isTelnetAvailable', 'isHttpGetAvailable',
+								'isHttpPostAvailable', 'lastTestTime', 'remark'],
 
 						proxy : {
 							type : 'ajax',
@@ -23,8 +24,21 @@ Ext.onReady(function() {
 					});
 
 			var reflesh = function() {
-				store.load();
-			}
+				store.load({
+							params : {
+								start : 0,
+								limit : 25
+							}
+						});
+			};
+
+			var pg = Ext.create('Ext.PagingToolbar', {
+						store : store,
+						pageSize : 25,
+						displayInfo : true,
+						displayMsg : '显示{0}-{1}条，共{2}条',
+						emptyMsg : "没有数据"
+					});
 
 			var grid = Ext.create('Ext.grid.Panel', {
 						title : '代理服务器列表',
@@ -43,7 +57,7 @@ Ext.onReady(function() {
 									xtype : 'rownumberer'
 								}, {
 									text : "代理主机地址",
-									width : 100,
+									width : 80,
 									dataIndex : 'proxyIp',
 									sortable : true
 								}, {
@@ -52,14 +66,31 @@ Ext.onReady(function() {
 									dataIndex : 'proxyPort',
 									sortable : true
 								}, {
-									text : "通信协议",
-									width : 20,
-									dataIndex : 'protocol',
-									sortable : true
+									text : "支持telnet？",
+									width : 30,
+									dataIndex : 'isTelnetAvailable',
+									sortable : true,
+									renderer : function(val) {
+										if ('是' != val)
+											return "<span style='color:red'>" + val + "</span>";
+										else
+											return val;
+									}
 								}, {
-									text : "是否可用",
-									width : 20,
-									dataIndex : 'available',
+									text : "支持http get？",
+									width : 30,
+									dataIndex : 'isHttpGetAvailable',
+									sortable : true,
+									renderer : function(val) {
+										if ('是' != val)
+											return "<span style='color:red'>" + val + "</span>";
+										else
+											return val;
+									}
+								}, {
+									text : "支持http post？",
+									width : 30,
+									dataIndex : 'isHttpPostAvailable',
 									sortable : true,
 									renderer : function(val) {
 										if ('是' != val)
@@ -78,12 +109,7 @@ Ext.onReady(function() {
 									dataIndex : 'remark',
 									sortable : true
 								}],
-						bbar : Ext.create('Ext.PagingToolbar', {
-									store : store,
-									displayInfo : true,
-									displayMsg : '显示{0}-{1}条，共{2}条',
-									emptyMsg : "没有数据"
-								}),
+						bbar : pg,
 						forceFit : true,
 						height : 600,
 						split : true

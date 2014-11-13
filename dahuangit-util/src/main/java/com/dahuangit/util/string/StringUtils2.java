@@ -2,9 +2,11 @@ package com.dahuangit.util.string;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 
 
@@ -140,5 +142,17 @@ public class StringUtils2 extends StringUtils {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * string格式化方法
+	 * 
+	 * @param format
+	 * @param args
+	 * @return
+	 */
+	public static String StringFormat(String format, Object... args) {
+		Formatter formatter = new Formatter();
+		return formatter.format(format, args).toString();
 	}
 }

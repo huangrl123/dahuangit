@@ -3,7 +3,6 @@ package com.dahuangit.util.net.http;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.entity.mime.Header;
 import org.apache.http.message.BasicHeader;
 
 public class HttpHeaderInfo {
@@ -12,6 +11,8 @@ public class HttpHeaderInfo {
 	private String host = null;
 
 	private String httpProtocol = null;
+
+	private String encode = "UTF-8";
 
 	private List<BasicHeader> headers = new ArrayList<BasicHeader>();
 
@@ -45,6 +46,14 @@ public class HttpHeaderInfo {
 
 	public void setHeaders(List<BasicHeader> headers) {
 		this.headers = headers;
+	}
+
+	public String getEncode() {
+		return encode;
+	}
+
+	public void setEncode(String encode) {
+		this.encode = encode;
 	}
 
 }

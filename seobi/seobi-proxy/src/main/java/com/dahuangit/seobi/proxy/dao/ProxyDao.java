@@ -15,8 +15,16 @@ public class ProxyDao extends BaseDao<Proxy, Long> {
 	 * 
 	 * @return
 	 */
-	public List<Proxy> getAvailateProxyOrderByLastTestTime() {
-		String hql = "from Proxy p where p.available=? order by p.lastTestTime asc desc,p.available desc";
+	public List<Proxy> getAvailateProxyOrderByLastTestTime(String httpMethodName) {
+		String hql = null;
+
+		if ("GET".equalsIgnoreCase(httpMethodName)) {
+			hql = "from Proxy p where p.isHttpGetAvailable=? order by p.lastTestTime asc";
+		} else if ("POST".equalsIgnoreCase(httpMethodName)) {
+			hql = "from Proxy p where p.isHttpPostAvailable=? order by p.lastTestTime asc";
+		} else {
+			throw new RuntimeException("不支持的http方法:[" + httpMethodName + "]");
+		}
 
 		List<Proxy> proxyList = this.find(hql, true);
 
@@ -24,12 +32,12 @@ public class ProxyDao extends BaseDao<Proxy, Long> {
 	}
 
 	public List<Proxy> findProxyByPage(Integer start, Integer limit) {
-		String hql = "from Proxy";
+		String hql = "from Proxy p order by p.isHttpGetAvailable desc,p.isHttpPostAvailable desc,p.isTelnetAvailable desc";
 		return this.findByPage(hql, start, limit);
 	}
 
 	public Long findProxyCount() {
-		String hql = "from Proxy";
+		String hql = "select count(*) from Proxy";
 		return this.findRecordsCount(hql);
 	}
 

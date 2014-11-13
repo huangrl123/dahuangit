@@ -133,7 +133,7 @@ public class XmlUtils {
 			IOUtils.closeQuietly(strInStream);
 		}
 
-		return "\r" + sw.toString();
+		return sw.toString();
 	}
 
 	/**

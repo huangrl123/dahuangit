@@ -99,7 +99,7 @@ public class SqliteHelper {
 		Statement stm = this.conn.createStatement();
 		// 不需要自动提交
 		this.conn.setAutoCommit(false);
-		stm.execute(this.StringFormat(DELETE_TABLE_PARAM, tableName, param));
+		stm.execute(StringUtils2.StringFormat(DELETE_TABLE_PARAM, tableName, param));
 		// 手动提交
 		this.conn.commit();
 		// 恢复自动提交
@@ -120,7 +120,7 @@ public class SqliteHelper {
 
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		Statement stm = this.conn.createStatement();
-		ResultSet rs = stm.executeQuery(this.StringFormat(SELECT_TABLE, tableName));
+		ResultSet rs = stm.executeQuery(StringUtils2.StringFormat(SELECT_TABLE, tableName));
 		List<SqliteColumn> columns = getColumnNameListByTable(tableName);
 
 		while (rs.next()) {
@@ -148,7 +148,7 @@ public class SqliteHelper {
 
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		Statement stm = this.conn.createStatement();
-		ResultSet rs = stm.executeQuery(this.StringFormat(SELECT_TABLE_PARAM, tableName, param));
+		ResultSet rs = stm.executeQuery(StringUtils2.StringFormat(SELECT_TABLE_PARAM, tableName, param));
 		List<SqliteColumn> columns = getColumnNameListByTable(tableName);
 
 		while (rs.next()) {
@@ -310,7 +310,7 @@ public class SqliteHelper {
 			List<SqliteColumn> columns = this.getColumnNameListByTable(tableName);
 			List<DBFField> dbfFields = this.convert2DBFFields(columns);
 			List<String[]> rows = new ArrayList<String[]>();
-			String select = this.StringFormat(SELECT_TABLE, tableName);
+			String select = StringUtils2.StringFormat(SELECT_TABLE, tableName);
 			stm = this.conn.createStatement();
 			ResultSet rs = stm.executeQuery(select);
 
@@ -357,7 +357,7 @@ public class SqliteHelper {
 			List<DBFField> dbfFields = this.convert2DBFFieldList(columns, replaceColumns, ignoredFieldNameList);
 			List<String[]> rows = new ArrayList<String[]>();
 
-			String select = this.StringFormat(SELECT_TABLE, tableName);
+			String select = StringUtils2.StringFormat(SELECT_TABLE, tableName);
 			stm = this.conn.createStatement();
 			ResultSet rs = stm.executeQuery(select);
 
@@ -422,7 +422,7 @@ public class SqliteHelper {
 
 			List<DBFField> dbfFields = this.convert2DBFFieldList(columnList, replaceColumns, ignoredFieldNameList);
 			List<String[]> rows = new ArrayList<String[]>();
-			String select = this.StringFormat(SELECT_TABLE, tableName);
+			String select = StringUtils2.StringFormat(SELECT_TABLE, tableName);
 			stm = this.conn.createStatement();
 			ResultSet rs = stm.executeQuery(select);
 
@@ -467,7 +467,7 @@ public class SqliteHelper {
 		StringBuffer preps = new StringBuffer();
 		columnNames.append("PROPERTY_NAME,PROPERTY_VALUE");
 		preps.append("?,?");
-		PreparedStatement batchSmt = this.conn.prepareStatement(this.StringFormat(INSERT_TABLE, tableName, columnNames,
+		PreparedStatement batchSmt = this.conn.prepareStatement(StringUtils2.StringFormat(INSERT_TABLE, tableName, columnNames,
 				preps));
 
 		this.conn.setAutoCommit(false);
@@ -494,7 +494,7 @@ public class SqliteHelper {
 		Validate.notNull(updateColumnData, " 修改的列数据updateColumnData不能为空");
 		Validate.notNull(tableName, "表名不能为null");
 		LOGGER.info("修改表数据,表名：" + tableName);
-		PreparedStatement batchSmt = this.conn.prepareStatement(this.StringFormat(UPDATE_TABLE, tableName, "?", "?",
+		PreparedStatement batchSmt = this.conn.prepareStatement(StringUtils2.StringFormat(UPDATE_TABLE, tableName, "?", "?",
 				"?", "?"));
 		this.conn.setAutoCommit(false);
 		for (int i = 0; i < updateColumnData.length; i++) {
@@ -516,7 +516,7 @@ public class SqliteHelper {
 		Validate.notNull(updateColumnData, " 修改的列数据updateColumnData不能为空");
 		Validate.notNull(tableName, "表名不能为null");
 		LOGGER.info("修改表数据,表名：" + tableName);
-		PreparedStatement batchSmt = this.conn.prepareStatement(this.StringFormat(UPDATE_TABLE_PARAM, tableName,
+		PreparedStatement batchSmt = this.conn.prepareStatement(StringUtils2.StringFormat(UPDATE_TABLE_PARAM, tableName,
 				updateColumnData[0], updateColumnData[1]));
 		this.conn.setAutoCommit(false);
 		batchSmt.addBatch();
@@ -543,7 +543,7 @@ public class SqliteHelper {
 		Connection conn = null;
 		try {
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(this.StringFormat(URL, dbFile));
+			conn = DriverManager.getConnection(StringUtils2.StringFormat(URL, dbFile));
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("获取sqlite连接时报错,这可能是sqlite文件[" + dbFile + "]不正确导致的:" + e, e);
@@ -634,7 +634,7 @@ public class SqliteHelper {
 			}
 		}
 
-		str = this.StringFormat(INSERT_TABLE, tableName, columnNames, preps);
+		str = StringUtils2.StringFormat(INSERT_TABLE, tableName, columnNames, preps);
 		return str;
 	}
 
@@ -743,18 +743,6 @@ public class SqliteHelper {
 			dbfFields.add(field);
 		}
 		return dbfFields;
-	}
-
-	/**
-	 * string格式化方法
-	 * 
-	 * @param format
-	 * @param args
-	 * @return
-	 */
-	private String StringFormat(String format, Object... args) {
-		Formatter formatter = new Formatter();
-		return formatter.format(format, args).toString();
 	}
 
 	/**

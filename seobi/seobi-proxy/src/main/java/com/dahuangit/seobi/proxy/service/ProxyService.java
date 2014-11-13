@@ -12,10 +12,8 @@ public interface ProxyService {
 
 	void deleteProxy(Integer id);
 
-	String doRequestByProxy(String url, String encode, String method) throws IOException;
+	String doRequestByProxy(HttpHeaderInfo headerInfo) throws IOException;
 
-	public String doRequestByProxy(HttpHeaderInfo headerInfo) throws IOException;
-	
 	void impProxy(MultipartFile multipartFile) throws IOException;
 
 	PageQueryResult<ProxyResponse> findByPage(Integer start, Integer limit);

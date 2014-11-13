@@ -14,8 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dahuangit.base.entry.BaseModel;
+import com.opensymphony.xwork2.interceptor.annotations.Allowed;
 
 /**
  * 说说信息表
@@ -67,6 +73,20 @@ public class QQTalkMsg extends BaseModel {
 	/** REMARK varchar(128) comment '备注' */
 	@Column(name = "REMARK")
 	private String remark = null;
+
+	/** 是否已经分析过 */
+	@Column(name = "analyzed")
+	@Type(type = "yes_no")
+	private Boolean analyzed = Boolean.FALSE;
+
+	/** 分析时间 */
+	@Column(name = "analyze_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date analyzeTime = null;
+
+	/** 原创度*/
+	@Column(name = "originality_percent")
+	private Double originalityPercent = null;
 
 	/** qq账号信息 */
 	@ManyToOne
@@ -171,6 +191,30 @@ public class QQTalkMsg extends BaseModel {
 
 	public void setQqTalkImgs(List<QQTalkImg> qqTalkImgs) {
 		this.qqTalkImgs = qqTalkImgs;
+	}
+
+	public double getOriginalityPercent() {
+		return originalityPercent;
+	}
+
+	public void setOriginalityPercent(double originalityPercent) {
+		this.originalityPercent = originalityPercent;
+	}
+
+	public Boolean getAnalyzed() {
+		return analyzed;
+	}
+
+	public void setAnalyzed(Boolean analyzed) {
+		this.analyzed = analyzed;
+	}
+
+	public Date getAnalyzeTime() {
+		return analyzeTime;
+	}
+
+	public void setAnalyzeTime(Date analyzeTime) {
+		this.analyzeTime = analyzeTime;
 	}
 
 }

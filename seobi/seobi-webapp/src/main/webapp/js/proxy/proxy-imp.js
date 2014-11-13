@@ -32,6 +32,8 @@ function showProxyImpWin(successfn) {
 													successfn();
 													
 													Ext.Msg.alert('Success', '代理服务器信息上传成功');
+													
+													win.close();
 												}
 											});
 								}

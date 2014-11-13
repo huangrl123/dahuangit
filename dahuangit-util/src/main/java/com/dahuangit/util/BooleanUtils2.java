@@ -33,7 +33,7 @@ public class BooleanUtils2 extends BooleanUtils {
 	 * @param yOrN
 	 * @return
 	 */
-	
+
 	public static Boolean trueFalseToBoolean(String trueOrFalse) {
 		Validate.notNull(trueOrFalse, "传入参数不能null");
 		if ("true".equalsIgnoreCase(trueOrFalse)) {
@@ -53,8 +53,17 @@ public class BooleanUtils2 extends BooleanUtils {
 	 */
 	public static String toStringYN(Boolean bool) {
 		Validate.notNull(bool, "传入参数不能null");
-		
+
 		return toString(bool, "Y", "N", null);
 	}
-	
+
+	/**
+	 * 将Boolean 转换为是否显示
+	 * 
+	 * @param bool
+	 * @return
+	 */
+	public static String toStringShiFou(Boolean bool) {
+		return bool == true ? "是" : "否";
+	}
 }

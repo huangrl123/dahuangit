@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN/EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="analyzeService" class="com.dahuangit.seobi.analyzer.service.impl.AnalyzeServiceImpl">
+	</bean>
+
+	<bean id="analyzeJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="analyzeService" />
+		</property>
+		<property name="targetMethod">
+			<value>analyzeBaiduOriginarityPercent</value>
+		</property>
+	</bean>
+
+	<bean id="analyzeTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="analyzeJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>${analyzer.originarityPercent.time.analyzeTrigger.cronExpression}</value>
+		</property>
+	</bean>
+
+	<bean id="analyzeScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="analyzeTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

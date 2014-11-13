@@ -38,6 +38,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.apache.log4j.Logger;
+
+import com.dahuangit.util.log.Log4jUtils;
 
 /**
  * 专门处理http请求与响应的工具
@@ -53,6 +56,111 @@ public class HttpKit {
 	public static final int HTTP_STATUS_CODE_200 = 200;
 
 	/**
+	 * 测试代理服务器是否支持http get方法
+	 * 
+	 * @param proxyHost
+	 * @param url
+	 * @return
+	 */
+	public static boolean isProxyServerHttpGetAvailable(HostInfo proxyHost, String url) {
+		Validate.notNull(url, "url不能为null");
+		Validate.notNull(proxyHost, "proxyHost不能为null");
+
+		CloseableHttpClient httpclient = null;
+		BufferedReader read = null;
+		InputStreamReader inputStreamReader = null;
+
+		try {
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+			httpclient = httpClientBuilder.build();
+
+			// 依次是代理地址，代理端口号，协议类型
+			HttpHost proxy = new HttpHost(proxyHost.getAddr(), proxyHost.getPort());
+			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+
+			// 请求地址
+			HttpGet httpGet = new HttpGet(url);
+			httpGet.setConfig(config);
+
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(4000).setConnectTimeout(4000).build();
+			httpGet.setConfig(requestConfig);
+
+			HttpResponse response = httpclient.execute(httpGet);
+
+			if (200 == response.getStatusLine().getStatusCode()) {
+//				InputStream in = response.getEntity().getContent();
+//				inputStreamReader = new InputStreamReader(in, HTTP.UTF_8);
+//				read = new BufferedReader(inputStreamReader);
+//				
+//				StringBuffer responseContent = new StringBuffer();
+//				String inputLine = null;
+//				while ((inputLine = read.readLine()) != null) {
+//					responseContent.append(inputLine);
+//				}
+//				
+//				inputStreamReader.close();
+//				read.close();
+//				httpclient.getConnectionManager().shutdown();
+				
+				
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				httpclient.close();
+				read.close();
+				inputStreamReader.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 测试代理服务器是否支持http post方法
+	 * 
+	 * HostInfo proxyHost
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static boolean isProxyServerHttpPostAvailable(HostInfo proxyHost, String url) {
+		Validate.notNull(url, "url不能为null");
+		Validate.notNull(proxyHost, "proxyHost不能为null");
+
+		try {
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+			CloseableHttpClient httpclient = httpClientBuilder.build();
+
+			// 依次是代理地址，代理端口号，协议类型
+			HttpHost proxy = new HttpHost(proxyHost.getAddr(), proxyHost.getPort());
+			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+
+			HttpPost httpost = new HttpPost(url);
+			httpost.setConfig(config);
+
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(4000).setConnectTimeout(4000).build();
+			httpost.setConfig(requestConfig);
+
+			HttpResponse response = httpclient.execute(httpost);
+
+			if (200 == response.getStatusLine().getStatusCode()) {
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+
+		return false;
+	}
+
+	/**
 	 * 得到http服务端返回的字符（通过post方法）
 	 * 
 	 * @param host
@@ -65,15 +173,19 @@ public class HttpKit {
 			throws IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpost = new HttpPost(host);
-		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		Iterator it = params.entrySet().iterator();
 
-		while (it.hasNext()) {
-			Map.Entry<String, String> entry = (Entry<String, String>) it.next();
-			nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+		if (null != params) {
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			Iterator it = params.entrySet().iterator();
+
+			while (it.hasNext()) {
+				Map.Entry<String, String> entry = (Entry<String, String>) it.next();
+				nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+			}
+
+			httpost.setEntity(new UrlEncodedFormEntity(nvps, encode == null ? HTTP.UTF_8 : encode));
 		}
 
-		httpost.setEntity(new UrlEncodedFormEntity(nvps, encode == null ? HTTP.UTF_8 : encode));
 		HttpResponse response = httpclient.execute(httpost);
 
 		if (200 != response.getStatusLine().getStatusCode()) {
@@ -398,8 +510,9 @@ public class HttpKit {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public static HttpResponse doHttpRequest(String serialUrl) throws IOException {
+	public static String doHttpRequest(String serialUrl) throws IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
+
 		HttpGet httpGet = new HttpGet(serialUrl);
 		HttpResponse response = httpclient.execute(httpGet);
 
@@ -407,7 +520,20 @@ public class HttpKit {
 			throw new RuntimeException("http返回状态" + response.getStatusLine().getStatusCode());
 		}
 
-		return response;
+		HttpEntity entity = response.getEntity();
+
+		String inputLine = "";
+		StringBuffer responseContent = new StringBuffer();
+		InputStreamReader in = new InputStreamReader(entity.getContent(), "utf-8");
+		BufferedReader reader = new BufferedReader(in);
+		while ((inputLine = reader.readLine()) != null) {
+			responseContent.append(inputLine);
+		}
+		reader.close();
+
+		httpclient.getConnectionManager().shutdown();
+
+		return responseContent.toString();
 	}
 
 	/**
@@ -480,8 +606,8 @@ public class HttpKit {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String doPostByProxy(String host, HostInfo proxyHost, Map<String, String> params, List<BasicHeader> headers)
-			throws IOException {
+	public static String doPostByProxy(String host, HostInfo proxyHost, Map<String, String> params,
+			List<BasicHeader> headers) throws IOException {
 		Validate.notNull(host, "主机地址不能为null");
 		Validate.notNull(proxyHost, "代理服务器不能为null");
 
@@ -573,11 +699,11 @@ public class HttpKit {
 
 		// 请求地址
 		HttpGet httpGet = new HttpGet(host);
-		//httpGet.setConfig(config);
+		httpGet.setConfig(config);
 
 		// 设置http头
 		if (null != headers) {
-			//httpGet.setHeaders(headers.toArray(new Header[headers.size()]));
+			httpGet.setHeaders(headers.toArray(new Header[headers.size()]));
 		}
 
 		HttpResponse response = httpclient.execute(httpGet);

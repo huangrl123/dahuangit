@@ -39,9 +39,6 @@ public class ProxyTcpServerHandler implements IoHandler {
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		byte[] content = (byte[]) message;
 		String msg = new String(content);
-		if(!msg.contains("20140507.ip138.com/ic.asp")) {
-			return;
-		}
 		
 		log.debug("服务器收到客户端信息,msg=[" + msg + "]");
 

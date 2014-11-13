@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN/EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="proxyJobService"
-		class="com.dahuangit.seobi.proxy.service.impl.ProxyJobServiceImpl" />
+	<bean id="proxyJobService" class="com.dahuangit.seobi.proxy.service.impl.ProxyJobServiceImpl">
+		<property name="httpGetTestUrl">
+			<value>${proxy.httpGetTestUrl}</value>
+		</property>
+		<property name="httpPostTestUrl">
+			<value>${proxy.httpPostTestUrl}</value>
+		</property>
+	</bean>
 
-	<bean id="scheduledTerminalJobDetail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<bean id="proxyJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
 			<ref bean="proxyJobService" />
 		</property>
@@ -14,21 +19,19 @@
 		</property>
 	</bean>
 
-	<bean id="cronTerminalTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<bean id="proxyTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
-			<ref bean="scheduledTerminalJobDetail" />
+			<ref bean="proxyJobDetail" />
 		</property>
 		<property name="cronExpression">
-			<!-- 每15分钟执行一次 -->
-			<value>0 0/15 * * * ?</value>
+			<value>${proxy.proxyTrigger.checkProxyServerStatus.cronExpression}</value>
 		</property>
 	</bean>
 
-	<bean id="proxyScheduler"
-		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<bean id="proxyScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="cronTerminalTrigger" />
+				<ref bean="proxyTrigger" />
 			</list>
 		</property>
 	</bean>

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +22,9 @@ import com.dahuangit.seobi.proxy.dto.opm.response.ProxyResponse;
 import com.dahuangit.seobi.proxy.entry.Proxy;
 import com.dahuangit.seobi.proxy.service.ProxyJobService;
 import com.dahuangit.seobi.proxy.service.ProxyService;
+import com.dahuangit.util.BooleanUtils2;
 import com.dahuangit.util.date.DateUtils;
 import com.dahuangit.util.log.Log4jUtils;
-import com.dahuangit.util.net.TelnetUtils;
 import com.dahuangit.util.net.http.HostInfo;
 import com.dahuangit.util.net.http.HttpHeaderInfo;
 import com.dahuangit.util.net.http.HttpKit;
@@ -39,6 +40,12 @@ public class ProxyServiceImpl implements ProxyService {
 
 	@Autowired
 	private ProxyJobService proxyJobService = null;
+
+	@Value("${proxy.local.ip}")
+	private String PROXY_LOCAL_IP = null;
+
+	@Value("${proxy.local.port}")
+	private int PROXY_LOCAL_PORT;
 
 	/**
 	 * 批量导入代理服务器信息
@@ -61,6 +68,7 @@ public class ProxyServiceImpl implements ProxyService {
 			String[] proxyInfo = line.split(":");
 			if (proxyInfo.length != 2) {
 				log.info("已跳过到不符合格式的代理信息行:" + line);
+				continue;
 			}
 
 			String proxyIp = proxyInfo[0].trim();
@@ -69,6 +77,7 @@ public class ProxyServiceImpl implements ProxyService {
 				proxyPort = Integer.parseInt(proxyInfo[1].trim());
 			} catch (NumberFormatException e) {
 				log.info("已跳过端口不合法的代理信息行:" + line);
+				continue;
 			}
 
 			// 通过ip和端口进行查询，如果不存在才新增
@@ -104,20 +113,34 @@ public class ProxyServiceImpl implements ProxyService {
 	 * @throws IOException
 	 */
 	public String doRequestByProxy(HttpHeaderInfo headerInfo) throws IOException {
-		List<Proxy> proxyList = this.proxyDao.getAvailateProxyOrderByLastTestTime();
+		List<Proxy> proxyList = this.proxyDao.getAvailateProxyOrderByLastTestTime(headerInfo.getMethod());
 
 		Proxy proxy = null;
+		boolean needUpdate = true;
 
-		for (Proxy p : proxyList) {
-			boolean available = TelnetUtils.isAvailableServer(p.getProxyIp(), p.getProxyPort(), 5 * 1000);
-			if (available) {
-				proxy = p;
-				break;
+		// 如果没有，则使用本机进行代理
+		if (null == proxyList || proxyList.isEmpty()) {
+			proxy = new Proxy();
+			proxy.setProxyIp(PROXY_LOCAL_IP);
+			proxy.setProxyPort(PROXY_LOCAL_PORT);
+			needUpdate = false;
+		} else {
+			for (Proxy p : proxyList) {
+				// 请求之前再检查一次，如果不可用，则用下一个代理服务器
+				Proxy py = proxyJobService.testProxy(p);
+
+				boolean isAvailable = false;
+				if ("GET".equalsIgnoreCase(headerInfo.getMethod())) {
+					isAvailable = py.getIsHttpGetAvailable();
+				} else if ("POST".equalsIgnoreCase(headerInfo.getMethod())) {
+					isAvailable = py.getIsHttpPostAvailable();
+				}
+
+				if (isAvailable) {
+					proxy = py;
+					break;
+				}
 			}
-		}
-
-		if (null == proxy) {
-			throw new GenericException("无法找到可用的代理服务器，请确认当前是否有代理服务器列表是否为空");
 		}
 
 		String url = headerInfo.getHost();
@@ -131,14 +154,25 @@ public class ProxyServiceImpl implements ProxyService {
 		HostInfo proxyHost = new HostInfo();
 		proxyHost.setAddr(proxy.getProxyIp());
 		proxyHost.setPort(proxy.getProxyPort());
-		proxyHost.setEncode("GB2312");
+		proxyHost.setEncode(headerInfo.getEncode());
 
 		String content = null;
 
 		if ("GET".equalsIgnoreCase(method)) {
-			content = HttpKit.doGetByProxy(url, proxyHost, headerInfo.getHeaders());
+			try {
+				content = HttpKit.doGetByProxy(url, proxyHost, headerInfo.getHeaders());
+			} catch (Exception e) {
+				content = e.getMessage();
+				e.printStackTrace();
+			}
+
 		} else if ("POST".equalsIgnoreCase(method)) {
-			content = HttpKit.doPostByProxy(url, proxyHost, null, headerInfo.getHeaders());
+			try {
+				content = HttpKit.doPostByProxy(url, proxyHost, null, headerInfo.getHeaders());
+			} catch (Exception e) {
+				content = e.getMessage();
+				e.printStackTrace();
+			}
 		} else {
 			throw new GenericException("非法的http方法：" + method);
 		}
@@ -146,8 +180,10 @@ public class ProxyServiceImpl implements ProxyService {
 		log.info("返回内容=" + content);
 
 		// 更新代理的最后通信时间
-		proxy.setLastTestTime(new Date());
-		this.proxyDao.update(proxy);
+		if (needUpdate) {
+			proxy.setLastTestTime(new Date());
+			this.proxyDao.update(proxy);
+		}
 
 		StringBuffer sb = new StringBuffer();
 
@@ -156,7 +192,16 @@ public class ProxyServiceImpl implements ProxyService {
 		sb.append("\r");
 		sb.append("\n");
 
-		sb.append("Content-Length: " + content.getBytes().length);
+//		sb.append("Content-Type: text/html;charset=" + headerInfo.getEncode());
+		sb.append("Content-Type: text/html;charset=gb2312");
+		sb.append("\r");
+		sb.append("\n");
+
+		if (null == content) {
+			sb.append("Content-Length: " + 0);
+		} else {
+			sb.append("Content-Length: " + content.getBytes().length);
+		}
 		sb.append("\r");
 		sb.append("\n");
 
@@ -169,60 +214,6 @@ public class ProxyServiceImpl implements ProxyService {
 		return sb.toString();
 	}
 
-	/**
-	 * 通过代理进行http请求<br>
-	 * 
-	 * @param url
-	 * @return
-	 * @throws IOException
-	 */
-	public String doRequestByProxy(String url, String encode, String method) throws IOException {
-		List<Proxy> proxyList = this.proxyDao.getAvailateProxyOrderByLastTestTime();
-
-		Proxy proxy = null;
-
-		for (Proxy p : proxyList) {
-			boolean available = TelnetUtils.isAvailableServer(p.getProxyIp(), p.getProxyPort(), 5 * 1000);
-			if (available) {
-				proxy = p;
-				break;
-			}
-		}
-
-		if (null == proxy) {
-			throw new GenericException("无法找到可用的代理服务器，请确认当前是否有代理服务器列表是否为空");
-		}
-
-		log.info("正在通过代理进行http请求...");
-		log.info("地址=" + url);
-		log.info("编码=" + encode);
-		log.info("代理IP=" + proxy.getProxyIp());
-		log.info("代理端口=" + proxy.getProxyPort());
-
-		HostInfo proxyHost = new HostInfo();
-		proxyHost.setAddr(proxy.getProxyIp());
-		proxyHost.setPort(proxy.getProxyPort());
-		proxyHost.setEncode(encode);
-
-		String content = null;
-
-		if ("GET".equalsIgnoreCase(method)) {
-			content = HttpKit.doGetByProxy(url, proxyHost, null);
-		} else if ("POST".equalsIgnoreCase(method)) {
-			content = HttpKit.doPostByProxy(url, proxyHost, null, null);
-		} else {
-			throw new GenericException("非法的http方法：" + method);
-		}
-
-		log.info("返回内容=" + content);
-
-		// 更新代理的最后通信时间
-		proxy.setLastTestTime(new Date());
-		this.proxyDao.update(proxy);
-
-		return content;
-	}
-
 	public void deleteProxy(Integer id) {
 		Proxy proxy = new Proxy();
 		proxy.setPid(id);
@@ -232,12 +223,9 @@ public class ProxyServiceImpl implements ProxyService {
 
 	@Override
 	public PageQueryResult<ProxyResponse> findByPage(Integer start, Integer limit) {
-		String listHql = "from Proxy p order by p.lastTestTime desc";
-		String countHql = "select count(*)  from Proxy";
-
 		PageQueryResult<ProxyResponse> pageQueryResult = new PageQueryResult<ProxyResponse>();
 
-		List<Proxy> rows = this.proxyDao.findByPage(listHql, start, limit);
+		List<Proxy> rows = this.proxyDao.findProxyByPage(start, limit);
 
 		List<ProxyResponse> results = new ArrayList<ProxyResponse>();
 
@@ -245,16 +233,12 @@ public class ProxyServiceImpl implements ProxyService {
 			ProxyResponse pr = new ProxyResponse();
 			pr.setPid(proxy.getPid());
 
-			boolean isAvailable = proxy.getAvailable();
-			if (isAvailable) {
-				pr.setAvailable("是");
-			} else {
-				pr.setAvailable("否");
-			}
+			pr.setIsTelnetAvailable(BooleanUtils2.toStringShiFou(proxy.getIsTelnetAvailable()));
+			pr.setIsHttpGetAvailable(BooleanUtils2.toStringShiFou(proxy.getIsHttpGetAvailable()));
+			pr.setIsHttpPostAvailable(BooleanUtils2.toStringShiFou(proxy.getIsHttpPostAvailable()));
 
 			pr.setLastTestTime(DateUtils.format(proxy.getLastTestTime()));
 
-			pr.setProtocol(proxy.getProtocol());
 			pr.setProxyIp(proxy.getProxyIp());
 			pr.setProxyPort(proxy.getProxyPort());
 			pr.setRemark(proxy.getRemark());
@@ -262,7 +246,7 @@ public class ProxyServiceImpl implements ProxyService {
 			results.add(pr);
 		}
 
-		Long totalCount = this.proxyDao.findRecordsCount(countHql);
+		Long totalCount = this.proxyDao.findProxyCount();
 		pageQueryResult.setTotalCount(totalCount);
 
 		pageQueryResult.setResults(results);

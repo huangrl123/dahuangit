@@ -42,7 +42,7 @@ public class HttpHeaderParser {
 			} else {
 				String[] other = line.split(":");
 
-				if (null != other || other.length != 2) {
+				if (null == other || other.length != 2) {
 					continue;
 				}
 

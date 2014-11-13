@@ -176,10 +176,8 @@ public class BaseDao<T extends BaseModel, PK extends Serializable> {
 
 		Query query = this.createQuery(hql);
 
-		if (0 != start && 0 != limit) {
-			query.setFirstResult((start - 1) * limit);
-			query.setMaxResults(limit);
-		}
+		query.setFirstResult(start);
+		query.setMaxResults(limit);
 
 		List<T> list = query.list();
 

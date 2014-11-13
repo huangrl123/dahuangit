@@ -1,10 +1,6 @@
 package com.dahuangit.seobi.proxy.dto.opm.response;
 
-import java.util.Date;
 
-import com.dahuangit.util.bean.dto.Dto;
-
-@Dto
 public class ProxyResponse {
 	private Integer pid = null;
 
@@ -12,9 +8,14 @@ public class ProxyResponse {
 
 	private Integer proxyPort = null;
 
-	private String protocol = null;
+	/** telnet是否通 */
+	private String isTelnetAvailable = null;
 
-	private String available = null;
+	/** http get方法是否可用 */
+	private String isHttpGetAvailable = null;
+
+	/** http post方法是否可用 */
+	private String isHttpPostAvailable = null;
 
 	private String lastTestTime = null;
 
@@ -44,22 +45,6 @@ public class ProxyResponse {
 		this.proxyPort = proxyPort;
 	}
 
-	public String getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(String protocol) {
-		this.protocol = protocol;
-	}
-
-	public String getAvailable() {
-		return available;
-	}
-
-	public void setAvailable(String available) {
-		this.available = available;
-	}
-
 	public String getLastTestTime() {
 		return lastTestTime;
 	}
@@ -74,6 +59,30 @@ public class ProxyResponse {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getIsTelnetAvailable() {
+		return isTelnetAvailable;
+	}
+
+	public void setIsTelnetAvailable(String isTelnetAvailable) {
+		this.isTelnetAvailable = isTelnetAvailable;
+	}
+
+	public String getIsHttpGetAvailable() {
+		return isHttpGetAvailable;
+	}
+
+	public void setIsHttpGetAvailable(String isHttpGetAvailable) {
+		this.isHttpGetAvailable = isHttpGetAvailable;
+	}
+
+	public String getIsHttpPostAvailable() {
+		return isHttpPostAvailable;
+	}
+
+	public void setIsHttpPostAvailable(String isHttpPostAvailable) {
+		this.isHttpPostAvailable = isHttpPostAvailable;
 	}
 
 }
