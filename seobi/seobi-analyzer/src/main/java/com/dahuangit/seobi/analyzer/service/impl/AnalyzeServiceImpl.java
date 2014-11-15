@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -82,21 +83,27 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public double getBaiduOriginarityPercent(String content) throws Exception {
-		double baiduSimilarityPercent = (double) 0;
-		double baiduOriginatyPercent = (double) 0;
+	public Double getBaiduOriginarityPercent(String content) throws Exception {
+		Validate.notNull(content, "需要计算原创度的字符不能为null");
+
+		Double baiduSimilarityPercent = null;
+		Double baiduOriginatyPercent = null;
 
 		try {
 			log.debug("正在通过百度搜索相关内容:[" + content + "]");
 
+			// 滤掉表情符号,例如： [em]e110042[/em]
+			String regEx = "\\[em\\]e[0-9]+?\\[\\/em\\]";
+			content = content.replaceAll(regEx, "");
+
 			// 如果内容没有超长
 			if (content.length() < BAIDU_SEARCH_KEY_COUNT) {
-				double baiduSimilarityLength = saveKeyAndCountSectionSimilarityLength(content);
+				Double baiduSimilarityLength = saveKeyAndCountSectionSimilarityLength(content);
 
 				baiduSimilarityPercent = baiduSimilarityLength / (double) content.length();
 				// 如果搜索的内容大于百度要求的搜索字数，则分段搜索
 			} else {
-				double d = (double) content.length() / (double) BAIDU_SEARCH_KEY_COUNT;
+				Double d = (double) content.length() / (double) BAIDU_SEARCH_KEY_COUNT;
 				int sectionCount = (int) Math.ceil(d);
 
 				// 遍历每一小段
@@ -109,8 +116,8 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 					}
 
 					// 这段的飘红字数的平均长度
-					double sectionSimilaryCountLength = saveKeyAndCountSectionSimilarityLength(key);
-					double sectionSimilary = sectionSimilaryCountLength / (double) key.length();
+					Double sectionSimilaryCountLength = saveKeyAndCountSectionSimilarityLength(key);
+					Double sectionSimilary = sectionSimilaryCountLength / (double) key.length();
 
 					sectionSimilaryList.add(sectionSimilary);
 				}
@@ -142,7 +149,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
-	private double saveKeyAndCountSectionSimilarityLength(String sectionStr) throws IOException, DocumentException {
+	private Double saveKeyAndCountSectionSimilarityLength(String sectionStr) throws IOException, DocumentException {
 
 		String result = BaiduUtils.searchByKey(sectionStr);
 
@@ -166,11 +173,11 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 		// 遍历一段的每一个结果
 		List<Double> list = new ArrayList<Double>();
 		for (Node n : results) {
-			double d = resultItemSimilarityLength(n);
+			Double d = resultItemSimilarityLength(n);
 			list.add(d);
 		}
 
-		double average = SortUtils.getAverage(list);
+		Double average = SortUtils.getAverage(list);
 
 		return average;
 	}
@@ -187,7 +194,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 
 		Element e = (Element) resultItemNode;
 
-		double average = 0;
+		Double average = null;
 
 		// 查询出每个结果中飘红内容
 		String searchResultxpathExpression = "//em";

@@ -8,7 +8,7 @@ public interface AnalyzeService {
 	 * @return
 	 * @throws Exception 
 	 */
-	double getBaiduOriginarityPercent(String content) throws Exception;
+	Double getBaiduOriginarityPercent(String content) throws Exception;
 
 	/**
 	 * 分析本系统数据库表中qq说说的百度原创度

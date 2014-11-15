@@ -66,6 +66,11 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 			List<QQTalkMsg> qqTalkMsgs = new ArrayList<QQTalkMsg>();
 
 			for (QQTalkContentXml qqTalkContentXml : qqTalkContentXmls) {
+				String content = qqTalkContentXml.getTalkContent();
+				if (null == content || content.length() < 6) {
+					continue;
+				}
+
 				QQTalkMsg qqTalkMsg = new QQTalkMsg();
 				qqTalkMsg.setBrowseCount(qqTalkContentXml.getBrowseCount());
 				qqTalkMsg.setFromDevice(qqTalkContentXml.getFromDevice());
@@ -81,6 +86,12 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				List<QQTalkImg> imgs = new ArrayList<QQTalkImg>();
 
 				for (QQTalkImgXml qqTalkImgXml : qqTalkImgXmls) {
+					String imgPath = qqTalkImgXml.getImgPath();
+
+					if (null == imgPath) {
+						continue;
+					}
+
 					QQTalkImg img = new QQTalkImg();
 					img.setImgPath(qqTalkImgXml.getImgPath());
 
@@ -92,7 +103,7 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				qqTalkMsg.setQqTalkImgs(imgs);
 
 				qqTalkMsg.setRemark(qqTalkContentXml.getRemark());
-				qqTalkMsg.setTalkContent(qqTalkContentXml.getTalkContent());
+				qqTalkMsg.setTalkContent(content);
 				qqTalkMsg.setTmTxId(qqTalkContentXml.getTalkTxId());
 
 				// 如果非新账户，则只需将说说信息、说说图片信息一起添加到数据库
