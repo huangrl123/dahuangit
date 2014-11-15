@@ -2,7 +2,11 @@ package com.dahuangit.seobi.receiver.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +26,16 @@ import com.dahuangit.seobi.receiver.entry.QQAccount;
 import com.dahuangit.seobi.receiver.entry.QQTalkImg;
 import com.dahuangit.seobi.receiver.entry.QQTalkMsg;
 import com.dahuangit.seobi.receiver.service.QQTalkMsgService;
+import com.dahuangit.util.NumberUtils;
 import com.dahuangit.util.date.DateUtils;
+import com.dahuangit.util.log.Log4jUtils;
+import com.dahuangit.util.net.http.HttpKit;
 
 @Component
 @Transactional
 public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgService {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final static Logger log = Log4jUtils.getLogger(QQTalkMsgServiceImpl.class);
 
 	@Autowired
 	private QQAccountDao accountDao = null;
@@ -38,6 +45,9 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 
 	@Value("${receiver.authentication.password}")
 	private String authenticationPassword = null;
+
+	@Value("${analyzer.analyzeShuoshuoBaiduOriginarityPercent.url}")
+	private String qqTalkOriginatyPercentAnalyzeUrl = null;
 
 	@Override
 	public void addQQTalkMsg(QQTalkMsgsReqXml qqTalkMsgsReqXml) {
@@ -50,6 +60,8 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 		List<QQTalkMsgXml> qqTalkMsgXmls = qqTalkMsgsReqXml.getQqTalkMsgXmls();
 
 		boolean isNewAccount = false;
+
+		List<QQTalkMsg> QQTalkMsgList = new ArrayList<QQTalkMsg>();
 
 		for (QQTalkMsgXml qqTalkMsgXml : qqTalkMsgXmls) {
 			QQAccount qqAccount = accountDao.findUniqueBy("qq", qqTalkMsgXml.getQq());
@@ -113,6 +125,7 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 					qqTalkMsgDao.addQQTalkMsg(qqTalkMsg);
 				}
 
+				QQTalkMsgList.add(qqTalkMsg);
 			}
 
 			// 如果是新账户，则将账号信息、说说信息、说说图片信息一起添加到数据库
@@ -120,7 +133,42 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				qqAccount.setQqTalkMsgs(qqTalkMsgs);
 				this.accountDao.addQQAccount(qqAccount);
 			}
+
+			// 启动线程分析这些qq说说的原创度
+			final List<Integer> idList = new ArrayList<Integer>();
+			for (QQTalkMsg qm : QQTalkMsgList) {
+				if (qm == null) {
+					continue;
+				}
+
+				idList.add(qm.getTmId());
+			}
+
+			analyzeOriginatyPercent(idList);
 		}
 	}
 
+	private void analyzeOriginatyPercent(final List<Integer> talkIdsList) {
+		Thread t = new Thread() {
+
+			@Override
+			public void run() {
+				log.debug("启动线程分析这些qq说说的原创度");
+
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("idsStr", NumberUtils.integerList2idsStr(talkIdsList));
+
+				try {
+					HttpKit.doHttpRequest(qqTalkOriginatyPercentAnalyzeUrl, params);
+					log.debug("qq说说的原创度ok");
+				} catch (Exception e) {
+					log.error("qq说说的原创度ok失败,错误原因:" + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+
+		};
+		
+		t.start();
+	}
 }

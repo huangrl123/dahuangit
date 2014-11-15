@@ -72,6 +72,10 @@ public class SortUtils {
 
 		Double sum = (double) 0;
 		for (Double d : list) {
+			if(null == d) {
+				continue;
+			}
+			
 			sum = sum + d;
 		}
 

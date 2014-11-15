@@ -68,4 +68,21 @@ public class ProxyMgrController extends BaseController {
 
 		return opResponse;
 	}
+
+	@RequestMapping(value = "/addProxy", method = RequestMethod.POST)
+	@ResponseBody
+	public OpResponse addProxy(String ip, Integer port) {
+		OpResponse opResponse = new OpResponse();
+
+		try {
+			this.proxyService.addProxy(ip, port);
+			opResponse.setSuccess(true);
+		} catch (Exception e) {
+			opResponse.setSuccess(false);
+			opResponse.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return opResponse;
+	}
 }

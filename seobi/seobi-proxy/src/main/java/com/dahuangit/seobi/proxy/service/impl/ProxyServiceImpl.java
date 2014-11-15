@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,34 +115,15 @@ public class ProxyServiceImpl implements ProxyService {
 	 * @throws IOException
 	 */
 	public String doRequestByProxy(HttpHeaderInfo headerInfo) throws IOException {
-		List<Proxy> proxyList = this.proxyDao.getAvailateProxyOrderByLastTestTime(headerInfo.getMethod());
-
-		Proxy proxy = null;
+		Proxy proxy = getOptimalProxy(headerInfo.getMethod());
 		boolean needUpdate = true;
 
 		// 如果没有，则使用本机进行代理
-		if (null == proxyList || proxyList.isEmpty()) {
+		if (null == proxy) {
 			proxy = new Proxy();
 			proxy.setProxyIp(PROXY_LOCAL_IP);
 			proxy.setProxyPort(PROXY_LOCAL_PORT);
 			needUpdate = false;
-		} else {
-			for (Proxy p : proxyList) {
-				// 请求之前再检查一次，如果不可用，则用下一个代理服务器
-				Proxy py = proxyJobService.testProxy(p);
-
-				boolean isAvailable = false;
-				if ("GET".equalsIgnoreCase(headerInfo.getMethod())) {
-					isAvailable = py.getIsHttpGetAvailable();
-				} else if ("POST".equalsIgnoreCase(headerInfo.getMethod())) {
-					isAvailable = py.getIsHttpPostAvailable();
-				}
-
-				if (isAvailable) {
-					proxy = py;
-					break;
-				}
-			}
 		}
 
 		String url = headerInfo.getHost();
@@ -157,9 +139,9 @@ public class ProxyServiceImpl implements ProxyService {
 		proxyHost.setPort(proxy.getProxyPort());
 		proxyHost.setEncode(headerInfo.getEncode());
 
-		ProxyHttpResponse proxyHttpResponse  = null;
-        String content = null;
-        
+		ProxyHttpResponse proxyHttpResponse = null;
+		String content = null;
+
 		if ("GET".equalsIgnoreCase(method)) {
 			try {
 				proxyHttpResponse = HttpKit.doGetByProxy(url, proxyHost, headerInfo.getHeaders());
@@ -197,11 +179,11 @@ public class ProxyServiceImpl implements ProxyService {
 		sb.append("\n");
 
 		sb.append("Content-Type: text/html; charset=gb2312");
-//		if(null == proxyHttpResponse) {
-//			sb.append("Content-Type: text/html; charset=UTF-8");
-//		} else {
-//			sb.append("Content-Type: " + proxyHttpResponse.getContentType());
-//		}
+		// if(null == proxyHttpResponse) {
+		// sb.append("Content-Type: text/html; charset=UTF-8");
+		// } else {
+		// sb.append("Content-Type: " + proxyHttpResponse.getContentType());
+		// }
 		sb.append("\r");
 		sb.append("\n");
 
@@ -222,11 +204,69 @@ public class ProxyServiceImpl implements ProxyService {
 		return sb.toString();
 	}
 
-	public void deleteProxy(Integer id) {
-		Proxy proxy = new Proxy();
-		proxy.setPid(id);
-		this.proxyDao.delete(proxy);
+	/**
+	 * 获取最优代理服务器
+	 * 
+	 * @return
+	 */
+	public Proxy getOptimalProxy(String method) {
+		List<Proxy> proxyList = this.proxyDao.getAvailateProxyOrderByLastTestTime(method);
 
+		Proxy proxy = null;
+
+		for (Proxy p : proxyList) {
+			// 请求之前再检查一次，如果不可用，则用下一个代理服务器
+			Proxy py = null;
+			try {
+				py = proxyJobService.testProxy(p);
+			} catch (Exception e) {
+				continue;
+			}
+
+			boolean isAvailable = false;
+			if ("GET".equalsIgnoreCase(method)) {
+				isAvailable = py.getIsHttpGetAvailable();
+			} else if ("POST".equalsIgnoreCase(method)) {
+				isAvailable = py.getIsHttpPostAvailable();
+			}
+
+			if (isAvailable) {
+				proxy = py;
+				break;
+			}
+		}
+
+		return proxy;
+	}
+
+	public void deleteProxy(Integer id) {
+		final Proxy proxy = new Proxy();
+		proxy.setPid(id);
+
+		proxyDao.delete(proxy);
+	}
+
+	public void addProxy(String ip, Integer port) {
+		final Proxy proxy = new Proxy();
+		proxy.setProxyIp(ip);
+		proxy.setProxyPort(port);
+
+		new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					Proxy testproxy = proxyJobService.testProxy(proxy);
+
+					if (testproxy.getIsTelnetAvailable()
+							&& (testproxy.getIsHttpGetAvailable() || testproxy.getIsHttpPostAvailable())) {
+						proxyDao.add(proxy);
+					}
+				} catch (Exception e) {
+				}
+			}
+
+		}.start();
 	}
 
 	@Override

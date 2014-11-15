@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -697,25 +698,22 @@ public class HttpKit {
 	 * @return
 	 * @throws IOException
 	 */
-	public static ProxyHttpResponse doGetByProxy(String host, HostInfo proxyHost, List<BasicHeader> headers) throws IOException {
+	public static ProxyHttpResponse doGetByProxy(String host, HostInfo proxyHost, List<BasicHeader> headers)
+			throws IOException {
 		Validate.notNull(host, "主机地址不能为null");
-		Validate.notNull(proxyHost, "代理服务器不能为null");
-
-		if (proxyHost.getPort() == 0) {
-			throw new RuntimeException("代理服务器端口不能为0");
-		}
 
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-
 		CloseableHttpClient httpclient = httpClientBuilder.build();
-
-		// 依次是代理地址，代理端口号，协议类型
-		HttpHost proxy = new HttpHost(proxyHost.getAddr(), proxyHost.getPort());
-		RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
 
 		// 请求地址
 		HttpGet httpGet = new HttpGet(host);
-		httpGet.setConfig(config);
+
+		// 代理
+		if (null != proxyHost) {
+			HttpHost proxy = new HttpHost(proxyHost.getAddr(), proxyHost.getPort());
+			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+			httpGet.setConfig(config);
+		}
 
 		// 设置http头
 		if (null != headers) {
@@ -729,9 +727,9 @@ public class HttpKit {
 		}
 
 		HttpEntity entity = response.getEntity();
-		InputStreamReader in = new InputStreamReader(entity.getContent(), proxyHost.getEncode() == null ? HTTP.UTF_8
-				: proxyHost.getEncode());
-		BufferedReader reader = new BufferedReader(in);
+		InputStreamReader inputStreamReader = new InputStreamReader(entity.getContent(), "UTF-8");
+		BufferedReader reader = new BufferedReader(inputStreamReader);
+
 		String line = null;
 		String content = "";
 		String contentType = "text/html; charset=UTF-8";
@@ -766,15 +764,116 @@ public class HttpKit {
 			}
 		}
 
-		in.close();
 		reader.close();
 		httpclient.getConnectionManager().shutdown();
 
 		ProxyHttpResponse r = new ProxyHttpResponse();
 		r.setContentType(contentType);
 		r.setContent(content);
-		
+
 		return r;
+	}
+
+	public static String parseAndGetContentType(String html) {
+		if (null == html || "".equals(html)) {
+			return null;
+		}
+
+		if (html.contains("http-equiv=\"Content-Type\"")) {
+			Node node = null;
+
+			try {
+				node = XpathUtils.findUnique(html, "./@content");
+			} catch (DocumentException e) {
+				return null;
+			}
+
+			if (null == node) {
+				return null;
+			}
+
+			String text = node.getText();
+			if (null == text) {
+				return null;
+			}
+
+			String[] arr = text.split(";");
+			if (arr.length != 2) {
+				return null;
+			}
+
+			return text;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 根据html的输入流获取BufferedReader
+	 * 
+	 * @param htmlInputStream
+	 * @return
+	 */
+	public static BufferedReader getBufferedReader(InputStream htmlInputStream) {
+
+		if (null == htmlInputStream) {
+			return null;
+		}
+
+		String line = null;
+		String encode = null;
+		InputStreamReader in = new InputStreamReader(htmlInputStream);
+		BufferedReader reader = new BufferedReader(in);
+
+		try {
+			while (null != (line = reader.readLine())) {
+				if (line.contains("http-equiv=\"Content-Type\"")) {
+					Node node = null;
+
+					try {
+						node = XpathUtils.findUnique(line, "./@content");
+					} catch (DocumentException e) {
+						continue;
+					}
+
+					if (null == node) {
+						continue;
+					}
+
+					String text = node.getText();
+					if (null == text) {
+						continue;
+					}
+
+					String[] arr = text.split(";");
+					if (arr.length != 2) {
+						continue;
+					}
+
+					if ("".equals(arr[1].trim())) {
+						continue;
+					}
+
+					encode = arr[1].trim();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (null == encode) {
+			encode = "UTF-8";
+		}
+
+		try {
+			in = new InputStreamReader(htmlInputStream, encode);
+			reader = new BufferedReader(in);
+			return reader;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }
