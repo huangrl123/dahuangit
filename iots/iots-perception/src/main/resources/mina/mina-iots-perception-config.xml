@@ -51,9 +51,9 @@
 	</bean>
 
 	<bean factory-bean="nioSocketAcceptor" factory-method="getSessionConfig">
-		<!--<property name="bothIdleTime" value="10"/> -->
-		<property name="readBufferSize" value="4096" />
-		<property name="receiveBufferSize" value="1024" />
+		<property name="bothIdleTime" value="${perception.nioSocketAcceptor.bothIdleTime}"/> 
+		<property name="readBufferSize" value="${perception.nioSocketAcceptor.readBufferSize}" />
+		<property name="receiveBufferSize" value="${perception.nioSocketAcceptor.receiveBufferSize}" />
 	</bean>
 
 	<!-- 处理器-->
@@ -64,7 +64,7 @@
 	<!-- socket监听 -->
 	<bean id="nioSocketAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
 		init-method="bind" destroy-method="unbind">
-		<property name="defaultLocalAddress" value="9999" />
+		<property name="defaultLocalAddress" value="${perception.nioSocketAcceptor.defaultLocalAddress}" />
 		<property name="reuseAddress" value="true" />
 		<property name="handler" ref="iotsTcpServerHandler" />
 		<property name="filterChainBuilder" ref="filterChainBuilder" />

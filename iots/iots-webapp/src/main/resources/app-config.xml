@@ -15,7 +15,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/jdbc.properties</value>
-				<value>classpath*:/prop/*-config.properties</value>
+				<value>classpath:/application.properties</value>
 			</list>
 		</property>
 	</bean>
