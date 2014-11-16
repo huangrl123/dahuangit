@@ -1,5 +1,9 @@
-Ext.require(['Ext.grid.*', 'Ext.data.*', 'Ext.panel.*', 'Ext.layout.container.Border', 'Ext.toolbar.*',
-		'Ext.PagingToolbar']);
+Ext.require('Ext.grid.*');
+Ext.require('Ext.data.*');
+Ext.require('Ext.panel.*');
+Ext.require('Ext.layout.container.Border');
+Ext.require('Ext.toolbar.Toolbar');
+Ext.require('Ext.PagingToolbar');
 
 Ext.onReady(function() {
 			var store = Ext.create('Ext.data.Store', {
