@@ -127,7 +127,7 @@ public class XmlUtils {
 			XMLWriter xmlwriter = new XMLWriter(sw, format);
 			xmlwriter.write(document);
 		} catch (Exception e) {
-			throw new XmlException("将xml类型的字符串格式化出错", e);
+			throw new RuntimeException("将xml类型的字符串格式化出错", e);
 		} finally {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(strInStream);

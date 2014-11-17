@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,7 +39,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.dom4j.Node;
 
 import com.dahuangit.util.xml.XpathUtils;
@@ -727,16 +725,28 @@ public class HttpKit {
 		}
 
 		HttpEntity entity = response.getEntity();
-		InputStreamReader inputStreamReader = new InputStreamReader(entity.getContent(), "UTF-8");
+
+		String encode = null;
+		if ("http://1111.ip138.com/ic.asp".equals(host)) {
+			encode = "gb2312";
+		} else {
+			encode = "UTF-8";
+		}
+		InputStreamReader inputStreamReader = new InputStreamReader(entity.getContent(), encode);
 		BufferedReader reader = new BufferedReader(inputStreamReader);
 
 		String line = null;
 		String content = "";
-		String contentType = "text/html; charset=UTF-8";
+		String contentType = "Content-Type: text/html; charset=UTF-8";
 
 		while (null != (line = reader.readLine())) {
 			content += line;
 
+			if (host.toLowerCase().contains("www.baidu.com")) {
+				contentType = "Content-Type: text/html; charset=gb2312";
+				continue;
+			} 
+			
 			if (line.contains("http-equiv=\"Content-Type\"")) {
 				Node node = null;
 
@@ -814,66 +824,72 @@ public class HttpKit {
 	 * @param htmlInputStream
 	 * @return
 	 */
-	public static BufferedReader getBufferedReader(InputStream htmlInputStream) {
+	public static String getHtmlInputStreamEncode(InputStream htmlInputStream) {
 
 		if (null == htmlInputStream) {
 			return null;
 		}
 
+		InputStreamReader in = null;
+		BufferedReader reader = null;
+
 		String line = null;
 		String encode = null;
-		InputStreamReader in = new InputStreamReader(htmlInputStream);
-		BufferedReader reader = new BufferedReader(in);
-
 		try {
+			in = new InputStreamReader(htmlInputStream);
+			reader = new BufferedReader(in);
+			String str = "http-equiv=\"content-type\"";
 			while (null != (line = reader.readLine())) {
-				if (line.contains("http-equiv=\"Content-Type\"")) {
+				if (line.toLowerCase().contains(str)) {
 					Node node = null;
 
 					try {
+						if (!line.endsWith("/>")) {
+							line = line + "</meta>";
+						}
 						node = XpathUtils.findUnique(line, "./@content");
 					} catch (DocumentException e) {
-						continue;
+						break;
 					}
 
 					if (null == node) {
-						continue;
+						break;
 					}
 
 					String text = node.getText();
 					if (null == text) {
-						continue;
+						break;
 					}
 
 					String[] arr = text.split(";");
 					if (arr.length != 2) {
-						continue;
+						break;
 					}
 
 					if ("".equals(arr[1].trim())) {
-						continue;
+						break;
 					}
 
-					encode = arr[1].trim();
+					encode = arr[1].trim().split("=")[1];
+					break;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				// reader.close();
+				// /in.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		if (null == encode) {
 			encode = "UTF-8";
 		}
 
-		try {
-			in = new InputStreamReader(htmlInputStream, encode);
-			reader = new BufferedReader(in);
-			return reader;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return encode;
 	}
 
 }

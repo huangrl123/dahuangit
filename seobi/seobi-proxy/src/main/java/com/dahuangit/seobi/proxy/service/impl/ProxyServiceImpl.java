@@ -179,11 +179,12 @@ public class ProxyServiceImpl implements ProxyService {
 		sb.append("\n");
 
 		sb.append("Content-Type: text/html; charset=gb2312");
-		// if(null == proxyHttpResponse) {
-		// sb.append("Content-Type: text/html; charset=UTF-8");
-		// } else {
-		// sb.append("Content-Type: " + proxyHttpResponse.getContentType());
-		// }
+		
+//		if (null == proxyHttpResponse) {
+//			sb.append("Content-Type: text/html; charset=UTF-8");
+//		} else {
+//			sb.append(proxyHttpResponse.getContentType());
+//		}
 		sb.append("\r");
 		sb.append("\n");
 

@@ -38,11 +38,10 @@ public class DataReceiverController extends BaseController {
 	@RequestMapping(value = "/receiveQQTalkMsg", method = RequestMethod.POST)
 	@ResponseBody
 	public String receiveQQTalkMsg(String qqTalkMsgs) throws Exception {
-		this.LOG.debug("qq说说信息接收服务响应报文：" + XmlUtils.formatXMLStr(qqTalkMsgs));
-		
 		OxResponse resp = new OxResponse();
 
 		try {
+			this.LOG.debug("qq说说信息接收服务响应报文：" + XmlUtils.formatXMLStr(qqTalkMsgs));
 			QQTalkMsgsReqXml qqTalkMsgsReqXml = XmlUtils.xml2obj(xmlMarshaller, qqTalkMsgs, QQTalkMsgsReqXml.class);
 			qqTalkMsgService.addQQTalkMsg(qqTalkMsgsReqXml);
 
