@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,52 +78,62 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 			for (QQTalkContentXml qqTalkContentXml : qqTalkContentXmls) {
 				String content = qqTalkContentXml.getTalkContent();
 				if (null == content || content.length() < 6) {
+					log.error("说说[" + content + "]内容长度不够，系统将其抛弃，不保存.");
 					continue;
 				}
 
-				QQTalkMsg qqTalkMsg = new QQTalkMsg();
-				qqTalkMsg.setBrowseCount(qqTalkContentXml.getBrowseCount());
-				qqTalkMsg.setFromDevice(qqTalkContentXml.getFromDevice());
-				qqTalkMsg.setGps(qqTalkContentXml.getGps());
-				qqTalkMsg.setPraiseCount(qqTalkContentXml.getPraiseCount());
+				QQTalkMsg qqTalkMsg = null;
+				try {
+					qqTalkMsg = new QQTalkMsg();
+					qqTalkMsg.setBrowseCount(qqTalkContentXml.getBrowseCount());
+					qqTalkMsg.setFromDevice(qqTalkContentXml.getFromDevice());
+					qqTalkMsg.setGps(qqTalkContentXml.getGps());
+					qqTalkMsg.setPraiseCount(qqTalkContentXml.getPraiseCount());
 
-				Date publishTime = DateUtils.parse(qqTalkContentXml.getPublishTime());
-				qqTalkMsg.setPublishTime(publishTime);
+					Date publishTime = DateUtils.parse(qqTalkContentXml.getPublishTime());
+					qqTalkMsg.setPublishTime(publishTime);
 
-				qqTalkMsg.setQqAccount(qqAccount);
+					qqTalkMsg.setQqAccount(qqAccount);
 
-				List<QQTalkImgXml> qqTalkImgXmls = qqTalkContentXml.getQqTalkImgXmls();
-				List<QQTalkImg> imgs = new ArrayList<QQTalkImg>();
+					List<QQTalkImgXml> qqTalkImgXmls = qqTalkContentXml.getQqTalkImgXmls();
+					List<QQTalkImg> imgs = new ArrayList<QQTalkImg>();
 
-				for (QQTalkImgXml qqTalkImgXml : qqTalkImgXmls) {
-					String imgPath = qqTalkImgXml.getImgPath();
+					for (QQTalkImgXml qqTalkImgXml : qqTalkImgXmls) {
+						String imgPath = qqTalkImgXml.getImgPath();
 
-					if (null == imgPath) {
-						continue;
+						if (null == imgPath) {
+							continue;
+						}
+
+						QQTalkImg img = new QQTalkImg();
+						img.setImgPath(qqTalkImgXml.getImgPath());
+
+						img.setQqTalkMsg(qqTalkMsg);
+
+						imgs.add(img);
 					}
 
-					QQTalkImg img = new QQTalkImg();
-					img.setImgPath(qqTalkImgXml.getImgPath());
+					qqTalkMsg.setQqTalkImgs(imgs);
 
-					img.setQqTalkMsg(qqTalkMsg);
+					qqTalkMsg.setRemark(qqTalkContentXml.getRemark());
+					qqTalkMsg.setTalkContent(content);
+					qqTalkMsg.setTmTxId(qqTalkContentXml.getTalkTxId());
 
-					imgs.add(img);
+					// 如果非新账户，则只需将说说信息、说说图片信息一起添加到数据库
+					if (isNewAccount) {
+						qqTalkMsgs.add(qqTalkMsg);
+					} else {
+						qqTalkMsgDao.addQQTalkMsg(qqTalkMsg);
+					}
+				} catch (Exception e) {
+					log.error("qq说说[" + content + "]保存失败,失败原因:" + e.getMessage());
+					e.printStackTrace();
+					continue;
 				}
 
-				qqTalkMsg.setQqTalkImgs(imgs);
-
-				qqTalkMsg.setRemark(qqTalkContentXml.getRemark());
-				qqTalkMsg.setTalkContent(content);
-				qqTalkMsg.setTmTxId(qqTalkContentXml.getTalkTxId());
-
-				// 如果非新账户，则只需将说说信息、说说图片信息一起添加到数据库
-				if (isNewAccount) {
-					qqTalkMsgs.add(qqTalkMsg);
-				} else {
-					qqTalkMsgDao.addQQTalkMsg(qqTalkMsg);
+				if (null != qqTalkMsg) {
+					QQTalkMsgList.add(qqTalkMsg);
 				}
-
-				QQTalkMsgList.add(qqTalkMsg);
 			}
 
 			// 如果是新账户，则将账号信息、说说信息、说说图片信息一起添加到数据库
@@ -168,7 +176,7 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 			}
 
 		};
-		
+
 		t.start();
 	}
 }
