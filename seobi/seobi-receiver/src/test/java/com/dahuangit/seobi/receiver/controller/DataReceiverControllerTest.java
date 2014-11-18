@@ -19,8 +19,8 @@ import com.dahuangit.util.xml.XmlUtils;
  * 
  */
 public class DataReceiverControllerTest {
-//	private static String host = "http://121.14.42.135:9000/seobi/spring/receiver/receiveQQTalkMsg";
-	private static String host = "http://localhost:8080/seobi/spring/receiver/receiveQQTalkMsg";
+	private static String host = "http://121.14.42.135:9000/seobi/spring/receiver/receiveQQTalkMsg";
+//	private static String host = "http://localhost:8080/seobi/spring/receiver/receiveQQTalkMsg";
 
 	private static final Logger LOG = Log4jUtils.getLogger(SeobiProxyTestConstants.LOG4J_FILE_PATH,
 			DataReceiverControllerTest.class);
