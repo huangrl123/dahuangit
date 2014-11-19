@@ -9,8 +9,7 @@ import org.springframework.web.bind.support.WebBindingInitializer;
 import org.springframework.web.context.request.WebRequest;
 
 /**
- * pring3 mvc 的日期传递[前台-后台]bug: org.springframework.validation.BindException
- * 的解决方式.包括xml的配置
+ * pring3 mvc 的日期传递[前台-后台] 的解决方式.包括xml的配置
  */
 public class SpringDateConverter implements WebBindingInitializer {
 

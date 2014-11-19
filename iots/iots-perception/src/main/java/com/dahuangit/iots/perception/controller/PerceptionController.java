@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
-import com.dahuangit.iots.perception.dto.oxm.request.RemoteCtrlMachineRequest;
-import com.dahuangit.iots.perception.dto.oxm.response.RemoteCtrlMachineResponse;
+import com.dahuangit.base.dto.opm.request.OpRequest;
+import com.dahuangit.base.dto.opm.response.OpResponse;
+import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.perception.dto.opm.request.PerceptionParamOpRequest;
+import com.dahuangit.iots.perception.dto.opm.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.oxm.response.RemoteQueryMachineResponse;
-import com.dahuangit.iots.perception.service.RemoteCtrlService;
+import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.RemoteQueryService;
 import com.dahuangit.util.log.Log4jUtils;
 
@@ -25,25 +28,45 @@ public class PerceptionController extends BaseController {
 	private RemoteQueryService remoteQueryService = null;
 
 	@Autowired
-	private RemoteCtrlService remoteCtrlService = null;
+	private PerceptionService perceptionService = null;
 
-	@RequestMapping(value = "/remoteQueryMachine", method = RequestMethod.POST)
+	@RequestMapping(value = "/remoteQueryPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public String remoteQueryMachine(String machineAddr) throws Exception {
+	public RemoteQueryMachineResponse remoteQueryPerception(String machineAddr) throws Exception {
 
-		RemoteQueryMachineResponse response = remoteQueryService.doRemoteQuery(machineAddr);
+		RemoteQueryMachineResponse response = new RemoteQueryMachineResponse();
+		try {
+			response = remoteQueryService.doRemoteQuery(machineAddr);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
 
-		return this.responseToXml(response);
+		return response;
 	}
 
-	@RequestMapping(value = "/remoteCtrlMachine", method = RequestMethod.POST)
+	@RequestMapping(value = "/remoteCtrlPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public String remoteCtrlMachine(String xml) throws Exception {
+	public OpResponse remoteCtrlPerception(PerceptionParamOpRequest perceptionParamOpRequest) {
+		OpResponse response = new OpResponse();
 
-		RemoteCtrlMachineRequest request = (RemoteCtrlMachineRequest) this.xmlToRequest(xml,
-				RemoteCtrlMachineRequest.class);
-		RemoteCtrlMachineResponse response = remoteCtrlService.doRemoteCtrl(request.getMachineAddr(), request.getOpt());
+		try {
+			perceptionService.updatePerceptionParam(perceptionParamOpRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+		}
 
-		return this.responseToXml(response);
+		return response;
+	}
+
+	@RequestMapping(value = "/findPerceptionByPage", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(OpRequest opRequest) {
+		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(
+				opRequest.getStart(), opRequest.getLimit());
+		return result;
 	}
 }

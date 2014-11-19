@@ -128,6 +128,15 @@ public class BaseDao<T extends BaseModel, PK extends Serializable> {
 	}
 
 	/**
+	 * 新增或者是修改
+	 * 
+	 * @param entity
+	 */
+	public void addOrUpdate(T entity) {
+		this.hibernateTemplate.saveOrUpdate(entity);
+	}
+
+	/**
 	 * 获取对象
 	 * 
 	 * @param clazz

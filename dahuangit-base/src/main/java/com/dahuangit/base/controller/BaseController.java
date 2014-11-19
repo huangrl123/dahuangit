@@ -11,8 +11,13 @@ public abstract class BaseController {
 	@Autowired
 	protected CastorMarshaller xmlMarshaller = null;
 
-	protected String responseToXml(OxResponse response) throws Exception {
-		String responseStr = XmlUtils.obj2xml(xmlMarshaller, response);
+	protected String responseToXml(OxResponse response) {
+		String responseStr = null;
+		try {
+			responseStr = XmlUtils.obj2xml(xmlMarshaller, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return responseStr;
 	}
@@ -20,5 +25,5 @@ public abstract class BaseController {
 	protected Object xmlToRequest(String xml, Class clazz) throws Exception {
 		return XmlUtils.xml2obj(xmlMarshaller, xml, clazz);
 	}
-	
+
 }
