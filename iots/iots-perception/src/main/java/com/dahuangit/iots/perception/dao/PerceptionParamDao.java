@@ -14,10 +14,5 @@ import com.dahuangit.iots.perception.entry.PerceptionParam;
  */
 @Component
 public class PerceptionParamDao extends BaseDao<PerceptionParam, Integer> {
-	
-	public PerceptionParam findPerceptionParamBy(Integer pid, Integer key) {
-		String hql = "from PerceptionParam p where p.pid=? and p.paramKey=?";
-		PerceptionParam p = this.findUnique(hql, pid, key);
-		return p;
-	}
+
 }

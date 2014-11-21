@@ -2,16 +2,24 @@ package com.dahuangit.iots.perception.dto.opm.response;
 
 import java.util.Date;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.util.bean.dto.Dto;
+import com.dahuangit.util.bean.dto.DtoField;
+import com.dahuangit.util.spring.JsonDateSerializer;
 
 @Dto
 public class PerceptionOpResponse extends OpResponse {
 	/** 感知端主键 */
-	private Integer pid = null;
+	private Integer perceptionId = null;
 
-	/** 感知端设备类型 1:2+2 设备 2:6+6设备 */
-	private String perceptionType = null;
+	/** 感知端设备类型 */
+	private Integer perceptionTypeId = null;
+
+	@DtoField(field = "perceptionType.perceptionTypeName")
+	private String perceptionTypeName = null;
 
 	/** 感知端设备地址(mac地址) */
 	private String perceptionAddr = null;
@@ -23,26 +31,9 @@ public class PerceptionOpResponse extends OpResponse {
 	private String installSite = null;
 
 	/** 创建时间 */
-	private Date createTime = null;
+	private Date createDateTime = null;
 
-	/** 最后修改时间 */
-	private Date lastModifyTime = null;
-
-	public Integer getPid() {
-		return pid;
-	}
-
-	public void setPid(Integer pid) {
-		this.pid = pid;
-	}
-
-	public String getPerceptionType() {
-		return perceptionType;
-	}
-
-	public void setPerceptionType(String perceptionType) {
-		this.perceptionType = perceptionType;
-	}
+	private Date lastCommTime = null;
 
 	public String getPerceptionAddr() {
 		return perceptionAddr;
@@ -68,20 +59,48 @@ public class PerceptionOpResponse extends OpResponse {
 		this.installSite = installSite;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(using = JsonDateSerializer.class)
+	public Date getCreateDateTime() {
+		return createDateTime;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setCreateDateTime(Date createDateTime) {
+		this.createDateTime = createDateTime;
 	}
 
-	public Date getLastModifyTime() {
-		return lastModifyTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(using = JsonDateSerializer.class)
+	public Date getLastCommTime() {
+		return lastCommTime;
 	}
 
-	public void setLastModifyTime(Date lastModifyTime) {
-		this.lastModifyTime = lastModifyTime;
+	public void setLastCommTime(Date lastCommTime) {
+		this.lastCommTime = lastCommTime;
+	}
+
+	public Integer getPerceptionTypeId() {
+		return perceptionTypeId;
+	}
+
+	public void setPerceptionTypeId(Integer perceptionTypeId) {
+		this.perceptionTypeId = perceptionTypeId;
+	}
+
+	public String getPerceptionTypeName() {
+		return perceptionTypeName;
+	}
+
+	public void setPerceptionTypeName(String perceptionTypeName) {
+		this.perceptionTypeName = perceptionTypeName;
+	}
+
+	public Integer getPerceptionId() {
+		return perceptionId;
+	}
+
+	public void setPerceptionId(Integer perceptionId) {
+		this.perceptionId = perceptionId;
 	}
 
 }

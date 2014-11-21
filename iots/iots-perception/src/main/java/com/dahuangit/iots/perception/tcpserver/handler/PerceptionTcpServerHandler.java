@@ -8,10 +8,12 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.iots.perception.constant.KeyConstants;
 import com.dahuangit.iots.perception.dao.PerceptionDao;
 import com.dahuangit.iots.perception.entry.Perception;
+import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrameConvertor;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
@@ -28,6 +30,7 @@ import com.dahuangit.util.log.Log4jUtils;
  * @author 黄仁良
  * 
  */
+@Transactional
 public class PerceptionTcpServerHandler implements IoHandler {
 
 	private final static Logger log = Log4jUtils.getLogger(PerceptionTcpServerHandler.class);
@@ -37,6 +40,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 	/** 客户端响应池 */
 	private ClientResponsePool clientResponsePool = ClientResponsePool.getInstance();
+
+	@Autowired
+	private PerceptionService perceptionService = null;
 
 	@Autowired
 	private PerceptionDao perceptionDao = null;
@@ -72,20 +78,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			clientConnect.setLastCommTime(System.currentTimeMillis());
 			clientConnect.setIoSession(session);
 
-			Perception p = this.perceptionDao.findUniqueBy("perceptionAddr", addr);
-			if (null == p) {
-				p = new Perception();
-				p.setPerceptionType("01");
-				p.setPerceptionAddr(addr);
-				p.setInstallSite("测试环境");
-				p.setCreateDateTime(new Date());
-				p.setLastModifyDateTime(new Date());
-				this.perceptionDao.add(p);
-			} else {
-				p.setLastModifyDateTime(new Date());
-				this.perceptionDao.update(p);
-			}
-
 			this.clientConnectionPool.addClientConnector(frame.getMachineAddr(), clientConnect);
 
 			// 处理请求并响应客户端
@@ -96,11 +88,33 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 			needResponse = true;
 
+			// 判断该感知端是否已经在系统中有记录
+			Perception p = this.perceptionDao.findUniqueBy("perceptionAddr", addr);
+			if (null != p) {
+				p.setLastCommTime(new Date());
+				this.perceptionDao.update(p);
+			} else {
+				p = new Perception();
+				p.setCreateDateTime(new Date());
+				p.setInstallSite("测试环境");
+				p.setLastCommTime(new Date());
+				p.setPerceptionAddr(addr);
+				p.setPerceptionName("测试设备");
+				p.setPerceptionTypeId(1);// 2+2
+				this.perceptionDao.add(p);
+			}
+
+			// 记录该感知端的参数日志
+			//开关
+			perceptionService.addPerceptionRuntimeLog(addr, 3, 1, frame.getSwitchStatus());
+			//旋转
+			perceptionService.addPerceptionRuntimeLog(addr, 5, 1, frame.getRotateStatus());
 			break;
 
 		case (byte) 0x02:// 客户端的响应
 			log.debug("服务器端收到客户端的响应信息，报文:" + ByteUtils.byteArrToHexString(content));
 
+			// 判断所有参数只要不为0就记录日志
 			ClientResponse clientResponse = new ClientResponse();
 			clientResponse.setSeq(frame.getSeq());
 			clientResponse.setUpTime(System.currentTimeMillis());

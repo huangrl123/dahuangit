@@ -152,7 +152,7 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				idList.add(qm.getTmId());
 			}
 
-			analyzeOriginatyPercent(idList);
+			//analyzeOriginatyPercent(idList);
 		}
 	}
 

@@ -2,35 +2,28 @@ package com.dahuangit.iots.perception.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dahuangit.iots.perception.dto.oxm.response.RemoteCtrlMachineResponse;
 import com.dahuangit.iots.perception.service.RemoteCtrlService;
+import com.dahuangit.iots.perception.tcpserver.dto.StatusParam;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
 import com.dahuangit.util.coder.ByteUtils;
 
 @Component
+@Transactional
 public class RemoteCtrlServiceImpl implements RemoteCtrlService {
 
 	@Autowired
 	private PerceptionProcessor perceptionProcessor = null;
 
-	public RemoteCtrlMachineResponse doRemoteCtrl(String machineAddr, Integer opt) {
-		RemoteCtrlMachineResponse response = new RemoteCtrlMachineResponse();
+	public PerceptionFrame doRemoteCtrl(String machineAddr, Integer opt, StatusParam statusParam) {
 
 		byte[] arr = ByteUtils.intToByteArray(opt);
-        byte bopt = arr[arr.length - 1];
-        
-		PerceptionFrame frame = perceptionProcessor.remoteOperateMachine(machineAddr, bopt);
+		byte bopt = arr[arr.length - 1];
 
-		response.setMachineAddr(machineAddr);
+		PerceptionFrame frame = perceptionProcessor.remoteOperateMachine(machineAddr, bopt, statusParam);
 
-		if (frame.getResult() != (byte) 0x01) {
-			response.setSuccess(false);
-			response.setMsg(String.valueOf(ByteUtils.byteArrToInt(new byte[] { frame.getResult() })));
-			return response;
-		}
-
-		return response;
+		return frame;
 	}
 }

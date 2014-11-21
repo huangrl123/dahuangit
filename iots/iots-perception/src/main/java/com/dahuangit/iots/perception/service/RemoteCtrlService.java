@@ -1,9 +1,10 @@
 package com.dahuangit.iots.perception.service;
 
-import com.dahuangit.iots.perception.dto.oxm.response.RemoteCtrlMachineResponse;
+import com.dahuangit.iots.perception.tcpserver.dto.StatusParam;
+import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 
 public interface RemoteCtrlService {
 
-	RemoteCtrlMachineResponse doRemoteCtrl(String machineAddr, Integer opt);
-
+	public PerceptionFrame doRemoteCtrl(String machineAddr, Integer opt, StatusParam statusParam);
+	
 }

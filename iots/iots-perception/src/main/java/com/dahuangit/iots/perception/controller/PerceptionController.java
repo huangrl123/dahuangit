@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
+import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.opm.request.OpRequest;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
-import com.dahuangit.iots.perception.dto.opm.request.PerceptionParamOpRequest;
+import com.dahuangit.iots.perception.dto.opm.request.FindPerceptionRuntimeLogByPageReq;
+import com.dahuangit.iots.perception.dto.opm.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.opm.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.opm.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.oxm.response.RemoteQueryMachineResponse;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.RemoteQueryService;
@@ -32,11 +35,11 @@ public class PerceptionController extends BaseController {
 
 	@RequestMapping(value = "/remoteQueryPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoteQueryMachineResponse remoteQueryPerception(String machineAddr) throws Exception {
+	public RemoteQueryMachineResponse remoteQueryPerception(Integer perceptionId) throws Exception {
 
 		RemoteQueryMachineResponse response = new RemoteQueryMachineResponse();
 		try {
-			response = remoteQueryService.doRemoteQuery(machineAddr);
+			response = remoteQueryService.doRemoteQuery(perceptionId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -48,11 +51,11 @@ public class PerceptionController extends BaseController {
 
 	@RequestMapping(value = "/remoteCtrlPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public OpResponse remoteCtrlPerception(PerceptionParamOpRequest perceptionParamOpRequest) {
+	public OpResponse remoteCtrlPerception(RemoteCtrlPerceptionRequest req) {
 		OpResponse response = new OpResponse();
 
 		try {
-			perceptionService.updatePerceptionParam(perceptionParamOpRequest);
+			perceptionService.remoteCtrlPerception(req);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setSuccess(false);
@@ -68,5 +71,26 @@ public class PerceptionController extends BaseController {
 		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(
 				opRequest.getStart(), opRequest.getLimit());
 		return result;
+	}
+
+	@RequestMapping(value = "/findPerceptionRuntimeLogByPage", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionRuntimeLogByPage(
+			FindPerceptionRuntimeLogByPageReq req) {
+		PageQueryResult<PerceptionRuntimeLogResponse> result = this.perceptionService
+				.findPerceptionRuntimeLogByPage(req);
+		return result;
+	}
+
+	@RequestMapping(value = "/getPerceptionParamListByTypeId", method = RequestMethod.POST)
+	@ResponseBody
+	public ComboboxData getPerceptionParamValueListByParam(Integer paramId) {
+		ComboboxData data = new ComboboxData();
+		try {
+			data = this.perceptionService.getPerceptionParamValueListByParam(paramId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 }

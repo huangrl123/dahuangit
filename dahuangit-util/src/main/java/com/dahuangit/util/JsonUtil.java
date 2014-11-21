@@ -64,23 +64,4 @@ public class JsonUtil {
 		}
 		return json.toString();
 	}
-
-	// list转换成json
-	public static String list2Json(List<?> list) {
-		StringBuffer json = new StringBuffer();
-		json.append("{");
-		json.append("\"rows\":");
-		json.append("[");
-		if (list != null && list.size() > 0) {
-			for (Object object : list) {
-				json.append(bean2Json(object));
-				json.append(",");
-			}
-			json.setCharAt(json.length() - 1, ']');
-		} else {
-			json.append("]");
-		}
-		json.append("}");
-		return json.toString();
-	}
 }

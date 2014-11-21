@@ -3,10 +3,15 @@ package com.dahuangit.iots.perception.tcpserver.processor.impl;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dahuangit.base.exception.GenericException;
 import com.dahuangit.iots.perception.constant.KeyConstants;
+import com.dahuangit.iots.perception.dao.PerceptionDao;
+import com.dahuangit.iots.perception.entry.Perception;
+import com.dahuangit.iots.perception.service.PerceptionService;
+import com.dahuangit.iots.perception.tcpserver.dto.StatusParam;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrameConvertor;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
@@ -32,8 +37,17 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 	private long transmitSeq = 1l;
 
+	@Autowired
+	private PerceptionDao perceptionDao = null;
+
+	@Autowired
+	private PerceptionService perceptionService = null;
+
 	@Override
-	public PerceptionFrame queryRemoteMachine(String machineAddr) {
+	public PerceptionFrame queryRemoteMachine(Integer perceptionId) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		String machineAddr = p.getPerceptionAddr();
+
 		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
 
 		if (null == clientConnection) {
@@ -52,10 +66,11 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		frame.setBusType((byte) 0x01);
 
 		// 电机地址
-		frame.setMachineAddr("DSFE432EWR");
+		frame.setMachineAddr(machineAddr);
 
 		// 操作标识
-		frame.setOperateFlag((byte) 0x02);
+		int opt = 2;
+		frame.setOperateFlag((byte) opt);
 
 		byte[] content = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
 
@@ -78,13 +93,17 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			if (null != obj) {
 				ClientResponse clientResponse = (ClientResponse) obj;
-				return clientResponse.getPerceptionFrame();
+				session.setAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY, null);// 不会清掉其他session的值
+				PerceptionFrame responseFrame = clientResponse.getPerceptionFrame();
+				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 1, responseFrame.getSwitchStatus());
+				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 2, responseFrame.getRotateStatus());
+				return responseFrame;
 			}
 		}
 	}
 
 	@Override
-	public PerceptionFrame remoteOperateMachine(String machineAddr, byte opt) {
+	public PerceptionFrame remoteOperateMachine(String machineAddr, byte opt, StatusParam statusParam) {
 		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
 
 		if (null == clientConnection) {
@@ -103,10 +122,13 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		frame.setBusType((byte) 0x01);
 
 		// 电机地址
-		frame.setMachineAddr("DSFE432EWR");
+		frame.setMachineAddr(machineAddr);
 
 		// 操作标识
 		frame.setOperateFlag(opt);
+
+		frame.setSwitchStatus(statusParam.getSwitchStatus());
+		frame.setRotateStatus(statusParam.getRotateStatus());
 
 		byte[] content = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
 
@@ -129,7 +151,21 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			if (null != obj) {
 				ClientResponse clientResponse = (ClientResponse) obj;
-				return clientResponse.getPerceptionFrame();
+				PerceptionFrame responseFrame = clientResponse.getPerceptionFrame();
+				session.setAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY, null);
+				int value = 0;
+				switch (opt) {
+				case 0x03:
+				case 0x04:
+					value = responseFrame.getSwitchStatus();
+					break;
+				case 0x05:
+				case 0x06:
+					value = responseFrame.getRotateStatus();
+					break;
+				}
+				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 0, value);
+				return responseFrame;
 			}
 		}
 	}

@@ -3,33 +3,33 @@ package com.dahuangit.iots.perception.dto.oxm.response;
 import com.dahuangit.base.dto.oxm.response.OxResponse;
 
 public class RemoteQueryMachineResponse extends OxResponse {
-	private String machineAddr = null;
+	private Integer perceptionId = null;
 
-	private Integer rotateStatus = null;
+	private String rotateStatus = null;
 
-	private Integer switchStatus = null;
+	private String switchStatus = null;
 
-	public String getMachineAddr() {
-		return machineAddr;
+	public Integer getPerceptionId() {
+		return perceptionId;
 	}
 
-	public void setMachineAddr(String machineAddr) {
-		this.machineAddr = machineAddr;
+	public void setPerceptionId(Integer perceptionId) {
+		this.perceptionId = perceptionId;
 	}
 
-	public Integer getRotateStatus() {
+	public String getRotateStatus() {
 		return rotateStatus;
 	}
 
-	public void setRotateStatus(Integer rotateStatus) {
+	public void setRotateStatus(String rotateStatus) {
 		this.rotateStatus = rotateStatus;
 	}
 
-	public Integer getSwitchStatus() {
+	public String getSwitchStatus() {
 		return switchStatus;
 	}
 
-	public void setSwitchStatus(Integer switchStatus) {
+	public void setSwitchStatus(String switchStatus) {
 		this.switchStatus = switchStatus;
 	}
 

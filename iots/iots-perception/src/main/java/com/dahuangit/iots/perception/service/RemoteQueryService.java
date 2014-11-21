@@ -4,5 +4,5 @@ import com.dahuangit.iots.perception.dto.oxm.response.RemoteQueryMachineResponse
 
 public interface RemoteQueryService {
 	
-	RemoteQueryMachineResponse doRemoteQuery(String machineAddr);
+	RemoteQueryMachineResponse doRemoteQuery(Integer perceptionId);
 }

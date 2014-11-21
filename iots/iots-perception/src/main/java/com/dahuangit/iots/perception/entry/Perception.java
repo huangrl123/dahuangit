@@ -1,17 +1,18 @@
 package com.dahuangit.iots.perception.entry;
 
-import java.util.List;
+import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import com.dahuangit.base.entry.BaseAuditableModel;
+import com.dahuangit.base.entry.BaseModel;
 
 /**
  * 感知端实体类
@@ -22,47 +23,51 @@ import com.dahuangit.base.entry.BaseAuditableModel;
  */
 @Entity
 @Table(name = "t_perception")
-public class Perception extends BaseAuditableModel {
-	/** 感知端主键 */
+public class Perception extends BaseModel {
+
 	@Id
 	@GeneratedValue
-	@Column(name = "pid")
-	private Integer pid = null;
+	@Column(name = "p_id")
+	private Integer perceptionId = null;
 
-	/** 感知端设备类型 1:2+2 设备 2:6+6设备 */
-	@Column(name = "ptype")
-	private String perceptionType = null;
+	@Column(name = "pt_id")
+	private Integer perceptionTypeId = null;
 
-	/** 感知端设备地址(mac地址) */
-	@Column(name = "paddr")
+	@Column(name = "p_addr")
 	private String perceptionAddr = null;
 
-	/** 感知端设备名称 */
-	@Column(name = "pname")
+	@Column(name = "p_name")
 	private String perceptionName = null;
 
-	/** 安装地点 */
 	@Column(name = "install_site")
 	private String installSite = null;
 
-	/** 本感知端的参数集合 双向一对多关联 */
-	@OneToMany(mappedBy = "perception", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	private List<PerceptionParam> perceptionParams = null;
+	@Column(name = "create_datetime")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createDateTime;
 
-	public Integer getPid() {
-		return pid;
+	@Column(name = "last_comm_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastCommTime = null;
+
+	@ManyToOne
+	@JoinColumn(name = "pt_id", insertable = false, updatable = false)
+	private PerceptionType perceptionType = null;
+
+	public Integer getPerceptionId() {
+		return perceptionId;
 	}
 
-	public void setPid(Integer pid) {
-		this.pid = pid;
+	public void setPerceptionId(Integer perceptionId) {
+		this.perceptionId = perceptionId;
 	}
 
-	public String getPerceptionType() {
-		return perceptionType;
+	public Integer getPerceptionTypeId() {
+		return perceptionTypeId;
 	}
 
-	public void setPerceptionType(String perceptionType) {
-		this.perceptionType = perceptionType;
+	public void setPerceptionTypeId(Integer perceptionTypeId) {
+		this.perceptionTypeId = perceptionTypeId;
 	}
 
 	public String getPerceptionAddr() {
@@ -89,12 +94,28 @@ public class Perception extends BaseAuditableModel {
 		this.installSite = installSite;
 	}
 
-	public List<PerceptionParam> getPerceptionParams() {
-		return perceptionParams;
+	public Date getCreateDateTime() {
+		return createDateTime;
 	}
 
-	public void setPerceptionParams(List<PerceptionParam> perceptionParams) {
-		this.perceptionParams = perceptionParams;
+	public void setCreateDateTime(Date createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public Date getLastCommTime() {
+		return lastCommTime;
+	}
+
+	public void setLastCommTime(Date lastCommTime) {
+		this.lastCommTime = lastCommTime;
+	}
+
+	public PerceptionType getPerceptionType() {
+		return perceptionType;
+	}
+
+	public void setPerceptionType(PerceptionType perceptionType) {
+		this.perceptionType = perceptionType;
 	}
 
 }

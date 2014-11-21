@@ -1,17 +1,32 @@
 package com.dahuangit.iots.perception.service;
 
-import java.util.List;
-
+import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
-import com.dahuangit.iots.perception.dto.opm.request.PerceptionParamOpRequest;
+import com.dahuangit.iots.perception.dto.opm.request.FindPerceptionRuntimeLogByPageReq;
+import com.dahuangit.iots.perception.dto.opm.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.opm.response.PerceptionOpResponse;
-import com.dahuangit.iots.perception.dto.opm.response.PerceptionParamOpResponse;
+import com.dahuangit.iots.perception.dto.opm.response.PerceptionRuntimeLogResponse;
 
 public interface PerceptionService {
 
 	PageQueryResult<PerceptionOpResponse> findPerceptionByPage(Integer start, Integer limit);
 
-	List<PerceptionParamOpResponse> findPerceptionParams(Integer perceptionId);
+	public void remoteCtrlPerception(RemoteCtrlPerceptionRequest req) throws Exception;
 
-	void updatePerceptionParam(PerceptionParamOpRequest perceptionParamOpRequest);
+	/**
+	 * 添加日志
+	 * 
+	 * @param addr
+	 * @param opt
+	 * @param param
+	 *            感知端设备参数,单一参数远程控制类传0，例如远程开，远程正转
+	 * @param value
+	 *            实际值
+	 */
+	public void addPerceptionRuntimeLog(String addr, int opt, int param, int value);
+
+	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionRuntimeLogByPage(
+			FindPerceptionRuntimeLogByPageReq req);
+
+	public ComboboxData getPerceptionParamValueListByParam(Integer paramId);
 }

@@ -1,5 +1,6 @@
 package com.dahuangit.iots.perception.tcpserver.processor;
 
+import com.dahuangit.iots.perception.tcpserver.dto.StatusParam;
 import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 
 /**
@@ -12,10 +13,10 @@ public interface PerceptionProcessor {
 	/**
 	 * 查询远程机器工作状态
 	 * 
-	 * @param machineAddr
+	 * @param perceptionId
 	 * @return
 	 */
-	PerceptionFrame queryRemoteMachine(String machineAddr);
+	PerceptionFrame queryRemoteMachine(Integer perceptionId);
 
 	/**
 	 * 远程控制
@@ -24,5 +25,5 @@ public interface PerceptionProcessor {
 	 * @param opt
 	 * @return
 	 */
-	PerceptionFrame remoteOperateMachine(String machineAddr, byte opt);
+	PerceptionFrame remoteOperateMachine(String machineAddr, byte opt, StatusParam statusParam);
 }

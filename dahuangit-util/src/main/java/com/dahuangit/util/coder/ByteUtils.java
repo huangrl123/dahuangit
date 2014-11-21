@@ -114,15 +114,21 @@ public class ByteUtils {
 		if (i == 0) {
 			return new byte[] { 0x00000000 };
 		}
-
+		
 		byte[] result = new byte[4];
-
+		
 		result[0] = (byte) ((i >> 24) & 0xFF);
 		result[1] = (byte) ((i >> 16) & 0xFF);
 		result[2] = (byte) ((i >> 8) & 0xFF);
 		result[3] = (byte) (i & 0xFF);
-
+		
 		return result;
+	}
+	
+	public static byte oneIntToByteArray(int i) {
+		byte[] arr = ByteUtils.intToByteArray(i);
+		byte bopt = arr[arr.length - 1];
+		return bopt;
 	}
 
 	/**
@@ -163,5 +169,4 @@ public class ByteUtils {
 
 		return result;
 	}
-
 }
