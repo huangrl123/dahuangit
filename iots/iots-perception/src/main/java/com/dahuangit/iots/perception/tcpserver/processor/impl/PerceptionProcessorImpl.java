@@ -5,6 +5,7 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.base.exception.GenericException;
 import com.dahuangit.iots.perception.constant.KeyConstants;
@@ -23,6 +24,7 @@ import com.dahuangit.util.IoBufferUtils;
 import com.dahuangit.util.log.Log4jUtils;
 
 @Component
+@Transactional
 public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 	private static final Logger log = Log4jUtils.getLogger(PerceptionProcessorImpl.class);

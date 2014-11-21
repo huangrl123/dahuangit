@@ -8,6 +8,7 @@
 <script type="text/javascript" src="plugin/extjs/include-ext.js"></script>
 <script type="text/javascript" src="js/perception/perception-mgr.js"></script>
 <script type="text/javascript" src="js/perception/perceptionRuntimeLog-mgr.js"></script>
+<script type="text/javascript" src="js/perception/perceptionRuntimeLog-mgr-6$6.js"></script>
 </head>
 <body>
 </body>

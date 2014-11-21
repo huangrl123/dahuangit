@@ -13,7 +13,6 @@ function showPerceptionDetailwin(perceptionId) {
 						perceptionId : perceptionId
 					},
 
-					// 将提交方式改为post
 					actionMethods : {
 						read : 'POST'
 					},
@@ -240,12 +239,8 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						success : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
-							// alert('response.switchStatus=' +
-							// response.switchStatus + 'response.rotateStatus='
-							// + response.rotateStatus);
 							switchStatus_combobox.setValue(response.switchStatus);
 							rotateStatus_combobox.setValue(response.rotateStatus);
-							// Ext.Msg.alert('Success', '设备实时状态获取成功');
 							perceptionRuntimeLogStoreLoad();
 						},
 						failure : function(form, action, args) {
