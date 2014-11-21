@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +49,9 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 
 	@Value("${analyzer.analyzeShuoshuoBaiduOriginarityPercent.url}")
 	private String qqTalkOriginatyPercentAnalyzeUrl = null;
+
+	@Autowired
+	private ExecutorService executorService = null;
 
 	@Override
 	public void addQQTalkMsg(QQTalkMsgsReqXml qqTalkMsgsReqXml) {
@@ -152,7 +158,7 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				idList.add(qm.getTmId());
 			}
 
-			//analyzeOriginatyPercent(idList);
+			analyzeOriginatyPercent(idList);
 		}
 	}
 
@@ -177,6 +183,6 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 
 		};
 
-		t.start();
+		this.executorService.execute(t);
 	}
 }

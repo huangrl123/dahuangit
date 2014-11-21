@@ -31,6 +31,9 @@
 	<!-- mina通配 -->
 	<import resource="classpath*:/mina/mina-iots-*.xml" />
 
+	<!-- 普通bean配置 -->
+	<import resource="classpath*:/bean/*-bean-config.xml" />
+
 	<!--对象与xml之间的转换管理配置 -->
 	<bean class="org.springframework.oxm.castor.CastorMarshaller" autowire-candidate="true">
 		<property name="mappingLocations">

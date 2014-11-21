@@ -33,6 +33,9 @@
 
 	<!-- 定时任务配置 -->
 	<import resource="classpath*:/quartz/*-quartz-config.xml" />
+	
+	<!-- 普通bean配置 -->
+	<import resource="classpath*:/bean/*-bean-config.xml" />
 
 	<!-- castor配置 -->
 	<bean id="xmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller" autowire-candidate="true">
