@@ -9,7 +9,7 @@ mvn install:install-file -Dfile=d:\lib\com.springsource.org.mozilla.javascript-1
 mvn install:install-file -Dfile=d:\lib\com.springsource.org.objectweb.asm.commons-3.2.0.jar -DgroupId=com.springsource -DartifactId=asm.commons -Dversion=3.2.0 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\com.springsource.org.objectweb.asm-3.2.0.jar -DgroupId=com.springsource -DartifactId=asm -Dversion=3.2.0 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\commons-modeler-2.0.1.jar -DgroupId=org.apache.commons -DartifactId=modeler -Dversion=2.0.1 -Dpackaging=jar
-mvn install:install-file -Dfile=d:\lib\jaudiotagger-2.0.4-SNAPSHOT.jar -DgroupId=org.jaudiotagger -DartifactId=jaudiotagger -Dversion=2.0.4 -Dpackaging=jar
+mvn install:install-file -Dfile=d:\lib\jaudiotagger-2.0.4-SNAPSHOT.jar -DgroupId=org.jaudiotagger -DartifactId=jaudiotagger -Dversion=2.0.4-SNAPSHOT -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\javaee-api-5.1.2.jar -DgroupId=javaee -DartifactId=javaee-api -Dversion=5.1.2 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\jcl-over-slf4j-1.6.6.jar -DgroupId=org.apache.slf4j -DartifactId=jcl-over-slf4j -Dversion=1.6.6 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\jruby-1.6.7.2.jar -DgroupId=jruby -DartifactId=jruby -Dversion=1.6.7.2 -Dpackaging=jar
@@ -23,3 +23,5 @@ mvn install:install-file -Dfile=d:\lib\mina-integration-beans-2.0.5.jar -DgroupI
 mvn install:install-file -Dfile=d:\lib\mina-integration-jmx-2.0.5.jar -DgroupId=mina-integration-jmx-2.0.5 -DartifactId=mina-integration-jmx-2.0.5 -Dversion=2.0.5 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\sysout-over-slf4j-1.0.2.jar -DgroupId=sysout-over-slf4j -DartifactId=sysout-over-slf4j -Dversion=1.0.2 -Dpackaging=jar
 mvn install:install-file -Dfile=d:\lib\xmlrpc-2.0.1.jar -DgroupId=xmlrpc -DartifactId=xmlrpc -Dversion=2.0.1 -Dpackaging=jar
+mvn install:install-file -Dfile=d:\lib\red5-1.0.0.jar -DgroupId=org.red5 -DartifactId=red5 -Dversion=1.0.0 -Dpackaging=jar
+mvn install:install-file -Dfile=d:\lib\red5-boot-1.0.0.jar -DgroupId=org.red5 -DartifactId=red5-boot -Dversion=1.0.0 -Dpackaging=jar

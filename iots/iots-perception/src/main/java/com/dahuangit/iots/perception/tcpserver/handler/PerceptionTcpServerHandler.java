@@ -1,6 +1,7 @@
 package com.dahuangit.iots.perception.tcpserver.handler;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
@@ -47,6 +48,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 	@Autowired
 	private PerceptionDao perceptionDao = null;
 
+	@Autowired
+	private ExecutorService executorService = null;
+	
 	@Override
 	public void exceptionCaught(IoSession session, Throwable throwable) throws Exception {
 		// log.debug("服务器handler监听到发生异常,可能是因为客户端已经断开");
@@ -80,35 +84,11 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 			this.clientConnectionPool.addClientConnector(frame.getMachineAddr(), clientConnect);
 
-			// 处理请求并响应客户端
-			frame.setBusType((byte) 0x02);
-			frame.setResult((byte) 0x01);
-
 			newContent = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
 
 			needResponse = true;
-
-			// 判断该感知端是否已经在系统中有记录
-			Perception p = this.perceptionDao.findUniqueBy("perceptionAddr", addr);
-			if (null != p) {
-				p.setLastCommTime(new Date());
-				this.perceptionDao.update(p);
-			} else {
-				p = new Perception();
-				p.setCreateDateTime(new Date());
-				p.setInstallSite("测试环境");
-				p.setLastCommTime(new Date());
-				p.setPerceptionAddr(addr);
-				p.setPerceptionName("测试设备");
-				p.setPerceptionTypeId(1);// 2+2
-				this.perceptionDao.add(p);
-			}
-
-			// 记录该感知端的参数日志
-			//开关
-			perceptionService.addPerceptionRuntimeLog(addr, 3, 1, frame.getSwitchStatus());
-			//旋转
-			perceptionService.addPerceptionRuntimeLog(addr, 5, 1, frame.getRotateStatus());
+			
+			saveLog(frame);
 			break;
 
 		case (byte) 0x02:// 客户端的响应
@@ -167,4 +147,42 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		log.debug("=============================================================");
 	}
 
+	private void saveLog(final PerceptionFrame frame) {
+		Thread t = new Thread() {
+
+			@Override
+			public void run() {
+				// 处理请求并响应客户端
+				frame.setBusType((byte) 0x02);
+				frame.setResult((byte) 0x01);
+
+				String addr = frame.getMachineAddr();
+
+				// 判断该感知端是否已经在系统中有记录
+				Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
+				if (null != p) {
+					p.setLastCommTime(new Date());
+					perceptionDao.update(p);
+				} else {
+					p = new Perception();
+					p.setCreateDateTime(new Date());
+					p.setInstallSite("测试环境");
+					p.setLastCommTime(new Date());
+					p.setPerceptionAddr(addr);
+					p.setPerceptionName("测试设备");
+					p.setPerceptionTypeId(1);// 2+2
+					perceptionDao.add(p);
+				}
+
+				// 记录该感知端的参数日志
+				//开关
+				perceptionService.addPerceptionRuntimeLog(addr, 3, 1, frame.getSwitchStatus());
+				//旋转
+				perceptionService.addPerceptionRuntimeLog(addr, 5, 1, frame.getRotateStatus());
+			}
+
+		};
+
+		this.executorService.execute(t);
+	}
 }

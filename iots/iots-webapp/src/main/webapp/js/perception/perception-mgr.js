@@ -1,6 +1,5 @@
-Ext.require('Ext.grid.*');
-Ext.require('Ext.data.*');
-Ext.require('Ext.panel.*');
+Ext.require('Ext.data.Store');
+Ext.require('Ext.grid.Panel');
 Ext.require('Ext.layout.container.Border');
 Ext.require('Ext.toolbar.Toolbar');
 Ext.require('Ext.PagingToolbar');

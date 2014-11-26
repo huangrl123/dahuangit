@@ -28,7 +28,7 @@
 		<asm.version>3.2</asm.version>
 		<ant.version>1.7.0</ant.version>
 		<!--B -->
-		
+
 		<!--C -->
 		<c3p0.version>0.9.5-pre4</c3p0.version>
 		<castor.version>1.2</castor.version>
@@ -48,7 +48,7 @@
 		<dbunit.version>2.4.7</dbunit.version>
 		<druid.version>1.0.8</druid.version>
 		<!--E -->
-		<ehcache.version>1.6.2</ehcache.version>
+		<ehcache.version>2.5.0</ehcache.version>
 		<easymock.version>3.0</easymock.version>
 		<!--F -->
 		<freemarker.version>2.3.16</freemarker.version>
@@ -290,15 +290,15 @@
 			</dependency>
 			<!--E -->
 			<dependency>
-				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache</artifactId>
-				<version>${ehcache.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.easymock</groupId>
 				<artifactId>easymock</artifactId>
 				<version>${easymock.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>${ehcache.version}</version>
 			</dependency>
 			<!--F -->
 			<dependency>
@@ -896,7 +896,7 @@
 		<!--E -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
+			<artifactId>ehcache-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
