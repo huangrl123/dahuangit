@@ -95,10 +95,10 @@ function showPerceptionDetailwin(perceptionId) {
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										if (btn === 'yes') {
-											if (record.data.value == '2') {
-												opt = 3;
+											if (record.data.value == '1') {
+												opt = 5;//开关打开
 											} else {
-												opt = 4;
+												opt = 6;//开关关闭
 											}
 											remoteCtrlPerception();
 										} else if (btn === 'no') {
@@ -150,10 +150,10 @@ function showPerceptionDetailwin(perceptionId) {
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										if (btn === 'yes') {
-											if (record.data.value == '3') {
-												opt = 5;
+											if (record.data.value == '1') {
+												opt = 3;//正转
 											} else {
-												opt = 6;
+												opt = 4;//反转
 											}
 											remoteCtrlPerception();
 										} else if (btn === 'no') {

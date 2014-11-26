@@ -211,4 +211,30 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		return comboboxData;
 	}
+	
+	public void saveLog(PerceptionFrame frame) {
+		String addr = frame.getMachineAddr();
+
+		// 判断该感知端是否已经在系统中有记录
+		Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
+		if (null != p) {
+			p.setLastCommTime(new Date());
+			perceptionDao.update(p);
+		} else {
+			p = new Perception();
+			p.setCreateDateTime(new Date());
+			p.setInstallSite("测试环境");
+			p.setLastCommTime(new Date());
+			p.setPerceptionAddr(addr);
+			p.setPerceptionName("测试设备");
+			p.setPerceptionTypeId(1);// 2+2
+			perceptionDao.add(p);
+		}
+
+		// 记录该感知端的参数日志
+		//开关
+		addPerceptionRuntimeLog(addr, 3, 1, frame.getSwitchStatus());
+		//旋转
+		addPerceptionRuntimeLog(addr, 5, 1, frame.getRotateStatus());
+	}
 }

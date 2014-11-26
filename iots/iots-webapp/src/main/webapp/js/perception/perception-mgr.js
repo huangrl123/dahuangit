@@ -5,7 +5,7 @@ Ext.require('Ext.toolbar.Toolbar');
 Ext.require('Ext.PagingToolbar');
 
 Ext.onReady(function() {
-
+  
 	var store = Ext.create('Ext.data.Store', {
 				fields : ['createDateTime', 'lastCommTime', 'installSite', 'lastModifyTime', 'perceptionAddr',
 						'perceptionName', 'perceptionTypeId', 'perceptionTypeName', 'perceptionId'],

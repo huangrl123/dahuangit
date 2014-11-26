@@ -8,8 +8,10 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.iots.perception.constant.KeyConstants;
 import com.dahuangit.iots.perception.dao.PerceptionDao;
@@ -31,7 +33,6 @@ import com.dahuangit.util.log.Log4jUtils;
  * @author 黄仁良
  * 
  */
-@Transactional
 public class PerceptionTcpServerHandler implements IoHandler {
 
 	private final static Logger log = Log4jUtils.getLogger(PerceptionTcpServerHandler.class);
@@ -46,10 +47,10 @@ public class PerceptionTcpServerHandler implements IoHandler {
 	private PerceptionService perceptionService = null;
 
 	@Autowired
-	private PerceptionDao perceptionDao = null;
-
-	@Autowired
 	private ExecutorService executorService = null;
+	
+	@Autowired
+	private SessionFactory sessionFactory = null;
 	
 	@Override
 	public void exceptionCaught(IoSession session, Throwable throwable) throws Exception {
@@ -84,6 +85,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 			this.clientConnectionPool.addClientConnector(frame.getMachineAddr(), clientConnect);
 
+			// 处理请求并响应客户端
+			frame.setBusType((byte) 0x02);
+			frame.setResult((byte) 0x01);
 			newContent = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
 
 			needResponse = true;
@@ -152,33 +156,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 			@Override
 			public void run() {
-				// 处理请求并响应客户端
-				frame.setBusType((byte) 0x02);
-				frame.setResult((byte) 0x01);
-
-				String addr = frame.getMachineAddr();
-
-				// 判断该感知端是否已经在系统中有记录
-				Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
-				if (null != p) {
-					p.setLastCommTime(new Date());
-					perceptionDao.update(p);
-				} else {
-					p = new Perception();
-					p.setCreateDateTime(new Date());
-					p.setInstallSite("测试环境");
-					p.setLastCommTime(new Date());
-					p.setPerceptionAddr(addr);
-					p.setPerceptionName("测试设备");
-					p.setPerceptionTypeId(1);// 2+2
-					perceptionDao.add(p);
-				}
-
-				// 记录该感知端的参数日志
-				//开关
-				perceptionService.addPerceptionRuntimeLog(addr, 3, 1, frame.getSwitchStatus());
-				//旋转
-				perceptionService.addPerceptionRuntimeLog(addr, 5, 1, frame.getRotateStatus());
+				perceptionService.saveLog(frame);
 			}
 
 		};

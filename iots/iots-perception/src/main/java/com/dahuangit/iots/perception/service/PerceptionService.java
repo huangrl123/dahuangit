@@ -6,6 +6,7 @@ import com.dahuangit.iots.perception.dto.opm.request.FindPerceptionRuntimeLogByP
 import com.dahuangit.iots.perception.dto.opm.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.opm.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.opm.response.PerceptionRuntimeLogResponse;
+import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
 
 public interface PerceptionService {
 
@@ -29,4 +30,6 @@ public interface PerceptionService {
 			FindPerceptionRuntimeLogByPageReq req);
 
 	public ComboboxData getPerceptionParamValueListByParam(Integer paramId);
+
+	public void saveLog(PerceptionFrame frame);
 }
