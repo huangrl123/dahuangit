@@ -1,7 +1,5 @@
 package com.dahuangit.iots.perception.dao;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import com.dahuangit.base.dao.BaseDao;

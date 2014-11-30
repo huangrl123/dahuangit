@@ -73,11 +73,11 @@ Ext.onReady(function() {
 						var linkStr = '';
 						
 						if (modal.record.data.perceptionTypeId == 1) {
-							linkStr = '<a href="#"  style="color:blue;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showPerceptionDetailwin(\''
-									+ value + '\')">查看详情</a>';
+							linkStr = '<span  style="color:blue;cursor:hand;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showPerceptionDetailwin(\''
+									+ value + '\')">查看详情</span>';
 						} else {
-							linkStr = '<a href="#"  style="color:blue;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showPerceptionDetailwin6$6(\''
-									+ value + '\')">查看详情</a>';
+							linkStr = '<span  style="color:blue;cursor:hand;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showPerceptionDetailwin6$6(\''
+									+ value + '\')">查看详情</span>';
 						}
 
 						return linkStr;

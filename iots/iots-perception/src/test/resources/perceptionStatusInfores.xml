@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+	<perception-addr>{电机地址}</perception-addr>
+	<!-- 支持多个参数 -->
+	<perception-param>
+		<param-id>{参数TAG ID}</param-id>
+		<param-value>{参数值}</param-value>
+	</perception-param>
+	...
+</request>

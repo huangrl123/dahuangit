@@ -5,8 +5,8 @@
 	<description>XML的映射</description>
 
 	<class name="com.dahuangit.base.dto.Response" auto-complete="true">
+	    <map-to xml="response" />
 	    <field name="success" type="java.lang.Boolean"/>
-		<map-to xml="response" />
 	</class>
 
 	<class name="com.dahuangit.base.dto.oxm.response.OxResponse"

@@ -1,0 +1,16 @@
+  <?xml version="1.0" encoding="UTF-8"?>
+<request>
+	<perception-addr>DSFE432EWR</perception-addr>
+	<file>
+		<file-path>/DSFE432EWR/2014/12/01/</file-path>
+		<file-name>2014-12-01-12-30.mp4</file-name>
+	</file>
+	<file>
+		<file-path>/DSFE432EWR/2014/12/01/</file-path>
+		<file-name>2014-12-01-15-30.mp4</file-name>
+	</file>
+	<file>
+		<file-path>/DSFE432EWR/2014/12/01/</file-path>
+		<file-name>2014-12-01-17-30.mp4</file-name>
+	</file>
+</request>

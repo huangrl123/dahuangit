@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+	<perception-addr>DSFE432EWR</perception-addr>
+	<!-- 旋转状态 -->
+	<perception-param>
+		<param-id>179</param-id>
+		<param-value>1</param-value>
+	</perception-param>
+	<!-- 开关状态 -->
+	<perception-param>
+		<param-id>180</param-id>
+		<param-value>1</param-value>
+	</perception-param>
+	<!-- 旋转状态2 -->
+	<perception-param>
+		<param-id>187</param-id>
+		<param-value>1</param-value>
+	</perception-param>
+</request>

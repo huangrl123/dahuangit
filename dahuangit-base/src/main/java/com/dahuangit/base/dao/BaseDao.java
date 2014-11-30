@@ -229,6 +229,16 @@ public class BaseDao<T extends BaseModel, PK extends Serializable> {
 	}
 
 	/**
+	 * 获取记录总数(分页查询时使用)
+	 * 
+	 * @param hql
+	 * @return
+	 */
+	public Long findRecordsCount(String hql, Object... values) {
+		return (Long) createQuery(hql, values).uniqueResult();
+	}
+
+	/**
 	 * 按属性查找对象列表,匹配方式为相等.
 	 */
 	public List<T> findBy(final String propertyName, final Object value) {

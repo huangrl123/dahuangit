@@ -8,19 +8,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.base.exception.GenericException;
-import com.dahuangit.iots.perception.constant.KeyConstants;
 import com.dahuangit.iots.perception.dao.PerceptionDao;
 import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.service.PerceptionService;
-import com.dahuangit.iots.perception.tcpserver.dto.StatusParam;
-import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrame;
-import com.dahuangit.iots.perception.tcpserver.frame.PerceptionFrameConvertor;
+import com.dahuangit.iots.perception.tcpserver.dto.response.PerceptionTcpResponse;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
-import com.dahuangit.iots.perception.tcpserver.pool.ClientResponse;
-import com.dahuangit.iots.perception.tcpserver.pool.ClientResponsePool;
 import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
 import com.dahuangit.util.IoBufferUtils;
+import com.dahuangit.util.coder.ByteUtils;
 import com.dahuangit.util.log.Log4jUtils;
 
 @Component
@@ -32,9 +28,6 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	/** 客户端连接池 */
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
 
-	/** 客户端响应池 */
-	private ClientResponsePool clientResponsePool = ClientResponsePool.getInstance();
-
 	private long MAX_TRANSMIT_ROLLING_COUNT = 99999999l;
 
 	private long transmitSeq = 1l;
@@ -45,8 +38,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	@Autowired
 	private PerceptionService perceptionService = null;
 
-	@Override
-	public PerceptionFrame queryRemoteMachine(Integer perceptionId) {
+	public PerceptionTcpResponse queryRemoteMachine(Integer perceptionId) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		String machineAddr = p.getPerceptionAddr();
 
@@ -59,22 +51,39 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		IoSession session = clientConnection.getIoSession();
 
-		PerceptionFrame frame = new PerceptionFrame();
+		byte[] content = new byte[69];
 		// 帧序列号
+		content[0] = (byte) 0xA1;
+		content[1] = 0x08;
 		long seq = this.nextSeq();
-		frame.setSeq(seq);
-
+		System.arraycopy(ByteUtils.longToByteArray(seq), 0, content, 2, 8);
+		// 帧总长度
+		content[10] = (byte) 0xA2;
+		content[11] = 0x04;
+		System.arraycopy(ByteUtils.intToByteArray(68), 0, content, 12, 4);
 		// 业务类型
-		frame.setBusType((byte) 0x01);
-
+		content[16] = (byte) 0xA3;
+		content[17] = 0x01;
+		content[18] = 0x01;
+		// CRC32校验和
+		content[19] = (byte) 0xA4;
+		content[20] = 0x08;
+		// 设备类型
+		content[29] = (byte) 0xA5;
+		content[30] = 0x01;
+		byte bytePerceptionTypeId = (byte) p.getPerceptionTypeId().intValue();
+		content[31] = bytePerceptionTypeId;
 		// 电机地址
-		frame.setMachineAddr(machineAddr);
-
+		content[32] = (byte) 0xB1;
+		content[33] = 0x20;
+		System.arraycopy(machineAddr.getBytes(), 0, content, 34, machineAddr.getBytes().length);
 		// 操作标识
-		int opt = 2;
-		frame.setOperateFlag((byte) opt);
+		content[66] = (byte) 0xB2;
+		content[67] = 0x01;
+		content[68] = 0x02;
 
-		byte[] content = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
+		long crc32l = ByteUtils.byteArrCRC32Value(content);
+		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
 		IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
 
@@ -91,21 +100,19 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 				new GenericException("请求超时");
 			}
 
-			Object obj = session.getAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY);
+			Object obj = session.getAttribute(seq);
 
 			if (null != obj) {
-				ClientResponse clientResponse = (ClientResponse) obj;
-				session.setAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY, null);// 不会清掉其他session的值
-				PerceptionFrame responseFrame = clientResponse.getPerceptionFrame();
-				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 1, responseFrame.getSwitchStatus());
-				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 2, responseFrame.getRotateStatus());
-				return responseFrame;
+				PerceptionTcpResponse response = (PerceptionTcpResponse) obj;
+				session.removeAttribute(seq);// 不会清掉其他session的值
+				return response;
 			}
 		}
 	}
 
-	@Override
-	public PerceptionFrame remoteOperateMachine(String machineAddr, byte opt, StatusParam statusParam) {
+	public void remoteOperateMachine(Integer perceptionId, Integer opt) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		String machineAddr = p.getPerceptionAddr();
 		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
 
 		if (null == clientConnection) {
@@ -115,24 +122,39 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		IoSession session = clientConnection.getIoSession();
 
-		PerceptionFrame frame = new PerceptionFrame();
+		byte[] content = new byte[69];
 		// 帧序列号
+		content[0] = (byte) 0xA1;
+		content[1] = 0x08;
 		long seq = this.nextSeq();
-		frame.setSeq(seq);
-
+		System.arraycopy(ByteUtils.longToByteArray(seq), 0, content, 2, 8);
+		// 帧总长度
+		content[10] = (byte) 0xA2;
+		content[11] = 0x04;
+		System.arraycopy(ByteUtils.intToByteArray(68), 0, content, 12, 4);
 		// 业务类型
-		frame.setBusType((byte) 0x01);
-
+		content[16] = (byte) 0xA3;
+		content[17] = 0x01;
+		content[18] = 0x01;
+		// CRC32校验和
+		content[19] = (byte) 0xA4;
+		content[20] = 0x08;
+		// 设备类型
+		content[29] = (byte) 0xA5;
+		content[30] = 0x01;
+		byte bytePerceptionTypeId = (byte) p.getPerceptionTypeId().intValue();
+		content[31] = bytePerceptionTypeId;
 		// 电机地址
-		frame.setMachineAddr(machineAddr);
-
+		content[32] = (byte) 0xB1;
+		content[33] = 0x20;
+		System.arraycopy(machineAddr.getBytes(), 0, content, 34, machineAddr.getBytes().length);
 		// 操作标识
-		frame.setOperateFlag(opt);
+		content[66] = (byte) 0xB2;
+		content[67] = 0x01;
+		content[68] = (byte) opt.intValue();
 
-		frame.setSwitchStatus(statusParam.getSwitchStatus());
-		frame.setRotateStatus(statusParam.getRotateStatus());
-
-		byte[] content = PerceptionFrameConvertor.PerceptionFrameToByteArray(frame);
+		long crc32l = ByteUtils.byteArrCRC32Value(content);
+		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
 		IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
 
@@ -149,25 +171,12 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 				new GenericException("请求超时");
 			}
 
-			Object obj = session.getAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY);
+			Object obj = session.getAttribute(seq);
 
 			if (null != obj) {
-				ClientResponse clientResponse = (ClientResponse) obj;
-				PerceptionFrame responseFrame = clientResponse.getPerceptionFrame();
-				session.setAttribute(KeyConstants.MINA_SESSION_RESPONSE_KEY, null);
-				int value = 0;
-				switch (opt) {
-				case 0x03:
-				case 0x04:
-					value = responseFrame.getSwitchStatus();
-					break;
-				case 0x05:
-				case 0x06:
-					value = responseFrame.getRotateStatus();
-					break;
-				}
-				perceptionService.addPerceptionRuntimeLog(machineAddr, opt, 0, value);
-				return responseFrame;
+				PerceptionTcpResponse response = (PerceptionTcpResponse) obj;
+				session.removeAttribute(seq);// 不会清掉其他session的值
+				break;
 			}
 		}
 	}

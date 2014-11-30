@@ -9,16 +9,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.ComboboxData;
+import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.request.OpRequest;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
-import com.dahuangit.iots.perception.dto.opm.request.FindPerceptionRuntimeLogByPageReq;
-import com.dahuangit.iots.perception.dto.opm.request.RemoteCtrlPerceptionRequest;
-import com.dahuangit.iots.perception.dto.opm.response.PerceptionOpResponse;
-import com.dahuangit.iots.perception.dto.opm.response.PerceptionRuntimeLogResponse;
-import com.dahuangit.iots.perception.dto.oxm.response.RemoteQueryMachineResponse;
+import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
+import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
+import com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest;
+import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
+import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
+import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
+import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
 import com.dahuangit.iots.perception.service.PerceptionService;
-import com.dahuangit.iots.perception.service.RemoteQueryService;
+import com.dahuangit.iots.perception.service.PerceptionVediaService;
 import com.dahuangit.util.log.Log4jUtils;
 
 @Controller
@@ -28,18 +33,34 @@ public class PerceptionController extends BaseController {
 	private static final Logger log = Log4jUtils.getLogger(PerceptionController.class);
 
 	@Autowired
-	private RemoteQueryService remoteQueryService = null;
-
-	@Autowired
 	private PerceptionService perceptionService = null;
 
-	@RequestMapping(value = "/remoteQueryPerception", method = RequestMethod.POST)
-	@ResponseBody
-	public RemoteQueryMachineResponse remoteQueryPerception(Integer perceptionId) throws Exception {
+	@Autowired
+	private PerceptionVediaService perceptionVediaService = null;
 
-		RemoteQueryMachineResponse response = new RemoteQueryMachineResponse();
+	@RequestMapping(value = "/remoteQuery2j2Machine", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoteQuery2j2MachineResponse remoteQuery2j2Machine(Integer perceptionId) throws Exception {
+
+		RemoteQuery2j2MachineResponse response = new RemoteQuery2j2MachineResponse();
 		try {
-			response = remoteQueryService.doRemoteQuery(perceptionId);
+			response = perceptionService.remoteQuery2j2Machine(perceptionId);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	@RequestMapping(value = "/remoteQuery6j6Machine", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoteQuery6j6MachineResponse remoteQuery6j6Machine(Integer perceptionId) throws Exception {
+		RemoteQuery6j6MachineResponse response = new RemoteQuery6j6MachineResponse();
+
+		try {
+			response = perceptionService.remoteQuery6j6Machine(perceptionId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -55,7 +76,7 @@ public class PerceptionController extends BaseController {
 		OpResponse response = new OpResponse();
 
 		try {
-			perceptionService.remoteCtrlPerception(req);
+			perceptionService.remoteCtrlMachine(req.getPerceptionId(), req.getOpt());
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setSuccess(false);
@@ -92,5 +113,33 @@ public class PerceptionController extends BaseController {
 			e.printStackTrace();
 		}
 		return data;
+	}
+
+	@RequestMapping(value = "/findPerceptionVediaFileByPage", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<PercetionVediaFileResponse> findPerceptionVediaFileByPage(
+			FindPerceptionVediaFileByPageRequest req) {
+		PageQueryResult<PercetionVediaFileResponse> result = this.perceptionVediaService.findPerceptionByPage(
+				req.getPerceptionId(), req.getStart(), req.getLimit());
+		return result;
+	}
+
+	@RequestMapping(value = "/fileUploadNotice", method = RequestMethod.POST)
+	@ResponseBody
+	public String fileUploadNotice(String fileInfoXml) {
+		Response response = new Response();
+       
+		try {
+			PerceptionVediaFileUploadNoticeRequest req = (PerceptionVediaFileUploadNoticeRequest) this.xmlToRequest(
+					fileInfoXml, PerceptionVediaFileUploadNoticeRequest.class);
+
+			perceptionVediaService.fileUploadNotice(req);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+		}
+
+		return this.responseToXml(response);
 	}
 }
