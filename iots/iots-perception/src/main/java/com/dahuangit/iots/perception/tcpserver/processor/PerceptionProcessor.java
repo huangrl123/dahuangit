@@ -11,5 +11,5 @@ import com.dahuangit.iots.perception.tcpserver.dto.response.PerceptionTcpRespons
 public interface PerceptionProcessor {
 	public PerceptionTcpResponse queryRemoteMachine(Integer perceptionId);
 
-	public void remoteOperateMachine(Integer perceptionId, Integer opt);
+	public PerceptionTcpResponse remoteOperateMachine(Integer perceptionId, Integer opt);
 }

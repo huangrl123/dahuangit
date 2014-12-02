@@ -87,8 +87,8 @@ public class PerceptionServiceImpl implements PerceptionService {
 			rows.add(por);
 		}
 
-		String countHql = "select count(*) from PerceptionRuntimeLog";
-		Long totalCount = this.perceptionRuntimeLogDao.findRecordsCount(countHql);
+		String countHql = "select count(*) from PerceptionRuntimeLog p where p.perceptionId=?";
+		Long totalCount = this.perceptionRuntimeLogDao.findRecordsCount(countHql, req.getPerceptionId());
 
 		pageQueryResult.setResults(rows);
 		pageQueryResult.setTotalCount(totalCount);
@@ -306,7 +306,11 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * @param opt
 	 */
 	public void remoteCtrlMachine(Integer perceptionId, Integer opt) {
-		perceptionProcessor.remoteOperateMachine(perceptionId, opt);
+		PerceptionTcpResponse response = perceptionProcessor.remoteOperateMachine(perceptionId, opt);
+
+		if (null == response || response.getResult() != 1) {
+			throw new RuntimeException("电机响应超时");
+		}
 	}
 
 	/**
@@ -319,13 +323,19 @@ public class PerceptionServiceImpl implements PerceptionService {
 		ServerQueryMachine2j2StatusResponse response = (ServerQueryMachine2j2StatusResponse) this.perceptionProcessor
 				.queryRemoteMachine(perceptionId);
 		RemoteQuery2j2MachineResponse r = new RemoteQuery2j2MachineResponse();
-		r.setSuccess(true);
-		int i2c = ByteUtils.byteArrToInt(response.getI2cStatus());
-		r.setI2cStatus(String.valueOf((i2c)));
-		r.setRotateStatus(String.valueOf(response.getRotateStatus()));
-		r.setRotateStatus2(String.valueOf(response.getRotateStatus2()));
-		r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
-		r.setPerceptionId(perceptionId);
+
+		if (response == null || response.getResult() != (byte) 0x01) {
+			r.setSuccess(false);
+			r.setMsg("电机响应超时");
+		} else {
+			r.setSuccess(true);
+			int i2c = ByteUtils.byteArrToInt(response.getI2cStatus());
+			r.setI2cStatus(String.valueOf((i2c)));
+			r.setRotateStatus(String.valueOf(response.getRotateStatus()));
+			r.setRotateStatus2(String.valueOf(response.getRotateStatus2()));
+			r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
+			r.setPerceptionId(perceptionId);
+		}
 		return r;
 	}
 
@@ -339,13 +349,20 @@ public class PerceptionServiceImpl implements PerceptionService {
 		ServerQueryMachine6j6StatusResponse response = (ServerQueryMachine6j6StatusResponse) this.perceptionProcessor
 				.queryRemoteMachine(perceptionId);
 		RemoteQuery6j6MachineResponse r = new RemoteQuery6j6MachineResponse();
-		r.setRotateStatus(String.valueOf(response.getRotateStatus()));
-		r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
-		r.setPerceptionId(perceptionId);
-		r.setApproachStatus(String.valueOf(response.getApproachStatus()));
-		r.setInfraredStatus(String.valueOf(response.getInfraredStatus()));
-		r.setPressureStatus(String.valueOf(response.getPerceptionType()));
-		r.setVibrateStatus(String.valueOf(response.getVibrateStatus()));
+
+		if (null == response || response.getResult() != (byte) 0x01) {
+			r.setSuccess(false);
+			r.setMsg("电机响应超时");
+		} else {
+			r.setRotateStatus(String.valueOf(response.getRotateStatus()));
+			r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
+			r.setPerceptionId(perceptionId);
+			r.setApproachStatus(String.valueOf(response.getApproachStatus()));
+			r.setInfraredStatus(String.valueOf(response.getInfraredStatus()));
+			r.setPressureStatus(String.valueOf(response.getPerceptionType()));
+			r.setVibrateStatus(String.valueOf(response.getVibrateStatus()));
+		}
+
 		return r;
 	}
 }

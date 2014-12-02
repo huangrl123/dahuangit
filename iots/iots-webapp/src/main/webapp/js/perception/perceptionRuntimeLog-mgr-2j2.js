@@ -370,7 +370,7 @@ function showPerceptionDetailwin(perceptionId) {
 		if (form.isValid()) {
 			form.submit({
 						url : 'spring/perception/remoteQuery2j2Machine',
-						//waitMsg : '获取设备实时状态，请稍后...',
+						waitMsg : '获取设备实时状态，请稍后...',
 						params : {
 							perceptionId : perceptionId
 						},
@@ -397,7 +397,7 @@ function showPerceptionDetailwin(perceptionId) {
 		if (form.isValid()) {
 			form.submit({
 						url : 'spring/perception/remoteCtrlPerception',
-						//waitMsg : '远程控制设备，请稍后...',
+						waitMsg : '远程控制设备，请稍后...',
 						params : {
 							perceptionId : perceptionId,
 							opt : opt

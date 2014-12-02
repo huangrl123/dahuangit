@@ -1,12 +1,12 @@
 package com.dahuangit.iots.perception.tcpserver.handler;
 
-import java.util.concurrent.ExecutorService;
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.session.IoSessionConfig;
+import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -59,7 +59,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		byte[] content = (byte[]) message;
 
 		log.debug("服务器端收到客户端的信息，报文:" + ByteUtils.byteArrToHexString(content));
-		
+
 		byte[] temArr = null;
 
 		long seq = 0l;
@@ -90,6 +90,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			temArr = new byte[32];
 			System.arraycopy(content, 34, temArr, 0, 32);
 			machineAddr = new String(temArr);
+			machineAddr = machineAddr.trim();
 
 			operateFlag = content[68];
 		} catch (Exception e) {
@@ -262,6 +263,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			case 0x06:// 服务器远程关控制的响应
 			case 0x07:// 服务器远程I2C开的响应
 			case 0x08:// 服务器远程I2C关的响应
+			case 0x09:// 服务器远程正转控制2
+			case 0x0A:// 服务器远程反转控制2
+
 				ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();
 				response.setBusType(busType);
 				response.setCrc32(crc32);

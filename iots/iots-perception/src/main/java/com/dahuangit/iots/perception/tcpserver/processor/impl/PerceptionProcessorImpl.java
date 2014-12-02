@@ -1,5 +1,7 @@
 package com.dahuangit.iots.perception.tcpserver.processor.impl;
 
+import java.util.concurrent.ExecutorService;
+
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -49,7 +51,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			throw new GenericException("当前感知端已失去连接，可能已经离线 machineAddr=" + machineAddr);
 		}
 
-		IoSession session = clientConnection.getIoSession();
+		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
 		// 帧序列号
@@ -85,32 +87,36 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
-		IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
+		final IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
 
 		session.write(ib);
 
 		long reqTime = System.currentTimeMillis();
 
+		PerceptionTcpResponse response = new PerceptionTcpResponse();
+
 		// 等待返回结果
 		while (true) {
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 15 * 60 * 60;// 默认15分钟
-			if ((nowTime - reqTime) > timeout) {
-				new GenericException("请求超时");
+			long timeout = 60 * 1000;// 默认1分钟
+			long count = nowTime - reqTime;
+			if (count > timeout) {
+				response.setResult((byte) 0x02);
+				return response;
 			}
 
 			Object obj = session.getAttribute(seq);
 
 			if (null != obj) {
-				PerceptionTcpResponse response = (PerceptionTcpResponse) obj;
+				response = (PerceptionTcpResponse) obj;
 				session.removeAttribute(seq);// 不会清掉其他session的值
 				return response;
 			}
 		}
 	}
 
-	public void remoteOperateMachine(Integer perceptionId, Integer opt) {
+	public PerceptionTcpResponse remoteOperateMachine(Integer perceptionId, Integer opt) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		String machineAddr = p.getPerceptionAddr();
 		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
@@ -120,7 +126,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			throw new GenericException("当前感知端已失去连接，可能已经离线 machineAddr=" + machineAddr);
 		}
 
-		IoSession session = clientConnection.getIoSession();
+		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
 		// 帧序列号
@@ -156,27 +162,31 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
-		IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
+		final IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
 
 		session.write(ib);
 
 		long reqTime = System.currentTimeMillis();
 
+		PerceptionTcpResponse response = new PerceptionTcpResponse();
+
 		// 等待返回结果
 		while (true) {
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 15 * 60 * 60;// 默认15分钟
-			if ((nowTime - reqTime) > timeout) {
-				new GenericException("请求超时");
+			long timeout = 60 * 1000;// 默认1分钟
+			long count = nowTime - reqTime;
+			if (count > timeout) {
+				response.setResult((byte) 0x02);
+				return response;
 			}
 
 			Object obj = session.getAttribute(seq);
 
 			if (null != obj) {
-				PerceptionTcpResponse response = (PerceptionTcpResponse) obj;
+				response = (PerceptionTcpResponse) obj;
 				session.removeAttribute(seq);// 不会清掉其他session的值
-				break;
+				return response;
 			}
 		}
 	}
