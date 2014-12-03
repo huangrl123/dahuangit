@@ -1,7 +1,5 @@
 package com.dahuangit.iots.perception.tcpserver.processor.impl;
 
-import java.util.concurrent.ExecutorService;
-
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -97,6 +95,14 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		// 等待返回结果
 		while (true) {
+
+			// 每3秒扫描一次，节省系统资源
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
 			long timeout = 60 * 1000;// 默认1分钟
@@ -172,6 +178,14 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		// 等待返回结果
 		while (true) {
+
+			// 每3秒扫描一次，节省系统资源
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
 			long timeout = 60 * 1000;// 默认1分钟

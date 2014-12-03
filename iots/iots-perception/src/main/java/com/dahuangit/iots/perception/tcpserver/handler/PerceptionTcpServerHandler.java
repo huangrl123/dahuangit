@@ -58,6 +58,11 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 		byte[] content = (byte[]) message;
 
+		if (content.length < 72) {
+			log.debug("发生错误，原因报文总长度小于72");
+			throw new RuntimeException("报文总长度不能小于72");
+		}
+
 		log.debug("服务器端收到客户端的信息，报文:" + ByteUtils.byteArrToHexString(content));
 
 		byte[] temArr = null;
@@ -71,27 +76,71 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		byte perceptionType = 0;
 
 		try {
+			String errorMsg = null;
+
+			// 帧序列号
+			if (content[0] != (byte)0xA1) {
+				errorMsg = "未找到帧序列号标识，content[0] != (byte)0xA1";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			temArr = new byte[8];
 			System.arraycopy(content, 2, temArr, 0, 8);
 			seq = ByteUtils.byteArrToLong(temArr);
 
+			// 帧总长度
+			if (content[10] != (byte)0xA2) {
+				errorMsg = "未找到帧总长度标识，content[10] != (byte)0xA2";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			temArr = new byte[4];
 			System.arraycopy(content, 12, temArr, 0, 4);
 			length = ByteUtils.byteArrToInt(temArr);
 
+			// 业务类型
+			if (content[16] != (byte)0xA3) {
+				errorMsg = "未找到业务类型标识，content[16] != (byte)0xA3";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			busType = content[18];
 
+			// CRC32校验和
+			if (content[19] != (byte)0xA4) {
+				errorMsg = "未找到CRC32校验和标识，content[19] != (byte)0xA4";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			temArr = new byte[8];
 			System.arraycopy(content, 21, temArr, 0, 8);
 			crc32 = ByteUtils.byteArrToLong(temArr);
 
+			// 设备类型
+			if (content[29] != (byte)0xA5) {
+				errorMsg = "未找到设备类型标识，content[29] != (byte)0xA5";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			perceptionType = content[31];
 
+			// 电机地址
+			if (content[32] != (byte)0xB1) {
+				errorMsg = "未找到电机地址标识，content[32] != (byte)0xB1";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			temArr = new byte[32];
 			System.arraycopy(content, 34, temArr, 0, 32);
 			machineAddr = new String(temArr);
 			machineAddr = machineAddr.trim();
 
+			// 操作标识
+			if (content[66] != (byte)0xB2) {
+				errorMsg = "未找到操作标识标识，content[66] != (byte)0xB2";
+				log.debug(errorMsg);
+				new RuntimeException(errorMsg);
+			}
 			operateFlag = content[68];
 		} catch (Exception e) {
 			e.printStackTrace();
