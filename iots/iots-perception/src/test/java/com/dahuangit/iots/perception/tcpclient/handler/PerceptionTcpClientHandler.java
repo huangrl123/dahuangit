@@ -74,7 +74,7 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 
 			switch (operateFlag) {
 			case 0x02:// 服务查询电机状态的请求
-				byte[] respcontent = new byte[97];
+				byte[] respcontent = new byte[103];
 				// 帧序列号
 				respcontent[0] = (byte) 0xA1;
 				respcontent[1] = 0x08;
@@ -104,17 +104,12 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 				respcontent[67] = 0x01;
 				respcontent[68] = 0x02;
 
-				// 旋转状态
+				// 电机1旋转状态
 				respcontent[69] = (byte) 0xB3;
 				respcontent[70] = 0x01;
 				respcontent[71] = 0x01;
 
-				// 开关状态
-				respcontent[69] = (byte) 0xB4;
-				respcontent[70] = 0x01;
-				respcontent[71] = 0x01;
-
-				// 开关状态
+				// 电机1开关状态
 				respcontent[72] = (byte) 0xB4;
 				respcontent[73] = 0x01;
 				respcontent[74] = 0x01;
@@ -130,11 +125,26 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 				respcontent[80] = 0x00;
 				respcontent[81] = 0x01;
 
-				// 旋转状态2
+				//红外状态
+				respcontent[82] = (byte) 0xB7;
+				respcontent[83] = 0x01;
+				respcontent[84] = 0x02;
+				
+				// 电机2旋转状态
 				respcontent[94] = (byte) 0xBB;
 				respcontent[95] = 0x01;
 				respcontent[96] = 0x02;
 
+				//电机2开关状态
+				respcontent[97] = (byte) 0xBC;
+				respcontent[98] = 0x01;
+				respcontent[99] = 0x02;
+				
+				//按键状态
+				respcontent[100] = (byte) 0xBD;
+				respcontent[101] = 0x01;
+				respcontent[102] = 0x02;
+				
 				long crc32l = ByteUtils.byteArrCRC32Value(respcontent);
 				System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, respcontent, 21, 8);
 

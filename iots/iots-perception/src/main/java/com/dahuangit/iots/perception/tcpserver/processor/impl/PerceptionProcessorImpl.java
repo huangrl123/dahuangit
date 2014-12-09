@@ -46,7 +46,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		if (null == clientConnection) {
 			log.debug("当前感知端已失去连接，可能已经离线  machineAddr=" + machineAddr);
-			throw new GenericException("当前感知端已失去连接，可能已经离线 machineAddr=" + machineAddr);
+			throw new GenericException("当前设备没有连接到服务器，请联系设备管理员");
 		}
 
 		final IoSession session = clientConnection.getIoSession();

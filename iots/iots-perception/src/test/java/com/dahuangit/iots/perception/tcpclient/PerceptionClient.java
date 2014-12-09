@@ -43,8 +43,8 @@ public class PerceptionClient {
 		connector.setConnectTimeoutCheckInterval(30);
 
 		// 建立连接
-		ConnectFuture cf = connector.connect(new InetSocketAddress("127.0.0.1", 9999));
-//		ConnectFuture cf = connector.connect(new InetSocketAddress("120.24.86.107", 9999));
+	     //ConnectFuture cf = connector.connect(new InetSocketAddress("127.0.0.1", 9999));
+		 ConnectFuture cf = connector.connect(new InetSocketAddress("120.24.86.107", 9999));
 
 		log.debug("客户端已经启动!");
 
@@ -54,7 +54,7 @@ public class PerceptionClient {
 		String machineAddr = "wertyerdsd3";
 		IoSession session = cf.getSession();
 
-		byte[] content = new byte[94];
+		byte[] content = new byte[100];
 		// 帧序列号
 		content[0] = (byte) 0xA1;
 		content[1] = 0x08;
@@ -85,31 +85,41 @@ public class PerceptionClient {
 		content[67] = 0x01;
 		content[68] = 0x01;
 
-		//旋转状态
+		// 电机1旋转状态
 		content[69] = (byte) 0xB3;
 		content[70] = 0x01;
 		content[71] = 0x01;
-		
-		//开关状态
-		content[69] = (byte) 0xB4;
-		content[70] = 0x01;
-		content[71] = 0x01;
-		
-		//开关状态
+
+		// 电机1开关状态
 		content[72] = (byte) 0xB4;
 		content[73] = 0x01;
 		content[74] = 0x01;
-		
-		//i2c状态
+
+		// i2c状态
 		content[75] = (byte) 0xB6;
 		content[76] = 0x01;
 		content[77] = 0x00;
 		content[78] = 0x01;
-		
-		//旋转状态2
+
+		// 红外状态
+		content[79] = (byte) 0xB7;
+		content[80] = 0x01;
+		content[81] = 0x01;
+
+		// 电机2旋转状态
 		content[91] = (byte) 0xBB;
 		content[92] = 0x01;
 		content[93] = 0x02;
+
+		//电机2开关状态
+		content[94] = (byte) 0xBC;
+		content[95] = 0x01;
+		content[96] = 0x01;
+		
+		//按键状态
+		content[97] = (byte) 0xBD;
+		content[98] = 0x01;
+		content[99] = 0x02;
 		
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
@@ -117,7 +127,7 @@ public class PerceptionClient {
 		IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
 
 		session.write(ib);
-		
+
 		log.debug("2+2客户端模拟端向服务器端发送的数据content=" + ByteUtils.byteArrToHexString(content));
 
 		session.write(IoBufferUtils.byteToIoBuffer(content));

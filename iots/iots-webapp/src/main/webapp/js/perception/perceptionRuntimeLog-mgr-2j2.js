@@ -64,9 +64,9 @@ function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////基本信息面板////////////////////////////////////////////
 	var form = null;
 	var opt = null;
-	// 开关状态combox
-	var switchStatus_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : '开关状态',
+	// 电机1开关状态combox
+	var switchStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox', {
+				fieldLabel : '电机1开关状态',
 				store : Ext.create('Ext.data.Store', {
 							singleton : true,
 							proxy : {
@@ -90,11 +90,11 @@ function showPerceptionDetailwin(perceptionId) {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
 						if (record.data.value == '1') {
-							opt = 5;// 正转
-							msg = '是否要对开关状态进行正转远程控制?';
+							opt = 5;// 电机1通电控制
+							msg = '是否电机1进行通电控制?';
 						} else {
-							opt = 6;// 反转
-							msg = '是否要对开关状态进行反转远程控制?';
+							opt = 6;// 电机1断电控制
+							msg = '是否电机1进行断电控制?';
 						}
 
 						Ext.Msg.show({
@@ -132,9 +132,9 @@ function showPerceptionDetailwin(perceptionId) {
 				width : 500
 			});
 
-	// 旋转状态combox
-	var rotateStatus_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : '旋转状态',
+	// 电机1旋转状态combox
+	var rotateStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox', {
+				fieldLabel : '电机1旋转状态',
 				store : Ext.create('Ext.data.Store', {
 							singleton : true,
 							proxy : {
@@ -158,11 +158,11 @@ function showPerceptionDetailwin(perceptionId) {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
 						if (record.data.value == '1') {
-							opt = 3;// 正转
-							msg = '是否要对旋转状态进行正转远程控制?';
+							opt = 3;// 电机1正转控制
+							msg = '是否要对电机1进行正转控制?';
 						} else {
-							opt = 4;// 反转
-							msg = '是否要对旋转状态进行反转远程控制?';
+							opt = 4;// 电机1反转控制
+							msg = '是否要对电机1进行反转控制?';
 						}
 
 						Ext.Msg.show({
@@ -192,9 +192,77 @@ function showPerceptionDetailwin(perceptionId) {
 				width : 500
 			});
 
-	// 旋转状态2combox
-	var rotateStatus2_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : '旋转状态2',
+	// 电机2开关状态combox
+	var switchStatus_machine2_combobox = Ext.create('Ext.form.field.ComboBox', {
+				fieldLabel : '电机2开关状态',
+				store : Ext.create('Ext.data.Store', {
+							singleton : true,
+							proxy : {
+								type : 'ajax',
+								url : 'spring/perception/getPerceptionParamListByTypeId',
+								actionMethods : {
+									read : 'POST'
+								},
+								extraParams : {
+									paramId : 188
+								},
+								reader : {
+									type : 'json',
+									rootProperty : 'root'
+								}
+							},
+							fields : ['value', 'text'],
+							autoLoad : true
+						}),
+				listeners : {
+					beforeselect : function(combo, record, index, eOpts) {
+						var msg;
+						if (record.data.value == '1') {
+							opt = 11;// 0x0B：电机2通电控制
+							msg = '是否要对电机2进行通电控制?';
+						} else {
+							opt = 12;// 0x0C：电机2断电控制
+							msg = '是否要对电机2进行断电控制?';
+						}
+
+						Ext.Msg.show({
+									title : '提示',
+									message : msg,
+									buttons : Ext.Msg.YESNOCANCEL,
+									icon : Ext.Msg.QUESTION,
+									fn : function(btn) {
+										Ext.Msg.show({
+													title : '提示',
+													message : msg,
+													buttons : Ext.Msg.YESNOCANCEL,
+													icon : Ext.Msg.QUESTION,
+													fn : function(btn) {
+														if (btn === 'yes') {
+
+															remoteCtrlPerception();
+														} else if (btn === 'no') {
+															this.close();
+														} else {
+															this.close();
+														}
+													}
+												});
+									}
+								});
+					}
+				},
+				displayField : 'text',
+				valueField : 'value',
+				emptyText : "请选择",
+				editable : false,
+				mode : "local",
+				triggerAction : 'all',
+				width : 500
+			});
+
+	// 电机2旋转状态combox
+	var rotateStatus_machine2_combobox = Ext.create('Ext.form.field.ComboBox', {
+				fieldLabel : '电机2旋转状态',
 				store : Ext.create('Ext.data.Store', {
 							singleton : true,
 							proxy : {
@@ -218,11 +286,11 @@ function showPerceptionDetailwin(perceptionId) {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
 						if (record.data.value == '1') {
-							opt = 9;// 正转
-							msg = '是否要对旋转状态2进行正转远程控制?';
+							opt = 9;// 电机2正转控制
+							msg = '是否要对电机2进行正转控制?';
 						} else {
-							opt = 10;// 反转
-							msg = '是否要对旋转状态2进行反转远程控制?';
+							opt = 10;// 0x0A: 电机2反转控制
+							msg = '是否要对电机2进行反转控制?';
 						}
 
 						Ext.Msg.show({
@@ -278,11 +346,11 @@ function showPerceptionDetailwin(perceptionId) {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
 						if (record.data.value == '1') {
-							opt = 7;// 正转
-							msg = '是否要对i2c状态2进行正转远程控制?';
+							opt = 7;// I2C打开控制
+							msg = '是否要对i2c进行打开控制?';
 						} else {
-							opt = 8;// 反转
-							msg = '是否要对i2c状态2进行反转远程控制?';
+							opt = 8;// I2C关闭控制
+							msg = '是否要对i2c进行关闭控制?';
 						}
 
 						Ext.Msg.show({
@@ -312,6 +380,20 @@ function showPerceptionDetailwin(perceptionId) {
 				width : 500
 			});
 
+	// 红外
+	var infraredStatus_field = new Ext.form.TextField({
+				fieldLabel : '红外状态',
+				disabled : true,
+				width : 500
+			});
+
+	// 按键
+	var pressKeyStatus_field = new Ext.form.TextField({
+				fieldLabel : '按键状态',
+				disabled : true,
+				width : 500
+			});
+
 	var inTimeQueryBtn = Ext.create("Ext.Button", {
 				text : "实时状态获取",
 				listeners : {
@@ -327,7 +409,9 @@ function showPerceptionDetailwin(perceptionId) {
 				height : 500,
 				bodyPadding : 5,
 				frame : true,
-				items : [switchStatus_combobox, rotateStatus_combobox, rotateStatus2_combobox, i2cStatus_combobox, {
+				items : [switchStatus_machine1_combobox, rotateStatus_machine1_combobox,
+						switchStatus_machine2_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
+						infraredStatus_field, pressKeyStatus_field, {
 							layout : 'column',
 							padding : '0 0 0 180',
 							items : [{
@@ -366,7 +450,7 @@ function showPerceptionDetailwin(perceptionId) {
 
 	// 使用ajax异步获取设备状态
 	var remoteQueryPerception = function() {
-		
+
 		if (form.isValid()) {
 			form.submit({
 						url : 'spring/perception/remoteQuery2j2Machine',
@@ -376,10 +460,17 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						success : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
-							switchStatus_combobox.setValue(response.switchStatus);
-							rotateStatus_combobox.setValue(response.rotateStatus);
-							rotateStatus2_combobox.setValue(response.rotateStatus2);
+							switchStatus_machine1_combobox.setValue(response.machine1SwitchStatus);
+							rotateStatus_machine1_combobox.setValue(response.machine1RotateStatus);
+
+							switchStatus_machine2_combobox.setValue(response.machine2SwitchStatus);
+							rotateStatus_machine2_combobox.setValue(response.machine2RotateStatus);
+
 							i2cStatus_combobox.setValue(response.i2cStatus);
+
+							pressKeyStatus_field.setValue(response.infraredStatus);
+							infraredStatus_field.setValue(response.pressKeyStatus);
+
 							perceptionRuntimeLogStoreLoad();
 						},
 						failure : function(form, action, args) {
@@ -391,8 +482,6 @@ function showPerceptionDetailwin(perceptionId) {
 	}
 
 	var remoteCtrlPerception = function() {
-		var switchStatus = switchStatus_combobox.getValue();
-		var rotateStatus = rotateStatus_combobox.getValue();
 
 		if (form.isValid()) {
 			form.submit({

@@ -21,5 +21,12 @@ public class PerceptionParamValueDao extends BaseDao<PerceptionParamValueInfo, I
 		Integer value = this.findUnique(hql, perceptionTypeId, perceptionParamId, perceptionParamValueId);
 		return value;
 	}
+	
+	public String getPerceptionParamValueDesc(Integer perceptionTypeId, Integer perceptionParamId,
+			Integer perceptionParamValue) {
+		String hql = "select p.perceptionParamValueDesc from PerceptionParamValueInfo p where p.perceptionTypeId=? and p.perceptionParamId=? and p.perceptionParamValue=?";
+		String desc = this.findUnique(hql, perceptionTypeId, perceptionParamId, perceptionParamValue);
+		return desc;
+	}
 
 }

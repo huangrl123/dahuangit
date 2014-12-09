@@ -1,32 +1,51 @@
 package com.dahuangit.iots.perception.tcpserver.dto.response;
 
 public class ServerQueryMachine2j2StatusResponse extends PerceptionTcpResponse {
-	/** 旋转状态 0xB3 BYTE */
-	private byte rotateStatus = (byte) 0x00;
-
-	/** 开关状态 0xB4 BYTE */
-	private byte switchStatus = (byte) 0x00;
-
+	/** 电机1旋转状态 0xB3 BYTE */
+	private byte machine1RotateStatus = (byte) 0x00;
+	/** 电机2旋转状态 0xB3 BYTE */
+	private byte machine2RotateStatus = (byte) 0x00;
+	/** 电机1开关状态 0xB4 BYTE */
+	private byte machine1SwitchStatus = (byte) 0x00;
+	/** 电机2开关状态 0xB4 BYTE */
+	private byte machine2SwitchStatus = (byte) 0x00;
 	/** i2c状态 */
 	private byte[] i2cStatus = new byte[2];
+	/** 红外状态 */
+	private byte infraredStatus = 0;
+	/** 按键状态 */
+	private byte pressKeyStatus = 0;
 
-	/** 旋转状态2 */
-	private byte rotateStatus2 = 0;
-
-	public byte getRotateStatus() {
-		return rotateStatus;
+	public byte getMachine1RotateStatus() {
+		return machine1RotateStatus;
 	}
 
-	public void setRotateStatus(byte rotateStatus) {
-		this.rotateStatus = rotateStatus;
+	public void setMachine1RotateStatus(byte machine1RotateStatus) {
+		this.machine1RotateStatus = machine1RotateStatus;
 	}
 
-	public byte getSwitchStatus() {
-		return switchStatus;
+	public byte getMachine2RotateStatus() {
+		return machine2RotateStatus;
 	}
 
-	public void setSwitchStatus(byte switchStatus) {
-		this.switchStatus = switchStatus;
+	public void setMachine2RotateStatus(byte machine2RotateStatus) {
+		this.machine2RotateStatus = machine2RotateStatus;
+	}
+
+	public byte getMachine1SwitchStatus() {
+		return machine1SwitchStatus;
+	}
+
+	public void setMachine1SwitchStatus(byte machine1SwitchStatus) {
+		this.machine1SwitchStatus = machine1SwitchStatus;
+	}
+
+	public byte getMachine2SwitchStatus() {
+		return machine2SwitchStatus;
+	}
+
+	public void setMachine2SwitchStatus(byte machine2SwitchStatus) {
+		this.machine2SwitchStatus = machine2SwitchStatus;
 	}
 
 	public byte[] getI2cStatus() {
@@ -37,12 +56,20 @@ public class ServerQueryMachine2j2StatusResponse extends PerceptionTcpResponse {
 		this.i2cStatus = i2cStatus;
 	}
 
-	public byte getRotateStatus2() {
-		return rotateStatus2;
+	public byte getInfraredStatus() {
+		return infraredStatus;
 	}
 
-	public void setRotateStatus2(byte rotateStatus2) {
-		this.rotateStatus2 = rotateStatus2;
+	public void setInfraredStatus(byte infraredStatus) {
+		this.infraredStatus = infraredStatus;
+	}
+
+	public byte getPressKeyStatus() {
+		return pressKeyStatus;
+	}
+
+	public void setPressKeyStatus(byte pressKeyStatus) {
+		this.pressKeyStatus = pressKeyStatus;
 	}
 
 }

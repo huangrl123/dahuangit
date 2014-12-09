@@ -136,29 +136,35 @@ public class PerceptionServiceImpl implements PerceptionService {
 			byte opt = perceptionTcpResponse.getOperateFlag();
 			PerceptionRuntimeLog perceptionRuntimeLog = null;
 			switch (opt) {
-			case 0x03:// 服务器远程正转控制的响应
+			case 0x03:// 电机1远程正转控制的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 1);
 				break;
-			case 0x04:// 服务器远程反转控制的响应
+			case 0x04:// 电机1远程反转控制的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 2);
 				break;
-			case 0x05:// 服务器远程开控制的响应
+			case 0x05:// 电机1远程通电控制的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 180, 1);
 				break;
-			case 0x06:// 服务器远程关控制的响应
+			case 0x06:// 电机1远程断电控制的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 180, 2);
 				break;
-			case 0x07:// 服务器远程I2C开的响应
+			case 0x07:// 远程I2C开的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 1);
 				break;
-			case 0x08:// 服务器远程I2C关的响应
+			case 0x08:// 远程I2C关的响应
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 2);
 				break;
-			case 0x09:// 服务器控制旋转状态2 正转
+			case 0x09:// 电机2远程控制旋转状态 正转
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 1);
 				break;
-			case 0x0A:// 服务器控制旋转状态2 反转
+			case 0x0A:// 电机2控制旋转状态2 反转
 				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 2);
+				break;
+			case 0x0B:// 电机2通电控制
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 188, 1);
+				break;
+			case 0x0C:// 电机2断电控制
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 188, 2);
 				break;
 			}
 
@@ -168,48 +174,78 @@ public class PerceptionServiceImpl implements PerceptionService {
 		else if (perceptionTcpDto instanceof ServerQueryMachine2j2StatusResponse) {// 2+2远程查询的响应
 			ServerQueryMachine2j2StatusResponse response = (ServerQueryMachine2j2StatusResponse) perceptionTcpDto;
 
-			// 开关状态
-			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) response.getSwitchStatus());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
+			// 电机1旋转状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine1RotateStatus = this.createPerceptionRuntimeLog(p, 179,
+					(int) response.getMachine1RotateStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1RotateStatus);
 
-			// 旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) response.getRotateStatus());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
+			// 电机1开关状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine1Switch = this.createPerceptionRuntimeLog(p, 180,
+					(int) response.getMachine1SwitchStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1Switch);
 
 			// i2c状态
 			PerceptionRuntimeLog perceptionRuntimeLog_i2cStatus = this.createPerceptionRuntimeLog(p, 182,
 					ByteUtils.byteArrToInt(response.getI2cStatus()));
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_i2cStatus);
 
-			// 旋转状态2
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus2 = this.createPerceptionRuntimeLog(p, 187,
-					(int) response.getRotateStatus2());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus2);
+			// 红外状态
+			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
+					ByteUtils.byteArrToInt(response.getI2cStatus()));
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
+
+			// 电机2旋转状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine2RotateStatus = this.createPerceptionRuntimeLog(p, 187,
+					(int) response.getMachine2RotateStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2RotateStatus);
+
+			// 电机2开关状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine2Switch = this.createPerceptionRuntimeLog(p, 180,
+					(int) response.getMachine2SwitchStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2Switch);
+
+			// 按键状态
+			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 188,
+					(int) response.getPressKeyStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressKey);
 		}
 
 		else if (perceptionTcpDto instanceof Machine2j2SendStatusRequest) {// 2+2电机上传状态的请求
 			Machine2j2SendStatusRequest request = (Machine2j2SendStatusRequest) perceptionTcpDto;
-			// 开关状态
-			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) request.getSwitchStatus());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
+			// 电机1旋转状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine1RotateStatus = this.createPerceptionRuntimeLog(p, 179,
+					(int) request.getMachine1RotateStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1RotateStatus);
 
-			// 旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) request.getRotateStatus());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
+			// 电机1开关状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine1Switch = this.createPerceptionRuntimeLog(p, 180,
+					(int) request.getMachine1SwitchStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1Switch);
 
 			// i2c状态
 			PerceptionRuntimeLog perceptionRuntimeLog_i2cStatus = this.createPerceptionRuntimeLog(p, 182,
 					ByteUtils.byteArrToInt(request.getI2cStatus()));
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_i2cStatus);
 
-			// 旋转状态2
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus2 = this.createPerceptionRuntimeLog(p, 187,
-					(int) request.getRotateStatus2());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus2);
+			// 红外状态
+			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
+					ByteUtils.byteArrToInt(request.getI2cStatus()));
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
+
+			// 电机2旋转状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine2RotateStatus = this.createPerceptionRuntimeLog(p, 187,
+					(int) request.getMachine2RotateStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2RotateStatus);
+
+			// 电机2开关状态
+			PerceptionRuntimeLog perceptionRuntimeLog_machine2Switch = this.createPerceptionRuntimeLog(p, 180,
+					(int) request.getMachine2SwitchStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2Switch);
+
+			// 按键状态
+			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 188,
+					(int) request.getPressKeyStatus());
+			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressKey);
 		}
 
 		else if (perceptionTcpDto instanceof ServerQueryMachine6j6StatusResponse) {// 6+6远程查询的响应
@@ -329,12 +365,27 @@ public class PerceptionServiceImpl implements PerceptionService {
 			r.setMsg("电机响应超时");
 		} else {
 			r.setSuccess(true);
+
+			r.setPerceptionId(perceptionId);
+
+			r.setMachine1RotateStatus(String.valueOf(response.getMachine1RotateStatus()));
+			r.setMachine1SwitchStatus(String.valueOf(response.getMachine1SwitchStatus()));
+
 			int i2c = ByteUtils.byteArrToInt(response.getI2cStatus());
 			r.setI2cStatus(String.valueOf((i2c)));
-			r.setRotateStatus(String.valueOf(response.getRotateStatus()));
-			r.setRotateStatus2(String.valueOf(response.getRotateStatus2()));
-			r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
-			r.setPerceptionId(perceptionId);
+
+			// 红外（不可以远程控制）
+			String infraredStatus = this.perceptionParamValueDao.getPerceptionParamValueDesc(1, 183,
+					(int) response.getInfraredStatus());
+			r.setInfraredStatus(infraredStatus);
+
+			r.setMachine2RotateStatus(String.valueOf(response.getMachine2RotateStatus()));
+			r.setMachine2SwitchStatus(String.valueOf(response.getMachine2SwitchStatus()));
+
+			// 按键(不可以远程控制)
+			String pressKeyStatus = this.perceptionParamValueDao.getPerceptionParamValueDesc(1, 189,
+					(int) response.getInfraredStatus());
+			r.setPressKeyStatus(pressKeyStatus);
 		}
 		return r;
 	}

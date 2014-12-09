@@ -79,7 +79,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			String errorMsg = null;
 
 			// 帧序列号
-			if (content[0] != (byte)0xA1) {
+			if (content[0] != (byte) 0xA1) {
 				errorMsg = "未找到帧序列号标识，content[0] != (byte)0xA1";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -89,7 +89,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			seq = ByteUtils.byteArrToLong(temArr);
 
 			// 帧总长度
-			if (content[10] != (byte)0xA2) {
+			if (content[10] != (byte) 0xA2) {
 				errorMsg = "未找到帧总长度标识，content[10] != (byte)0xA2";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -99,7 +99,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			length = ByteUtils.byteArrToInt(temArr);
 
 			// 业务类型
-			if (content[16] != (byte)0xA3) {
+			if (content[16] != (byte) 0xA3) {
 				errorMsg = "未找到业务类型标识，content[16] != (byte)0xA3";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -107,7 +107,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			busType = content[18];
 
 			// CRC32校验和
-			if (content[19] != (byte)0xA4) {
+			if (content[19] != (byte) 0xA4) {
 				errorMsg = "未找到CRC32校验和标识，content[19] != (byte)0xA4";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -117,7 +117,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			crc32 = ByteUtils.byteArrToLong(temArr);
 
 			// 设备类型
-			if (content[29] != (byte)0xA5) {
+			if (content[29] != (byte) 0xA5) {
 				errorMsg = "未找到设备类型标识，content[29] != (byte)0xA5";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -125,7 +125,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			perceptionType = content[31];
 
 			// 电机地址
-			if (content[32] != (byte)0xB1) {
+			if (content[32] != (byte) 0xB1) {
 				errorMsg = "未找到电机地址标识，content[32] != (byte)0xB1";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -136,7 +136,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			machineAddr = machineAddr.trim();
 
 			// 操作标识
-			if (content[66] != (byte)0xB2) {
+			if (content[66] != (byte) 0xB2) {
 				errorMsg = "未找到操作标识标识，content[66] != (byte)0xB2";
 				log.debug(errorMsg);
 				new RuntimeException(errorMsg);
@@ -154,14 +154,19 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				try {
 					if (perceptionType == 1) {// 2+2的请求
 						Machine2j2SendStatusRequest request = new Machine2j2SendStatusRequest();
-						byte rotateStatus = content[71];
-						byte switchStatus = content[74];
+
+						byte machine1RotateStatus = content[71];
+						byte machine1SwitchStatus = content[74];
 
 						temArr = new byte[2];
 						System.arraycopy(content, 77, temArr, 0, 2);
 						byte[] i2cStatus = temArr;
 
-						byte rotateStatus2 = content[93];
+						byte infraredStatus = content[81];
+
+						byte machine2RotateStatus = content[93];
+						byte machine2SwitchStatus = content[96];
+						byte pressKeyStatus = content[99];
 
 						request.setBusType(busType);
 						request.setCrc32(crc32);
@@ -171,10 +176,14 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setPerceptionType(perceptionType);
 						request.setSeq(seq);
 
-						request.setRotateStatus(rotateStatus);
-						request.setSwitchStatus(switchStatus);
+						request.setMachine1RotateStatus(machine1RotateStatus);
+						request.setMachine2RotateStatus(machine2RotateStatus);
+						request.setMachine1SwitchStatus(machine1SwitchStatus);
+						request.setMachine2SwitchStatus(machine2SwitchStatus);
+						request.setPressKeyStatus(pressKeyStatus);
+						request.setInfraredStatus(infraredStatus);
 						request.setI2cStatus(i2cStatus);
-						request.setRotateStatus2(rotateStatus2);
+
 						perceptionService.saveLog(request);
 					} else if (perceptionType == 2) {// 6+6的请求
 						Machine6j6SendStatusRequest request = new Machine6j6SendStatusRequest();
@@ -242,13 +251,21 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			case 0x02:// 服务器向电机查询状态的响应
 				if (perceptionType == 1) {// 2+2的响应
 					ServerQueryMachine2j2StatusResponse response = new ServerQueryMachine2j2StatusResponse();
-					byte rotateStatus = content[71];
-					byte switchStatus = content[74];
-					byte rotateStatus2 = content[96];
+					byte machine1RotateStatus = content[71];
+					byte machine1SwitchStatus = content[74];
 
+					byte result = content[77];
+					
 					temArr = new byte[2];
 					System.arraycopy(content, 80, temArr, 0, 2);
 					byte[] i2cStatus = temArr;
+
+					byte infraredStatus = content[84];
+
+					byte machine2RotateStatus = content[96];
+					byte machine2SwitchStatus = content[99];
+
+					byte pressKeyStatus = content[102];
 
 					response.setBusType(busType);
 					response.setCrc32(crc32);
@@ -258,10 +275,14 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setPerceptionType(perceptionType);
 					response.setSeq(seq);
 
-					response.setRotateStatus(rotateStatus);
-					response.setSwitchStatus(switchStatus);
+					response.setMachine1RotateStatus(machine1RotateStatus);
+					response.setMachine2RotateStatus(machine2RotateStatus);
+					response.setResult(result);
+					response.setMachine1SwitchStatus(machine1SwitchStatus);
+					response.setMachine2SwitchStatus(machine2SwitchStatus);
+					response.setPressKeyStatus(pressKeyStatus);
+					response.setInfraredStatus(infraredStatus);
 					response.setI2cStatus(i2cStatus);
-					response.setRotateStatus2(rotateStatus2);
 
 					perceptionService.saveLog(response);
 
@@ -315,6 +336,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			case 0x09:// 服务器远程正转控制2
 			case 0x0A:// 服务器远程反转控制2
 
+				byte result = content[71];
+				
 				ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();
 				response.setBusType(busType);
 				response.setCrc32(crc32);
@@ -324,6 +347,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				response.setPerceptionType(perceptionType);
 				response.setSeq(seq);
 
+				response.setResult(result);
+				
 				perceptionService.saveLog(response);
 
 				// 将响应结果对象放到session上下文里
