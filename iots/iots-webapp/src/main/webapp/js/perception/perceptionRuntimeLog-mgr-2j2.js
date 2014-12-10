@@ -100,13 +100,13 @@ function showPerceptionDetailwin(perceptionId) {
 						Ext.Msg.show({
 									title : '提示',
 									message : msg,
-									buttons : Ext.Msg.YESNOCANCEL,
+									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										Ext.Msg.show({
 													title : '提示',
 													message : msg,
-													buttons : Ext.Msg.YESNOCANCEL,
+													buttons : Ext.Msg.YESNO,
 													icon : Ext.Msg.QUESTION,
 													fn : function(btn) {
 														if (btn === 'yes') {
@@ -168,7 +168,7 @@ function showPerceptionDetailwin(perceptionId) {
 						Ext.Msg.show({
 									title : '提示',
 									message : msg,
-									buttons : Ext.Msg.YESNOCANCEL,
+									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										if (btn === 'yes') {
@@ -228,13 +228,13 @@ function showPerceptionDetailwin(perceptionId) {
 						Ext.Msg.show({
 									title : '提示',
 									message : msg,
-									buttons : Ext.Msg.YESNOCANCEL,
+									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										Ext.Msg.show({
 													title : '提示',
 													message : msg,
-													buttons : Ext.Msg.YESNOCANCEL,
+													buttons : Ext.Msg.YESNO,
 													icon : Ext.Msg.QUESTION,
 													fn : function(btn) {
 														if (btn === 'yes') {
@@ -296,7 +296,7 @@ function showPerceptionDetailwin(perceptionId) {
 						Ext.Msg.show({
 									title : '提示',
 									message : msg,
-									buttons : Ext.Msg.YESNOCANCEL,
+									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										if (btn === 'yes') {
@@ -356,7 +356,7 @@ function showPerceptionDetailwin(perceptionId) {
 						Ext.Msg.show({
 									title : '提示',
 									message : msg,
-									buttons : Ext.Msg.YESNOCANCEL,
+									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
 										if (btn === 'yes') {
@@ -475,7 +475,7 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						failure : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
-							Ext.Msg.alert('Failurs', '设备实时状态获取失败,原因:' + response.msg);
+							Ext.Msg.alert('提示', response.msg);
 						}
 					});
 		}
@@ -494,14 +494,14 @@ function showPerceptionDetailwin(perceptionId) {
 						success : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
 							if (response.success) {
-								Ext.Msg.alert('Success', '远程控制设备成功!');
+								Ext.Msg.alert('提示', '远程控制设备成功!');
 								perceptionRuntimeLogStoreLoad();
 							} else {
-								Ext.Msg.alert('Failurs', '远程控制设备失败!');
+								Ext.Msg.alert('提示', '远程控制设备失败!');
 							}
 						},
 						failure : function(form, action, args) {
-							Ext.Msg.alert('Failurs', '远程控制设备失败!');
+							Ext.Msg.alert('提示', '远程控制设备失败!');
 						}
 					});
 		}

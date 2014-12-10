@@ -1,11 +1,12 @@
 Ext.require('Ext.data.Store');
 Ext.require('Ext.grid.Panel');
-Ext.require('Ext.layout.container.Border');
 Ext.require('Ext.toolbar.Toolbar');
 Ext.require('Ext.PagingToolbar');
+Ext.require('Ext.grid.column.RowNumberer');
 
 Ext.onReady(function() {
-  
+	Ext.BLANK_IMAGE_URL = "/iots/plugin/extjs/packages/ext-theme-crisp/resources/images/s.gif";
+
 	var store = Ext.create('Ext.data.Store', {
 				fields : ['createDateTime', 'lastCommTime', 'installSite', 'lastModifyTime', 'perceptionAddr',
 						'perceptionName', 'perceptionTypeId', 'perceptionTypeName', 'perceptionId'],
@@ -71,7 +72,7 @@ Ext.onReady(function() {
 					dataIndex : 'perceptionId',
 					renderer : function(value, modal) {
 						var linkStr = '';
-						
+
 						if (modal.record.data.perceptionTypeId == 1) {
 							linkStr = '<span  style="color:blue;cursor:hand;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showPerceptionDetailwin(\''
 									+ value + '\')">查看详情</span>';

@@ -1,14 +1,1 @@
-Ext.define('Ext.rtl.selection.CellModel', {
-    override: 'Ext.selection.CellModel',
-    
-    doMove: function(direction, e) {
-        if (this.view.getInherited().rtl) {
-            if (direction == 'left') {
-                direction = 'right';
-            } else if (direction == 'right') {
-                direction = 'left';
-            }
-        }
-        this.callParent([direction, e]);
-    }
-});
+Ext.define("Ext.rtl.selection.CellModel",{override:"Ext.selection.CellModel",doMove:function(B,A){if(this.view.getInherited().rtl){if(B=="left"){B="right"}else{if(B=="right"){B="left"}}}this.callParent([B,A])}});

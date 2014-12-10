@@ -1,14 +1,1 @@
-Ext.define('Ext.rtl.layout.container.boxOverflow.Scroller', {
-    override: 'Ext.layout.container.boxOverflow.Scroller',
-
-    getWheelDelta: function(e) {
-        var layout = this.layout,
-            delta = e.getWheelDelta();
-
-        if (layout.direction === 'horizontal' && layout.owner.getInherited().rtl) {
-            delta = -delta;
-        }
-
-        return delta;
-    }
-});
+Ext.define("Ext.rtl.layout.container.boxOverflow.Scroller",{override:"Ext.layout.container.boxOverflow.Scroller",getWheelDelta:function(B){var C=this.layout,A=B.getWheelDelta();if(C.direction==="horizontal"&&C.owner.getInherited().rtl){A=-A}return A}});

@@ -1,12 +1,1 @@
-Ext.define('Ext.sparkline.Shape', {
-    constructor: function (target, id, type, args) {
-        this.target = target;
-        this.id = id;
-        this.type = type;
-        this.args = args;
-    },
-    append: function () {
-        this.target.appendShape(this);
-        return this;
-    }
-});
+Ext.define("Ext.sparkline.Shape",{constructor:function(C,D,A,B){this.target=C;this.id=D;this.type=A;this.args=B},append:function(){this.target.appendShape(this);return this}});
