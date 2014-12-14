@@ -38,6 +38,13 @@ public class PerceptionController extends BaseController {
 	@Autowired
 	private PerceptionVediaService perceptionVediaService = null;
 
+	/**
+	 * 2+2远程控制
+	 * 
+	 * @param perceptionId
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/remoteQuery2j2Machine", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoteQuery2j2MachineResponse remoteQuery2j2Machine(Integer perceptionId) throws Exception {
@@ -54,6 +61,13 @@ public class PerceptionController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 6+6远程控制
+	 * 
+	 * @param perceptionId
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/remoteQuery6j6Machine", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoteQuery6j6MachineResponse remoteQuery6j6Machine(Integer perceptionId) throws Exception {
@@ -70,6 +84,12 @@ public class PerceptionController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 感知端远程控制
+	 * 
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping(value = "/remoteCtrlPerception", method = RequestMethod.POST)
 	@ResponseBody
 	public OpResponse remoteCtrlPerception(RemoteCtrlPerceptionRequest req) {
@@ -86,6 +106,12 @@ public class PerceptionController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 分页查询感知端
+	 * 
+	 * @param opRequest
+	 * @return
+	 */
 	@RequestMapping(value = "/findPerceptionByPage", method = RequestMethod.POST)
 	@ResponseBody
 	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(OpRequest opRequest) {
@@ -94,6 +120,12 @@ public class PerceptionController extends BaseController {
 		return result;
 	}
 
+	/**
+	 * 分页查询感知端运行日志
+	 * 
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping(value = "/findPerceptionRuntimeLogByPage", method = RequestMethod.POST)
 	@ResponseBody
 	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionRuntimeLogByPage(
@@ -103,6 +135,12 @@ public class PerceptionController extends BaseController {
 		return result;
 	}
 
+	/**
+	 * 通过参数id查询感知端状态的下拉列表值
+	 * 
+	 * @param paramId
+	 * @return
+	 */
 	@RequestMapping(value = "/getPerceptionParamListByTypeId", method = RequestMethod.POST)
 	@ResponseBody
 	public ComboboxData getPerceptionParamValueListByParam(Integer paramId) {
@@ -115,6 +153,12 @@ public class PerceptionController extends BaseController {
 		return data;
 	}
 
+	/**
+	 * 分页查询感知端视频文件
+	 * 
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping(value = "/findPerceptionVediaFileByPage", method = RequestMethod.POST)
 	@ResponseBody
 	public PageQueryResult<PercetionVediaFileResponse> findPerceptionVediaFileByPage(
@@ -124,11 +168,17 @@ public class PerceptionController extends BaseController {
 		return result;
 	}
 
+	/**
+	 * 感知端文件上传通知
+	 * 
+	 * @param fileInfoXml
+	 * @return
+	 */
 	@RequestMapping(value = "/fileUploadNotice", method = RequestMethod.POST)
 	@ResponseBody
 	public String fileUploadNotice(String fileInfoXml) {
 		Response response = new Response();
-       
+
 		try {
 			PerceptionVediaFileUploadNoticeRequest req = (PerceptionVediaFileUploadNoticeRequest) this.xmlToRequest(
 					fileInfoXml, PerceptionVediaFileUploadNoticeRequest.class);

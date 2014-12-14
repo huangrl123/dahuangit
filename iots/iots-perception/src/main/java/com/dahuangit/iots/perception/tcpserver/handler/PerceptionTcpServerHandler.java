@@ -5,8 +5,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.apache.mina.core.session.IoSessionConfig;
-import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,8 +40,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 	private SessionFactory sessionFactory = null;
 
 	@Override
-	public void exceptionCaught(IoSession session, Throwable throwable) throws Exception {
+	public void exceptionCaught(IoSession session, Throwable throwable) {
 		// log.debug("服务器handler监听到发生异常,可能是因为客户端已经断开");
+
 		// throwable.printStackTrace();
 	}
 
@@ -255,7 +254,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					byte machine1SwitchStatus = content[74];
 
 					byte result = content[77];
-					
+
 					temArr = new byte[2];
 					System.arraycopy(content, 80, temArr, 0, 2);
 					byte[] i2cStatus = temArr;
@@ -327,17 +326,18 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				}
 				break;
 
-			case 0x03:// 服务器远程正转控制的响应
-			case 0x04:// 服务器远程反转控制的响应
-			case 0x05:// 服务器远程开控制的响应
-			case 0x06:// 服务器远程关控制的响应
+			case 0x03:// 服务器远程电机1正转控制的响应
+			case 0x04:// 服务器远程电机1反转控制的响应
+			case 0x05:// 服务器远程电机1开控制的响应
+			case 0x06:// 服务器远程电机1关控制的响应
 			case 0x07:// 服务器远程I2C开的响应
 			case 0x08:// 服务器远程I2C关的响应
-			case 0x09:// 服务器远程正转控制2
-			case 0x0A:// 服务器远程反转控制2
-
+			case 0x09:// 服务器远程控制电机2正转控制
+			case 0x0A:// 服务器远程控制电机2反转控制
+			case 0x0B:// 服务器远程控制电机2通电控制
+			case 0x0C:// 服务器远程控制电机2断电控制
 				byte result = content[71];
-				
+
 				ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();
 				response.setBusType(busType);
 				response.setCrc32(crc32);
@@ -348,7 +348,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				response.setSeq(seq);
 
 				response.setResult(result);
-				
+
 				perceptionService.saveLog(response);
 
 				// 将响应结果对象放到session上下文里
@@ -376,7 +376,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		log.debug("当前被管理的session数量:" + currentSessionCount);
 
 		this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
-		session.close();
+		session.close(true);
 	}
 
 	@Override

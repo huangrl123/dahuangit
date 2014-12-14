@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+	 "http://castor.org/mapping.dtd">
+<mapping>
+
+	<!-- 感知端列表响应 -->
+	<class name="com.dahuangit.iots.app.dto.response.PerceptionInfo" auto-complete="true" />
+	<class name="com.dahuangit.iots.app.dto.response.AppGetPerceptionListResponse" auto-complete="true"
+		extends="com.dahuangit.base.dto.Response">
+		<map-to xml="response" />
+
+		<field name="perceptionDtos" collection="arraylist" type="com.dahuangit.iots.app.dto.response.PerceptionInfo">
+			<bind-xml name="perception-info" />
+		</field>
+	</class>
+
+	<!-- 2+2感知端远程查询响应 -->
+	<class name="com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse" auto-complete="true"
+		extends="com.dahuangit.base.dto.Response">
+		<map-to xml="response" />
+	</class>
+
+	<!-- 感知端运行日志列表响应 -->
+	<class name="com.dahuangit.iots.app.dto.response.PerceptionRuntimeLogInfo" auto-complete="true" />
+	<class name="com.dahuangit.iots.app.dto.response.PerceptionRuntimeLogDto">
+		<field name="groupTag" />
+		<field name="logInfos" collection="arraylist" type="com.dahuangit.iots.app.dto.response.PerceptionRuntimeLogInfo">
+			<bind-xml name="perception-runtime-log-info" />
+		</field>
+	</class>
+	<class name="com.dahuangit.iots.app.dto.response.AppGetPerceptionRuntimeLogListResponse" extends="com.dahuangit.base.dto.Response">
+		<map-to xml="response" />
+
+		<field name="logDtos" collection="arraylist" type="com.dahuangit.iots.app.dto.response.PerceptionRuntimeLogDto">
+			<bind-xml name="perception-runtime-log-dto" />
+		</field>
+	</class>
+
+	<!-- 用户登录 -->
+	<class name="com.dahuangit.iots.manager.dto.response.UserLoginResponse" extends="com.dahuangit.base.dto.Response"
+		auto-complete="true">
+		<map-to xml="response" />
+	</class>
+</mapping>

@@ -30,7 +30,7 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 		byte[] content = (byte[]) message;
 
 		log.debug("客户端收到报文:" + ByteUtils.byteArrToHexString(content));
-		
+
 		byte[] temArr = null;
 
 		long seq = 0l;
@@ -125,26 +125,26 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 				respcontent[80] = 0x00;
 				respcontent[81] = 0x01;
 
-				//红外状态
+				// 红外状态
 				respcontent[82] = (byte) 0xB7;
 				respcontent[83] = 0x01;
 				respcontent[84] = 0x02;
-				
+
 				// 电机2旋转状态
 				respcontent[94] = (byte) 0xBB;
 				respcontent[95] = 0x01;
 				respcontent[96] = 0x02;
 
-				//电机2开关状态
+				// 电机2开关状态
 				respcontent[97] = (byte) 0xBC;
 				respcontent[98] = 0x01;
 				respcontent[99] = 0x02;
-				
-				//按键状态
+
+				// 按键状态
 				respcontent[100] = (byte) 0xBD;
 				respcontent[101] = 0x01;
 				respcontent[102] = 0x02;
-				
+
 				long crc32l = ByteUtils.byteArrCRC32Value(respcontent);
 				System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, respcontent, 21, 8);
 
@@ -153,54 +153,56 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 				session.write(ib);
 				break;
 			// 服务器远程控制的请求
-			case 0x03:// 正转控制
-			case 0x04:// 反转控制
-			case 0x05:// 开控制
-			case 0x06:// 关控制
+			case 0x03:// 电机1正转控制
+			case 0x04:// 电机1反转控制
+			case 0x05:// 电机1开控制
+			case 0x06:// 电机1关控制
 			case 0x07:// I2C开
 			case 0x08:// I2C关
-			case 0x09:// 正转控制2
-			case 0x0A:// 反转控制2
+			case 0x09:// 电机2正转控制
+			case 0x0A:// 电机2反转控制
+			case 0x0B:// 电机2通电控制
+			case 0x0C:// 电机2断电控制
 				// 帧序列号
-				byte[] ctrlResponseContent = new byte[72]; 
+				byte[] ctrlResponseContent = new byte[72];
 				ctrlResponseContent[0] = (byte) 0xA1;
 				ctrlResponseContent[1] = 0x08;
 				System.arraycopy(ByteUtils.longToByteArray(seq), 0, ctrlResponseContent, 2, 8);
-				
+
 				// 帧总长度
 				ctrlResponseContent[10] = (byte) 0xA2;
 				ctrlResponseContent[11] = 0x04;
 				System.arraycopy(ByteUtils.intToByteArray(72), 0, ctrlResponseContent, 12, 4);
-				
+
 				// 业务类型
 				ctrlResponseContent[16] = (byte) 0xA3;
 				ctrlResponseContent[17] = 0x01;
 				ctrlResponseContent[18] = 0x02;
-				
+
 				// CRC32校验和
 				ctrlResponseContent[19] = (byte) 0xA4;
 				ctrlResponseContent[20] = 0x08;
-				
+
 				// 设备类型
 				ctrlResponseContent[29] = (byte) 0xA5;
 				ctrlResponseContent[30] = 0x01;
 				ctrlResponseContent[31] = 0x01;
-				
+
 				// 电机地址
 				ctrlResponseContent[32] = (byte) 0xB1;
 				ctrlResponseContent[33] = 0x20;
 				System.arraycopy(machineAddr.getBytes(), 0, ctrlResponseContent, 34, machineAddr.getBytes().length);
-			
+
 				// 操作标识
 				ctrlResponseContent[66] = (byte) 0xB2;
 				ctrlResponseContent[67] = 0x01;
 				ctrlResponseContent[68] = operateFlag;
-				
+
 				// 处理结果
 				ctrlResponseContent[69] = (byte) 0xB5;
 				ctrlResponseContent[70] = 0x01;
 				ctrlResponseContent[71] = 0x01;
-				
+
 				ib = IoBufferUtils.byteToIoBuffer(ctrlResponseContent);
 
 				session.write(ib);

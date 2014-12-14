@@ -9,7 +9,7 @@
 		<version>2.0</version>
 	</parent>
 	<artifactId>iots-perception</artifactId>
-	<name>iots-receiver</name>
+	<name>iots-perception</name>
 	<url>http://maven.apache.org</url>
 
 	<dependencies>

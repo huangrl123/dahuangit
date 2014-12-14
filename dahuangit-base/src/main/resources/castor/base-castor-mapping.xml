@@ -6,7 +6,7 @@
 
 	<class name="com.dahuangit.base.dto.Response" auto-complete="true">
 	    <map-to xml="response" />
-	    <field name="success" type="java.lang.Boolean"/>
+	    <field name="success" type="boolean"/>
 	</class>
 
 	<class name="com.dahuangit.base.dto.oxm.response.OxResponse"

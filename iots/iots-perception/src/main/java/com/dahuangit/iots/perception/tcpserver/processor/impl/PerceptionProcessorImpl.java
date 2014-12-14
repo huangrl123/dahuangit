@@ -98,7 +98,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			// 每3秒扫描一次，节省系统资源
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -181,7 +181,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			// 每3秒扫描一次，节省系统资源
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
