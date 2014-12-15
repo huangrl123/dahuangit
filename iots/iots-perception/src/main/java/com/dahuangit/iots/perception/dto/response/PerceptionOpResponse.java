@@ -33,6 +33,9 @@ public class PerceptionOpResponse extends OpResponse {
 	/** 创建时间 */
 	private Date createDateTime = null;
 
+	/** 在线状态 */
+	private String onlineStatus = null;
+
 	private Date lastCommTime = null;
 
 	public String getPerceptionAddr() {
@@ -101,6 +104,14 @@ public class PerceptionOpResponse extends OpResponse {
 
 	public void setPerceptionId(Integer perceptionId) {
 		this.perceptionId = perceptionId;
+	}
+
+	public String getOnlineStatus() {
+		return onlineStatus;
+	}
+
+	public void setOnlineStatus(String onlineStatus) {
+		this.onlineStatus = onlineStatus;
 	}
 
 }

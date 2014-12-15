@@ -25,7 +25,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 	private static final Logger log = Log4jUtils.getLogger(PerceptionProcessorImpl.class);
 
-	/** 客户端连接池 */
+	/** 感知端连接池 */
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
 
 	private long MAX_TRANSMIT_ROLLING_COUNT = 99999999l;
@@ -108,6 +108,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			long timeout = 60 * 1000;// 默认1分钟
 			long count = nowTime - reqTime;
 			if (count > timeout) {
+				log.debug("远程查询电机超时:帧序号seq=" + seq);
 				response.setResult((byte) 0x02);
 				return response;
 			}
@@ -191,6 +192,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			long timeout = 60 * 1000;// 默认1分钟
 			long count = nowTime - reqTime;
 			if (count > timeout) {
+				log.debug("远程控制电机超时:帧序号seq=" + seq);
 				response.setResult((byte) 0x02);
 				return response;
 			}

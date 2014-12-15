@@ -1,5 +1,1 @@
-(function() {
-    var env = jasmine.getEnv();
-    env.addReporter(parent.Test.SandBox.reporter);
-    env.execute();
-})();
+(function(){var A=jasmine.getEnv();A.addReporter(parent.Test.SandBox.reporter);A.execute()})();

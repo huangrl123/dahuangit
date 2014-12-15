@@ -62,8 +62,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			throw new RuntimeException("报文总长度不能小于72");
 		}
 
-		log.debug("服务器端收到客户端的信息，报文:" + ByteUtils.byteArrToHexString(content));
-
 		byte[] temArr = null;
 
 		long seq = 0l;
@@ -146,12 +144,17 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			throw new RuntimeException("报文数组不正确", e);
 		}
 
+		boolean flag = true;
+
 		switch (busType) {
 		case (byte) 0x01: // 客户端的请求
 			switch (operateFlag) {
 			case 0x01:// 客户端上传电机状态
 				try {
 					if (perceptionType == 1) {// 2+2的请求
+						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + ByteUtils.byteArrToHexString(content));
+						log.debug("帧序号seq=" + seq);
+						
 						Machine2j2SendStatusRequest request = new Machine2j2SendStatusRequest();
 
 						byte machine1RotateStatus = content[71];
@@ -175,16 +178,27 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setPerceptionType(perceptionType);
 						request.setSeq(seq);
 
-						request.setMachine1RotateStatus(machine1RotateStatus);
-						request.setMachine2RotateStatus(machine2RotateStatus);
-						request.setMachine1SwitchStatus(machine1SwitchStatus);
-						request.setMachine2SwitchStatus(machine2SwitchStatus);
+						//如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
+						if(machine1SwitchStatus != (byte)0x00) {
+							request.setMachine1RotateStatus((byte) 0x03);
+						} else {
+							request.setMachine1RotateStatus(machine1RotateStatus);
+						}
+						
+						//如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
+						if(machine2SwitchStatus != (byte)0x00) {
+							request.setMachine2RotateStatus((byte)0x03);
+						} else {
+							request.setMachine2RotateStatus(machine2RotateStatus);
+						}
+
 						request.setPressKeyStatus(pressKeyStatus);
 						request.setInfraredStatus(infraredStatus);
 						request.setI2cStatus(i2cStatus);
 
 						perceptionService.saveLog(request);
 					} else if (perceptionType == 2) {// 6+6的请求
+						log.debug("服务器端收到客户端的信息[6+6客户端上传电机状态]，报文:" + ByteUtils.byteArrToHexString(content));
 						Machine6j6SendStatusRequest request = new Machine6j6SendStatusRequest();
 						byte rotateStatus = content[71];
 						byte switchStatus = content[74];
@@ -249,6 +263,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			switch (operateFlag) {
 			case 0x02:// 服务器向电机查询状态的响应
 				if (perceptionType == 1) {// 2+2的响应
+					log.debug("服务器端收到客户端的信息[服务器向2+2电机查询状态的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+					log.debug("帧序号seq=" + seq);
+					
 					ServerQueryMachine2j2StatusResponse response = new ServerQueryMachine2j2StatusResponse();
 					byte machine1RotateStatus = content[71];
 					byte machine1SwitchStatus = content[74];
@@ -289,6 +306,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					session.setAttribute(seq, response);
 
 				} else if (perceptionType == 2) {// 6+6的响应
+					log.debug("服务器端收到客户端的信息[服务器向6+6电机查询状态的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+					log.debug("帧序号seq=" + seq);
+					
 					ServerQueryMachine6j6StatusResponse response = new ServerQueryMachine6j6StatusResponse();
 					byte rotateStatus = content[71];
 					byte switchStatus = content[74];
@@ -327,15 +347,54 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				break;
 
 			case 0x03:// 服务器远程电机1正转控制的响应
+				log.debug("服务器端收到客户端的信息[服务器远程电机1正转控制的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				flag = false;
 			case 0x04:// 服务器远程电机1反转控制的响应
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程电机1反转控制的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x05:// 服务器远程电机1开控制的响应
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程电机1开控制的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x06:// 服务器远程电机1关控制的响应
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程电机1关控制的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x07:// 服务器远程I2C开的响应
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程I2C开的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x08:// 服务器远程I2C关的响应
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程I2C关的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x09:// 服务器远程控制电机2正转控制
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程控制电机2正转控制]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x0A:// 服务器远程控制电机2反转控制
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程控制电机2反转控制]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x0B:// 服务器远程控制电机2通电控制
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程控制电机2通电控制]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
 			case 0x0C:// 服务器远程控制电机2断电控制
+				if (flag) {
+					log.debug("服务器端收到客户端的信息[服务器远程控制电机2断电控制]，报文:" + ByteUtils.byteArrToHexString(content));
+				}
+				flag = false;
+				log.debug("帧序号seq=" + seq);
 				byte result = content[71];
 
 				ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();

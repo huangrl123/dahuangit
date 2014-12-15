@@ -38,10 +38,11 @@ function showPerceptionDetailwin(perceptionId) {
 				width : 600,
 				store : perceptionRuntimeLogStore,
 				columns : [{
-							xtype : 'rownumberer'
+							xtype : 'rownumberer',
+							width : 40
 						}, {
 							text : "运行动作执行时间",
-							width : 30,
+							width : 50,
 							dataIndex : 'createDateTime',
 							sortable : true
 						}, {
@@ -51,7 +52,7 @@ function showPerceptionDetailwin(perceptionId) {
 							sortable : true
 						}, {
 							text : "运动动作结果",
-							width : 60,
+							width : 40,
 							dataIndex : 'perceptionParamValueDesc',
 							sortable : true
 						}],
@@ -64,73 +65,6 @@ function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////基本信息面板////////////////////////////////////////////
 	var form = null;
 	var opt = null;
-	// 电机1开关状态combox
-	var switchStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : '电机1开关状态',
-				store : Ext.create('Ext.data.Store', {
-							singleton : true,
-							proxy : {
-								type : 'ajax',
-								url : 'spring/perception/getPerceptionParamListByTypeId',
-								actionMethods : {
-									read : 'POST'
-								},
-								extraParams : {
-									paramId : 180
-								},
-								reader : {
-									type : 'json',
-									rootProperty : 'root'
-								}
-							},
-							fields : ['value', 'text'],
-							autoLoad : true
-						}),
-				listeners : {
-					beforeselect : function(combo, record, index, eOpts) {
-						var msg;
-						if (record.data.value == '1') {
-							opt = 5;// 电机1通电控制
-							msg = '是否电机1进行通电控制?';
-						} else {
-							opt = 6;// 电机1断电控制
-							msg = '是否电机1进行断电控制?';
-						}
-
-						Ext.Msg.show({
-									title : '提示',
-									message : msg,
-									buttons : Ext.Msg.YESNO,
-									icon : Ext.Msg.QUESTION,
-									fn : function(btn) {
-										Ext.Msg.show({
-													title : '提示',
-													message : msg,
-													buttons : Ext.Msg.YESNO,
-													icon : Ext.Msg.QUESTION,
-													fn : function(btn) {
-														if (btn === 'yes') {
-
-															remoteCtrlPerception();
-														} else if (btn === 'no') {
-															this.close();
-														} else {
-															this.close();
-														}
-													}
-												});
-									}
-								});
-					}
-				},
-				displayField : 'text',
-				valueField : 'value',
-				emptyText : "请选择",
-				editable : false,
-				mode : "local",
-				triggerAction : 'all',
-				width : 500
-			});
 
 	// 电机1旋转状态combox
 	var rotateStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox', {
@@ -160,9 +94,12 @@ function showPerceptionDetailwin(perceptionId) {
 						if (record.data.value == '1') {
 							opt = 3;// 电机1正转控制
 							msg = '是否要对电机1进行正转控制?';
-						} else {
+						} else if (record.data.value == '2') {
 							opt = 4;// 电机1反转控制
 							msg = '是否要对电机1进行反转控制?';
+						} else if (record.data.value == '3') {
+							opt = 6;// 电机1断电控制
+							msg = '是否要对电机1进行停控制?';
 						}
 
 						Ext.Msg.show({
@@ -186,76 +123,9 @@ function showPerceptionDetailwin(perceptionId) {
 				displayField : 'text',
 				valueField : 'value',
 				emptyText : "请选择",
+				disabled : true,
 				editable : false,
 				mode : 'remote',
-				triggerAction : 'all',
-				width : 500
-			});
-
-	// 电机2开关状态combox
-	var switchStatus_machine2_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : '电机2开关状态',
-				store : Ext.create('Ext.data.Store', {
-							singleton : true,
-							proxy : {
-								type : 'ajax',
-								url : 'spring/perception/getPerceptionParamListByTypeId',
-								actionMethods : {
-									read : 'POST'
-								},
-								extraParams : {
-									paramId : 188
-								},
-								reader : {
-									type : 'json',
-									rootProperty : 'root'
-								}
-							},
-							fields : ['value', 'text'],
-							autoLoad : true
-						}),
-				listeners : {
-					beforeselect : function(combo, record, index, eOpts) {
-						var msg;
-						if (record.data.value == '1') {
-							opt = 11;// 0x0B：电机2通电控制
-							msg = '是否要对电机2进行通电控制?';
-						} else {
-							opt = 12;// 0x0C：电机2断电控制
-							msg = '是否要对电机2进行断电控制?';
-						}
-
-						Ext.Msg.show({
-									title : '提示',
-									message : msg,
-									buttons : Ext.Msg.YESNO,
-									icon : Ext.Msg.QUESTION,
-									fn : function(btn) {
-										Ext.Msg.show({
-													title : '提示',
-													message : msg,
-													buttons : Ext.Msg.YESNO,
-													icon : Ext.Msg.QUESTION,
-													fn : function(btn) {
-														if (btn === 'yes') {
-
-															remoteCtrlPerception();
-														} else if (btn === 'no') {
-															this.close();
-														} else {
-															this.close();
-														}
-													}
-												});
-									}
-								});
-					}
-				},
-				displayField : 'text',
-				valueField : 'value',
-				emptyText : "请选择",
-				editable : false,
-				mode : "local",
 				triggerAction : 'all',
 				width : 500
 			});
@@ -288,9 +158,12 @@ function showPerceptionDetailwin(perceptionId) {
 						if (record.data.value == '1') {
 							opt = 9;// 电机2正转控制
 							msg = '是否要对电机2进行正转控制?';
-						} else {
+						} else if (record.data.value == '2') {
 							opt = 10;// 0x0A: 电机2反转控制
 							msg = '是否要对电机2进行反转控制?';
+						} else if (record.data.value == '3') {
+							opt = 12;// 0x0C：电机2断电控制
+							msg = '是否要对电机2进行断电控制?';
 						}
 
 						Ext.Msg.show({
@@ -315,6 +188,7 @@ function showPerceptionDetailwin(perceptionId) {
 				valueField : 'value',
 				emptyText : "请选择",
 				editable : false,
+				disabled : true,
 				mode : 'remote',
 				triggerAction : 'all',
 				width : 500
@@ -375,6 +249,7 @@ function showPerceptionDetailwin(perceptionId) {
 				valueField : 'value',
 				emptyText : "请选择",
 				editable : false,
+				disabled : true,
 				mode : 'remote',
 				triggerAction : 'all',
 				width : 500
@@ -409,8 +284,7 @@ function showPerceptionDetailwin(perceptionId) {
 				height : 500,
 				bodyPadding : 5,
 				frame : true,
-				items : [switchStatus_machine1_combobox, rotateStatus_machine1_combobox,
-						switchStatus_machine2_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
+				items : [rotateStatus_machine1_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
 						infraredStatus_field, pressKeyStatus_field, {
 							layout : 'column',
 							padding : '0 0 0 180',
@@ -460,16 +334,17 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						success : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
-							switchStatus_machine1_combobox.setValue(response.machine1SwitchStatus);
 							rotateStatus_machine1_combobox.setValue(response.machine1RotateStatus);
+							rotateStatus_machine1_combobox.setDisabled(false);
 
-							switchStatus_machine2_combobox.setValue(response.machine2SwitchStatus);
 							rotateStatus_machine2_combobox.setValue(response.machine2RotateStatus);
+							rotateStatus_machine2_combobox.setDisabled(false);
 
 							i2cStatus_combobox.setValue(response.i2cStatus);
+							i2cStatus_combobox.setDisabled(false);
 
-							pressKeyStatus_field.setValue(response.infraredStatus);
-							infraredStatus_field.setValue(response.pressKeyStatus);
+							pressKeyStatus_field.setValue(response.pressKeyStatus);
+							infraredStatus_field.setValue(response.infraredStatus);
 
 							perceptionRuntimeLogStoreLoad();
 						},

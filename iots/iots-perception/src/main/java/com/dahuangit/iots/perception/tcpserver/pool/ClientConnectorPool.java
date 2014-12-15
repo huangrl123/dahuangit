@@ -92,6 +92,22 @@ public class ClientConnectorPool {
 		return this.clientConnectorMap.get(key);
 	}
 
+	/**
+	 * 是否含有客户端
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public boolean containsClientConnector(String key) {
+		ClientConnector c = this.getClientConnector(key);
+
+		if (null == c) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/** 连接池维护线程 定时清除掉连接池中超时的连接 */
 	private class ClientConnectorPoolMaintenance implements Runnable {
 

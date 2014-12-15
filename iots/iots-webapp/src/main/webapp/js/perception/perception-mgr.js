@@ -9,7 +9,7 @@ Ext.onReady(function() {
 
 	var store = Ext.create('Ext.data.Store', {
 				fields : ['createDateTime', 'lastCommTime', 'installSite', 'lastModifyTime', 'perceptionAddr',
-						'perceptionName', 'perceptionTypeId', 'perceptionTypeName', 'perceptionId'],
+						'perceptionName', 'perceptionTypeId', 'perceptionTypeName', 'perceptionId', 'onlineStatus'],
 
 				proxy : {
 					type : 'ajax',
@@ -40,7 +40,8 @@ Ext.onReady(function() {
 		renderTo : Ext.getBody(),
 		store : store,
 		columns : [{
-					xtype : 'rownumberer'
+					xtype : 'rownumberer',
+					width : 40
 				}, {
 					text : "设备地址",
 					width : 30,
@@ -57,9 +58,9 @@ Ext.onReady(function() {
 					dataIndex : 'installSite',
 					sortable : true
 				}, {
-					text : "设备接入时间",
+					text : "在线状态",
 					width : 30,
-					dataIndex : 'createDateTime',
+					dataIndex : 'onlineStatus',
 					sortable : true
 				}, {
 					text : "最后通信时间",
