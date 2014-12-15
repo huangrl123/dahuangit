@@ -207,7 +207,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2RotateStatus);
 
 			// 按键状态
-			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 188,
+			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 189,
 					(int) request.getPressKeyStatus());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressKey);
 		}
