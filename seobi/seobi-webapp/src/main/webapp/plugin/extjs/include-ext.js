@@ -64,7 +64,7 @@
 
 	if (includeCSS) {
 		document.write('<link rel="stylesheet" type="text/css" href="'
-				+ themePath + '-debug.css"/>');
+				+ themePath + '.css"/>');
 	}
 
 	document.write('<script type="text/javascript" src="plugin/extjs/ext-all'

@@ -34,7 +34,7 @@ public class AnalyzeController extends BaseController {
 		DoAnalyzeResponse response = new DoAnalyzeResponse();
 
 		try {
-			double percent = this.analyzeService.getBaiduOriginarityPercent(content);
+			double percent = this.analyzeService.getBaiduOriginarityPercentByStr(content);
 			response.setOriginarityPercent(percent);
 		} catch (Exception e) {
 			response.setSuccess(false);

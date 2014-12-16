@@ -1,14 +1,1 @@
-Ext.define('Ext.aria.menu.CheckItem', {
-    override: 'Ext.menu.CheckItem',
-    
-    ariaGetRenderAttributes: function() {
-        var me = this,
-            attrs;
-        
-        attrs = me.callParent();
-        
-        attrs['aria-checked'] = me.menu ? 'mixed' : !!me.checked;
-        
-        return attrs;
-    }
-});
+Ext.define("Ext.aria.menu.CheckItem",{override:"Ext.menu.CheckItem",ariaGetRenderAttributes:function(){var B=this,A;A=B.callParent();A["aria-checked"]=B.menu?"mixed":!!B.checked;return A}});

@@ -6,12 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +64,8 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 		boolean isNewAccount = false;
 
 		List<QQTalkMsg> QQTalkMsgList = new ArrayList<QQTalkMsg>();
+
+		final List<Integer> idList = new ArrayList<Integer>();
 
 		for (QQTalkMsgXml qqTalkMsgXml : qqTalkMsgXmls) {
 			QQAccount qqAccount = accountDao.findUniqueBy("qq", qqTalkMsgXml.getQq());
@@ -148,8 +148,6 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 				this.accountDao.addQQAccount(qqAccount);
 			}
 
-			// 启动线程分析这些qq说说的原创度
-			final List<Integer> idList = new ArrayList<Integer>();
 			for (QQTalkMsg qm : QQTalkMsgList) {
 				if (qm == null) {
 					continue;
@@ -157,9 +155,9 @@ public class QQTalkMsgServiceImpl extends BaseService implements QQTalkMsgServic
 
 				idList.add(qm.getTmId());
 			}
-
-			analyzeOriginatyPercent(idList);
 		}
+
+		analyzeOriginatyPercent(idList);
 	}
 
 	private void analyzeOriginatyPercent(final List<Integer> talkIdsList) {

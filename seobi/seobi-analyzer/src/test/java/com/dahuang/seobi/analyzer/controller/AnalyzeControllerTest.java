@@ -14,7 +14,7 @@ import com.dahuangit.util.xml.XmlUtils;
 import com.dahuangit.util.xml.XpathUtils;
 
 public class AnalyzeControllerTest extends BaseController {
-	private static String host = "http://localhost:8080/seobi/spring/analyze/doAnalyze";
+	private static String host = "http://localhost:8080/seobi/spring/analyze/analyzeShuoshuoBaiduOriginarityPercent";
 
 	private static final Logger log = Log4jUtils.getLogger(
 			"E:\\dahuang-workspace\\dahuangit\\seobi\\seobi-webapp\\src\\test\\resources\\log4j.properties",
@@ -26,7 +26,7 @@ public class AnalyzeControllerTest extends BaseController {
 		try {
 			String content = "今天天气不错";
 
-			serialParams.put("content", content);
+			serialParams.put("idsStr", "111802;111803");
 			String result = HttpKit.getHttpRequestContent(host, serialParams, null);
 
 			log.debug("服务端返回报文:" + XmlUtils.formatXMLStr(result));

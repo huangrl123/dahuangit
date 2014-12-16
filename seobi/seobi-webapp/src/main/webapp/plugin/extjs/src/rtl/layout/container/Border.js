@@ -1,14 +1,1 @@
-Ext.define('Ext.rtl.layout.container.Border', {
-    override: 'Ext.layout.container.Border',
-    
-    initLayout: function(){
-        var me = this;
-        
-        if (me.owner.getInherited().rtl) {
-            me.padOnContainerProp = 'right';
-            me.padNotOnContainerProp = 'left';  
-            me.horzPositionProp = 'right';
-        }
-        me.callParent(arguments);    
-    }
-});
+Ext.define("Ext.rtl.layout.container.Border",{override:"Ext.layout.container.Border",initLayout:function(){var A=this;if(A.owner.getInherited().rtl){A.padOnContainerProp="right";A.padNotOnContainerProp="left";A.horzPositionProp="right"}A.callParent(arguments)}});

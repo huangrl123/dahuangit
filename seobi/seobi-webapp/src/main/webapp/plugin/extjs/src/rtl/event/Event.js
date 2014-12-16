@@ -1,17 +1,1 @@
-Ext.define('Ext.rtl.event.Event', {
-    override: 'Ext.event.Event',
-    
-    getXY: function() {
-        var me = this,
-            xy = me.xy;
-
-        if (!xy) {
-            xy = me.callParent();
-            if (Ext.rootInheritedState.rtl) {
-                xy[0] = Ext.Element.getViewportWidth() - xy[0];
-            }
-        }
-        return xy;
-    }
-
-});
+Ext.define("Ext.rtl.event.Event",{override:"Ext.event.Event",getXY:function(){var B=this,A=B.xy;if(!A){A=B.callParent();if(Ext.rootInheritedState.rtl){A[0]=Ext.Element.getViewportWidth()-A[0]}}return A}});

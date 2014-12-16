@@ -1,10 +1,1 @@
-Ext.define('Ext.chart.overrides.AbstractChart', {
-    override: 'Ext.chart.AbstractChart',
-
-    updateLegend: function (legend) {
-        this.callParent(arguments);
-        if (legend) {
-            this.add(legend);
-        }
-    }
-});
+Ext.define("Ext.chart.overrides.AbstractChart",{override:"Ext.chart.AbstractChart",updateLegend:function(A){this.callParent(arguments);if(A){this.add(A)}}});

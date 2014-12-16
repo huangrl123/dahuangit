@@ -12,11 +12,13 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dahuangit.seobi.analyzer.dao.TalkMsgRelatedSearchKeyDao;
+import com.dahuangit.seobi.analyzer.dao.RelatedSearchKeyDao;
+import com.dahuangit.seobi.analyzer.dto.OriginarityPercentDto;
+import com.dahuangit.seobi.analyzer.dto.SectionSimilarityLengthDto;
 import com.dahuangit.seobi.analyzer.entry.RelatedSearchKey;
-import com.dahuangit.seobi.analyzer.entry.TalkRelatedSearchKey;
 import com.dahuangit.seobi.analyzer.service.AnalyzeService;
 import com.dahuangit.seobi.analyzer.util.SearchUtils;
 import com.dahuangit.seobi.proxy.entry.Proxy;
@@ -28,6 +30,7 @@ import com.dahuangit.util.SortUtils;
 import com.dahuangit.util.log.Log4jUtils;
 import com.dahuangit.util.xml.XpathUtils;
 
+@Component
 @Transactional
 public class AnalyzeServiceImpl implements AnalyzeService {
 
@@ -43,7 +46,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	private QQTalkMsgDao qqTalkMsgDao = null;
 
 	@Autowired
-	private TalkMsgRelatedSearchKeyDao msgRelatedSearchKeyDao = null;
+	private RelatedSearchKeyDao relatedSearchKeyDao = null;
 
 	@Autowired
 	private ProxyService proxyService = null;
@@ -57,13 +60,11 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @param qqTalkMsgs
 	 * @return
 	 */
-	public QQTalkMsg analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(Integer qqTalkMsgId) {
+	public void analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(Integer qqTalkMsgId) {
 
 		QQTalkMsg msg = this.qqTalkMsgDao.getQQTalkMsg(qqTalkMsgId);
 
-		msg = this.analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(msg);
-
-		return msg;
+		this.analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(msg.getTalkContent(), msg.getTmId());
 	}
 
 	/**
@@ -72,35 +73,25 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @param qQtalkMsgIds
 	 * @return
 	 */
-	public List<QQTalkMsg> analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(List<Integer> qQtalkMsgIds) {
+	public void analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(List<Integer> qQtalkMsgIds) {
 		List<QQTalkMsg> list = this.qqTalkMsgDao.findByIds(qQtalkMsgIds);
 
 		if (null == list || list.isEmpty()) {
-			return null;
-		}
-
-		List<QQTalkMsg> qqTalkMsgs = new ArrayList<QQTalkMsg>();
-		for (QQTalkMsg qm : list) {
-			QQTalkMsg msg = this.analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(qm);
-			qqTalkMsgs.add(msg);
-		}
-
-		return qqTalkMsgs;
-	}
-
-	/**
-	 * 分析本系统数据库表中qq说说的百度原创度
-	 */
-	public void analyzeQQTalkMsgBaiduOriginatyPercent() {
-		// 搜索所有未搜索过的说说信息
-		List<QQTalkMsg> notSearchedList = this.qqTalkMsgDao.getAllNotAnalyzedQQTalkMsg();
-
-		if (null == notSearchedList || notSearchedList.isEmpty()) {
 			return;
 		}
 
-		for (QQTalkMsg msg : notSearchedList) {
-			this.analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(msg);
+		for (QQTalkMsg qm : list) {
+			Double originalityPercent = this.analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(qm.getTalkContent(),
+					qm.getTmId());
+
+			qm.setAnalyzed(true);
+			qm.setAnalyzeTime(new Date());
+
+			if (null != originalityPercent) {
+				qm.setOriginalityPercent(originalityPercent);
+			}
+
+			this.qqTalkMsgDao.update(qm);
 		}
 
 	}
@@ -111,34 +102,29 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @param msg
 	 * @return
 	 */
-	public QQTalkMsg analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(QQTalkMsg msg) {
-		Validate.notNull(msg, "分析并且获取qq说说原创度的qq说说内容不能为null");
+	public Double analyzeAndSaveQQTalkMsgBaiduOriginatyPercent(String content, Integer tmId) {
+		Validate.notNull(content, "分析并且获取qq说说原创度的qq说说内容不能为null");
 
-		String content = msg.getTalkContent();
 		Double originalityPercent = null;
 		List<RelatedSearchKey> keys = null;
+		OriginarityPercentDto originarityPercentDto = null;
 
 		try {
-			originalityPercent = getBaiduOriginarityPercent(content);
-			keys = parseAndGetRelatedSearchKey(content);
+			originarityPercentDto = getBaiduOriginarityPercent(content);
+			originalityPercent = originarityPercentDto.getOriginarityPercent();
+			keys = originarityPercentDto.getKeys();
 		} catch (Exception e) {
 		}
 
-		// 保存说说信息(无需手动保存，系统会自动保存)
-		msg.setAnalyzed(true);
-		msg.setAnalyzeTime(new Date());
-		if (null != originalityPercent) {
-			msg.setOriginalityPercent(originalityPercent);
-		}
-
 		if (null != keys) {
-			TalkRelatedSearchKey talkRelatedSearchKey = new TalkRelatedSearchKey();
-			talkRelatedSearchKey.setQqTalkMsg(msg);
-			talkRelatedSearchKey.setRelatedSearchKeys(keys);
-			this.msgRelatedSearchKeyDao.add(talkRelatedSearchKey);
+			for (RelatedSearchKey relatedSearchKey : keys) {
+				relatedSearchKey.setTalkId(tmId);
+				this.relatedSearchKeyDao.add(relatedSearchKey);
+			}
+
 		}
 
-		return msg;
+		return originalityPercent;
 	}
 
 	/**
@@ -148,11 +134,13 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Double getBaiduOriginarityPercent(String content) throws Exception {
+	public OriginarityPercentDto getBaiduOriginarityPercent(String content) throws Exception {
 		Validate.notNull(content, "需要计算原创度的字符不能为null");
 
 		Double baiduSimilarityPercent = null;
 		Double baiduOriginatyPercent = null;
+
+		List<RelatedSearchKey> keys = new ArrayList<RelatedSearchKey>();
 
 		try {
 			log.debug("正在通过百度搜索相关内容:[" + content + "]");
@@ -162,12 +150,18 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 			content = content.replaceAll(regEx, "").trim();
 
 			if ("".equals(content)) {
-				return (double) 0;
+				return null;
 			}
 
 			// 如果内容没有超长
 			if (content.length() < BAIDU_SEARCH_KEY_COUNT) {
-				Double baiduSimilarityLength = saveKeyAndCountSectionSimilarityLength(content);
+				SectionSimilarityLengthDto dto = saveKeyAndCountSectionSimilarityLength(content);
+
+				if (null != dto && null != dto.getKeys()) {
+					keys.addAll(dto.getKeys());
+				}
+
+				Double baiduSimilarityLength = dto.getSectionSimilarityLength();
 
 				baiduSimilarityPercent = baiduSimilarityLength / (double) content.length();
 				// 如果搜索的内容大于百度要求的搜索字数，则分段搜索
@@ -193,7 +187,14 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 						}
 
 						// 这段的飘红字数的平均长度
-						Double sectionSimilaryCountLength = saveKeyAndCountSectionSimilarityLength(key);
+						SectionSimilarityLengthDto dto = saveKeyAndCountSectionSimilarityLength(key);
+
+						if (null != dto && null != dto.getKeys()) {
+							keys.addAll(dto.getKeys());
+						}
+
+						Double sectionSimilaryCountLength = dto.getSectionSimilarityLength();
+
 						Double sectionSimilary = sectionSimilaryCountLength / (double) key.length();
 
 						log.debug("第[" + i + "/" + sectionCount + "]段内容的相似度计算完毕,相似度为:["
@@ -220,7 +221,11 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 			throw e;
 		}
 
-		return baiduOriginatyPercent;
+		OriginarityPercentDto originarityPercentDto = new OriginarityPercentDto();
+		originarityPercentDto.setOriginarityPercent(baiduOriginatyPercent);
+		originarityPercentDto.setKeys(keys);
+
+		return originarityPercentDto;
 	}
 
 	/**
@@ -232,7 +237,8 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
-	private Double saveKeyAndCountSectionSimilarityLength(String sectionStr) throws IOException, DocumentException {
+	private SectionSimilarityLengthDto saveKeyAndCountSectionSimilarityLength(String sectionStr) throws IOException,
+			DocumentException {
 
 		String result = null;
 
@@ -244,7 +250,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 		}
 
 		if (null == result) {
-			return (double) 0;
+			return null;
 		}
 
 		String startStr = "<div class=\"nums\">";
@@ -277,7 +283,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 			log.error("xml解析报错,searchResult=[" + searchResult + "] searchResultxpathExpression=["
 					+ searchResultxpathExpression + "]");
 			e.printStackTrace();
-			return (double) 0;
+			return null;
 		}
 
 		// 遍历一段的每一个结果
@@ -288,8 +294,13 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 		}
 
 		Double average = SortUtils.getAverage(list);
+		List<RelatedSearchKey> keys = this.parseAndGetRelatedSearchKey(result);
 
-		return average;
+		SectionSimilarityLengthDto dto = new SectionSimilarityLengthDto();
+		dto.setSectionSimilarityLength(average);
+		dto.setKeys(keys);
+
+		return dto;
 	}
 
 	/**
@@ -334,6 +345,7 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 	 * @throws DocumentException
 	 */
 	private List<RelatedSearchKey> parseAndGetRelatedSearchKey(String result) throws DocumentException {
+
 		// 保存关联搜索关键字
 		String startStr = "<div id=\"rs\">";
 		String endStr = "id=\"page\"";
@@ -374,6 +386,12 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 		}
 
 		return relatedSearchKeys;
+	}
+
+	@Override
+	public Double getBaiduOriginarityPercentByStr(String content) throws Exception {
+		OriginarityPercentDto dto = this.getBaiduOriginarityPercent(content);
+		return dto.getOriginarityPercent();
 	}
 
 }
