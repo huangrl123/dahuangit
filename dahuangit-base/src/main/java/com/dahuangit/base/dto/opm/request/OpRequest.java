@@ -7,7 +7,7 @@ public class OpRequest extends Request {
 	private Integer start = 0;
 
 	/** 获取记录数 */
-	private Integer limit = 0;
+	private Integer limit = 25;
 
 	public Integer getStart() {
 		return start;
@@ -17,11 +17,11 @@ public class OpRequest extends Request {
 		this.start = start;
 	}
 
-	public int getLimit() {
+	public Integer getLimit() {
 		return limit;
 	}
 
-	public void setLimit(int limit) {
+	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
 
