@@ -6,6 +6,7 @@ function showLogHexwin(hex) {
 				items : [{
 							xtype : 'textareafield',
 							fieldLabel : '设备报文',
+							disabled : true,
 							labelWidth : 50,
 							height : 200,
 							value : hex,
@@ -70,6 +71,10 @@ function showPerceptionDetailwin(perceptionId) {
 	var perceptionRuntimeLogGrid = Ext.create('Ext.grid.Panel', {
 		title : '运行日志',
 		width : 600,
+		viewConfig : {
+			// 不需要mask，加载中...提示字样
+			loadMask : false
+		},
 		store : perceptionRuntimeLogStore,
 		columns : [{
 					xtype : 'rownumberer',
@@ -152,9 +157,10 @@ function showPerceptionDetailwin(perceptionId) {
 									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
+										var value = rotateStatus_machine1_combobox.getValue();
 										if (btn === 'yes') {
 
-											remoteCtrlPerception();
+											remoteCtrlPerception(rotateStatus_machine1_combobox, value);
 										} else if (btn === 'no') {
 											this.close();
 										} else {
@@ -379,7 +385,7 @@ function showPerceptionDetailwin(perceptionId) {
 		if (form.isValid()) {
 			form.submit({
 						url : 'spring/perception/remoteQuery2j2Machine',
-						waitMsg : '获取设备实时状态，请稍后...',
+						// waitMsg : '获取设备实时状态，请稍后...',
 						params : {
 							perceptionId : perceptionId
 						},
@@ -409,7 +415,7 @@ function showPerceptionDetailwin(perceptionId) {
 		}
 	}
 
-	var remoteCtrlPerception = function() {
+	var remoteCtrlPerception = function(combox, oldValue) {
 
 		if (form.isValid()) {
 			form.submit({
@@ -430,10 +436,14 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						failure : function(form, action, args) {
 							Ext.Msg.alert('提示', '远程控制设备失败!');
+							//如果失败，则恢复到设备当前的真实状态
+							remoteQueryPerception();
 						}
 					});
 		}
 	}
 
 	remoteQueryPerception();
+
+	window.setInterval(remoteQueryPerception, 3000);
 }
