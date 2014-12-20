@@ -72,6 +72,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		byte operateFlag = 0;
 		byte perceptionType = 0;
 
+		String hex = null;
+		
 		try {
 			String errorMsg = null;
 
@@ -152,7 +154,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			case 0x01:// 客户端上传电机状态
 				try {
 					if (perceptionType == 1) {// 2+2的请求
-						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + ByteUtils.byteArrToHexString(content));
+						hex = ByteUtils.byteArrToHexString(content);
+						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + hex);
 						log.debug("帧序号seq=" + seq);
 						
 						Machine2j2SendStatusRequest request = new Machine2j2SendStatusRequest();
@@ -196,9 +199,12 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setInfraredStatus(infraredStatus);
 						request.setI2cStatus(i2cStatus);
 
+						request.setHex(hex);
+						
 						perceptionService.saveLog(request);
 					} else if (perceptionType == 2) {// 6+6的请求
-						log.debug("服务器端收到客户端的信息[6+6客户端上传电机状态]，报文:" + ByteUtils.byteArrToHexString(content));
+						hex = ByteUtils.byteArrToHexString(content);
+						log.debug("服务器端收到客户端的信息[6+6客户端上传电机状态]，报文:" + hex);
 						Machine6j6SendStatusRequest request = new Machine6j6SendStatusRequest();
 						byte rotateStatus = content[71];
 						byte switchStatus = content[74];
@@ -229,6 +235,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setSwitchStatus(switchStatus);
 						request.setVibrateStatus(vibrateStatus);
 
+						request.setHex(hex);
+						
 						perceptionService.saveLog(request);
 					}
 
@@ -263,7 +271,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			switch (operateFlag) {
 			case 0x02:// 服务器向电机查询状态的响应
 				if (perceptionType == 1) {// 2+2的响应
-					log.debug("服务器端收到客户端的信息[服务器向2+2电机查询状态的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+					hex = ByteUtils.byteArrToHexString(content);
+					log.debug("服务器端收到客户端的信息[服务器向2+2电机查询状态的响应]，报文:" + hex);
 					log.debug("帧序号seq=" + seq);
 					
 					ServerQueryMachine2j2StatusResponse response = new ServerQueryMachine2j2StatusResponse();
@@ -291,8 +300,20 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setPerceptionType(perceptionType);
 					response.setSeq(seq);
 
-					response.setMachine1RotateStatus(machine1RotateStatus);
-					response.setMachine2RotateStatus(machine2RotateStatus);
+					//如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
+					if(machine1SwitchStatus != (byte)0x00) {
+						response.setMachine1RotateStatus((byte) 0x03);
+					} else {
+						response.setMachine1RotateStatus(machine1RotateStatus);
+					}
+					
+					//如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
+					if(machine2SwitchStatus != (byte)0x00) {
+						response.setMachine2RotateStatus((byte)0x03);
+					} else {
+						response.setMachine2RotateStatus(machine2RotateStatus);
+					}
+					
 					response.setResult(result);
 					response.setMachine1SwitchStatus(machine1SwitchStatus);
 					response.setMachine2SwitchStatus(machine2SwitchStatus);
@@ -300,13 +321,15 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setInfraredStatus(infraredStatus);
 					response.setI2cStatus(i2cStatus);
 
+					response.setHex(hex);
 					perceptionService.saveLog(response);
 
 					// 将响应结果对象放到session上下文里
 					session.setAttribute(seq, response);
 
 				} else if (perceptionType == 2) {// 6+6的响应
-					log.debug("服务器端收到客户端的信息[服务器向6+6电机查询状态的响应]，报文:" + ByteUtils.byteArrToHexString(content));
+					hex = ByteUtils.byteArrToHexString(content);
+					log.debug("服务器端收到客户端的信息[服务器向6+6电机查询状态的响应]，报文:" + hex);
 					log.debug("帧序号seq=" + seq);
 					
 					ServerQueryMachine6j6StatusResponse response = new ServerQueryMachine6j6StatusResponse();
@@ -339,6 +362,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setSwitchStatus(switchStatus);
 					response.setVibrateStatus(vibrateStatus);
 
+					response.setHex(hex);
+					
 					perceptionService.saveLog(response);
 
 					// 将响应结果对象放到session上下文里
@@ -406,6 +431,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				response.setPerceptionType(perceptionType);
 				response.setSeq(seq);
 
+				response.setHex(hex);
+				
 				response.setResult(result);
 
 				perceptionService.saveLog(response);

@@ -1,9 +1,43 @@
+function showLogHexwin(hex) {
+	var form = Ext.create('Ext.form.Panel', {
+				width : 400,
+				bodyPadding : 5,
+				frame : true,
+				items : [{
+							xtype : 'textareafield',
+							fieldLabel : '设备报文',
+							labelWidth : 50,
+							height : 200,
+							value : hex,
+							width : '100%'
+						}],
+
+				buttons : [{
+							text : '确定',
+							handler : function() {
+								win.close();
+							}
+						}]
+			});
+
+	var win = Ext.create('Ext.Window', {
+				title : '设备报文',
+				plain : true,
+				closable : true,
+				closeAction : 'destroy',
+				layout : 'fit',
+				items : [form]
+			});
+
+	win.show();
+}
+
 function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////运行日志信息面板////////////////////////////////////////////
 	var perceptionRuntimeLogStore = Ext.create('Ext.data.Store', {
 				fields : ['createDateTime', 'perceptionAddr', 'perceptionId', 'perceptionName', 'perceptionParamId',
 						'perceptionParamName', 'perceptionParamValueInfoId', 'perceptionParamValueDesc',
-						'perceptionRuntimeLogId', 'perceptionTypeId', 'perceptionTypeName', 'remark'],
+						'perceptionRuntimeLogId', 'perceptionTypeId', 'perceptionTypeName', 'remark', 'hex'],
 
 				proxy : {
 					type : 'ajax',
@@ -34,33 +68,43 @@ function showPerceptionDetailwin(perceptionId) {
 			});
 
 	var perceptionRuntimeLogGrid = Ext.create('Ext.grid.Panel', {
-				title : '运行日志',
-				width : 600,
-				store : perceptionRuntimeLogStore,
-				columns : [{
-							xtype : 'rownumberer',
-							width : 40
-						}, {
-							text : "运行动作执行时间",
-							width : 50,
-							dataIndex : 'createDateTime',
-							sortable : true
-						}, {
-							text : "运行动作",
-							width : 30,
-							dataIndex : 'perceptionParamName',
-							sortable : true
-						}, {
-							text : "运动动作结果",
-							width : 40,
-							dataIndex : 'perceptionParamValueDesc',
-							sortable : true
-						}],
-				bbar : perceptionRuntimeLogPg,
-				forceFit : true,
-				height : 505,
-				split : true
-			});
+		title : '运行日志',
+		width : 600,
+		store : perceptionRuntimeLogStore,
+		columns : [{
+					xtype : 'rownumberer',
+					width : 60
+				}, {
+					text : "时间",
+					width : 80,
+					dataIndex : 'createDateTime',
+					sortable : true
+				}, {
+					text : "动作",
+					width : 70,
+					dataIndex : 'perceptionParamName',
+					sortable : true
+				}, {
+					text : "结果",
+					width : 30,
+					dataIndex : 'perceptionParamValueDesc',
+					sortable : true
+				}, {
+					text : "操作",
+					width : 50,
+					dataIndex : 'hex',
+					renderer : function(value, modal) {
+						var linkStr = '<span  style="color:blue;cursor:hand;" onmousemove="this.style.color=\'red\';" onmouseout="this.style.color=\'blue\'" onclick="javascript:showLogHexwin(\''
+								+ value + '\')">查看设备报文</span>';
+
+						return linkStr;
+					}
+				}],
+		bbar : perceptionRuntimeLogPg,
+		forceFit : true,
+		height : 505,
+		split : true
+	});
 
 	// ///////////////////////////////////基本信息面板////////////////////////////////////////////
 	var form = null;
@@ -269,6 +313,13 @@ function showPerceptionDetailwin(perceptionId) {
 				width : 500
 			});
 
+	var hexTextArea = Ext.create('Ext.form.field.TextArea', {
+				fieldLabel : '设备报文',
+				height : 100,
+				disabled : true,
+				width : 500
+			});
+
 	var inTimeQueryBtn = Ext.create("Ext.Button", {
 				text : "实时状态获取",
 				listeners : {
@@ -285,7 +336,7 @@ function showPerceptionDetailwin(perceptionId) {
 				bodyPadding : 5,
 				frame : true,
 				items : [rotateStatus_machine1_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
-						infraredStatus_field, pressKeyStatus_field, {
+						infraredStatus_field, pressKeyStatus_field, hexTextArea, {
 							layout : 'column',
 							padding : '0 0 0 180',
 							items : [{
@@ -345,6 +396,8 @@ function showPerceptionDetailwin(perceptionId) {
 
 							pressKeyStatus_field.setValue(response.pressKeyStatus);
 							infraredStatus_field.setValue(response.infraredStatus);
+
+							hexTextArea.setValue(response.hex);
 
 							perceptionRuntimeLogStoreLoad();
 						},

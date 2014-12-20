@@ -40,6 +40,8 @@ public class PerceptionRuntimeLogResponse {
 
 	private String remark = null;
 
+	private String hex = null;
+
 	public Integer getPerceptionRuntimeLogId() {
 		return perceptionRuntimeLogId;
 	}
@@ -136,6 +138,14 @@ public class PerceptionRuntimeLogResponse {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getHex() {
+		return hex;
+	}
+
+	public void setHex(String hex) {
+		this.hex = hex;
 	}
 
 }

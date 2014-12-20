@@ -20,6 +20,8 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 	/** 按键状态 */
 	private String pressKeyStatus = null;
 
+	private String hex = null;
+
 	public Integer getPerceptionId() {
 		return perceptionId;
 	}
@@ -82,6 +84,14 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 
 	public void setPressKeyStatus(String pressKeyStatus) {
 		this.pressKeyStatus = pressKeyStatus;
+	}
+
+	public String getHex() {
+		return hex;
+	}
+
+	public void setHex(String hex) {
+		this.hex = hex;
 	}
 
 }

@@ -149,34 +149,34 @@ public class PerceptionServiceImpl implements PerceptionService {
 			PerceptionRuntimeLog perceptionRuntimeLog = null;
 			switch (opt) {
 			case 0x03:// 电机1远程正转控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 1);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x04:// 电机1远程反转控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 2);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x05:// 电机1远程通电控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 180, 1);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 180, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x06:// 电机1远程断电控制的响应,当电机旋转状态参数方式来处理
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 3);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 3, perceptionTcpDto.getHex());
 				break;
 			case 0x07:// 远程I2C开的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 1);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x08:// 远程I2C关的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 2);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x09:// 电机2远程控制旋转状态 正转
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 1);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x0A:// 电机2控制旋转状态2 反转
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 2);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x0B:// 电机2通电控制
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 188, 1);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 188, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x0C:// 电机2断电控制，以电机2的旋转状态的方式来处理
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 3);
+				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 3, perceptionTcpDto.getHex());
 				break;
 			}
 
@@ -188,27 +188,27 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 			// 电机1旋转状态
 			PerceptionRuntimeLog perceptionRuntimeLog_machine1RotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) request.getMachine1RotateStatus());
+					(int) request.getMachine1RotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1RotateStatus);
 
 			// i2c状态
 			PerceptionRuntimeLog perceptionRuntimeLog_i2cStatus = this.createPerceptionRuntimeLog(p, 182,
-					ByteUtils.byteArrToInt(request.getI2cStatus()));
+					ByteUtils.byteArrToInt(request.getI2cStatus()), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_i2cStatus);
 
 			// 红外状态
 			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					ByteUtils.byteArrToInt(request.getI2cStatus()));
+					(int) request.getInfraredStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
 
 			// 电机2旋转状态
 			PerceptionRuntimeLog perceptionRuntimeLog_machine2RotateStatus = this.createPerceptionRuntimeLog(p, 187,
-					(int) request.getMachine2RotateStatus());
+					(int) request.getMachine2RotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2RotateStatus);
 
 			// 按键状态
 			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 189,
-					(int) request.getPressKeyStatus());
+					(int) request.getPressKeyStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressKey);
 		}
 
@@ -216,32 +216,32 @@ public class PerceptionServiceImpl implements PerceptionService {
 			ServerQueryMachine6j6StatusResponse response = (ServerQueryMachine6j6StatusResponse) perceptionTcpDto;
 			// 开关状态
 			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) response.getSwitchStatus());
+					(int) response.getSwitchStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
 
 			// 旋转状态
 			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) response.getRotateStatus());
+					(int) response.getRotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
 
 			// 红外状态
 			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					(int) response.getInfraredStatus());
+					(int) response.getInfraredStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
 
 			// 压力状态
 			PerceptionRuntimeLog perceptionRuntimeLog_pressureStatus = this.createPerceptionRuntimeLog(p, 185,
-					(int) response.getPressureStatus());
+					(int) response.getPressureStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressureStatus);
 
 			// 振动状态
 			PerceptionRuntimeLog perceptionRuntimeLog_vibrateStatus = this.createPerceptionRuntimeLog(p, 184,
-					(int) response.getVibrateStatus());
+					(int) response.getVibrateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_vibrateStatus);
 
 			// 接近状态
 			PerceptionRuntimeLog perceptionRuntimeLog_approachStatus = this.createPerceptionRuntimeLog(p, 186,
-					(int) response.getApproachStatus());
+					(int) response.getApproachStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_approachStatus);
 
 		}
@@ -250,32 +250,32 @@ public class PerceptionServiceImpl implements PerceptionService {
 			Machine6j6SendStatusRequest request = (Machine6j6SendStatusRequest) perceptionTcpDto;
 			// 开关状态
 			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) request.getSwitchStatus());
+					(int) request.getSwitchStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
 
 			// 旋转状态
 			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) request.getRotateStatus());
+					(int) request.getRotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
 
 			// 红外状态
 			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					(int) request.getInfraredStatus());
+					(int) request.getInfraredStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
 
 			// 压力状态
 			PerceptionRuntimeLog perceptionRuntimeLog_pressureStatus = this.createPerceptionRuntimeLog(p, 185,
-					(int) request.getPressureStatus());
+					(int) request.getPressureStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressureStatus);
 
 			// 振动状态
 			PerceptionRuntimeLog perceptionRuntimeLog_vibrateStatus = this.createPerceptionRuntimeLog(p, 184,
-					(int) request.getVibrateStatus());
+					(int) request.getVibrateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_vibrateStatus);
 
 			// 接近状态
 			PerceptionRuntimeLog perceptionRuntimeLog_approachStatus = this.createPerceptionRuntimeLog(p, 186,
-					(int) request.getApproachStatus());
+					(int) request.getApproachStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_approachStatus);
 		}
 	}
@@ -289,11 +289,12 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * @return
 	 */
 	private PerceptionRuntimeLog createPerceptionRuntimeLog(Perception perception, Integer perceptionParamId,
-			Integer perceptionParamValue) {
+			Integer perceptionParamValue, String hex) {
 		PerceptionRuntimeLog perceptionRuntimeLog = new PerceptionRuntimeLog();
 		perceptionRuntimeLog.setCreateDateTime(new Date());
 		perceptionRuntimeLog.setPerceptionId(perception.getPerceptionId());
 		perceptionRuntimeLog.setPerceptionParamId(perceptionParamId);
+		perceptionRuntimeLog.setHex(hex);
 
 		Integer perceptionParamValueInfoId = this.perceptionParamValueDao.getPerceptionParamValueInfoId(
 				perceptionParamId, perceptionParamValue);
@@ -344,6 +345,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 			}
 		} else {
 			r.setSuccess(true);
+			r.setHex(response.getHex());
 
 			r.setPerceptionId(perceptionId);
 
@@ -379,7 +381,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 			// 按键(不可以远程控制)
 			String pressKeyStatus = this.perceptionParamValueDao.getPerceptionParamValueDesc(1, 189,
-					(int) response.getInfraredStatus());
+					(int) response.getPressKeyStatus());
 			if (null == pressKeyStatus) {
 				Log.error("感知端响应非法按键状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));
 				throw new RuntimeException("感知端响应非法按键状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));

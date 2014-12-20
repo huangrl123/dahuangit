@@ -41,6 +41,9 @@ public class PerceptionRuntimeLog extends BaseModel {
 	@Column(name = "remark")
 	private String remark = null;
 
+	@Column(name = "msg_hex")
+	private String hex = null;
+
 	@ManyToOne
 	@JoinColumn(name = "p_id", insertable = false, updatable = false)
 	private Perception perception = null;
@@ -75,6 +78,14 @@ public class PerceptionRuntimeLog extends BaseModel {
 
 	public Integer getPerceptionParamId() {
 		return perceptionParamId;
+	}
+
+	public String getHex() {
+		return hex;
+	}
+
+	public void setHex(String hex) {
+		this.hex = hex;
 	}
 
 	public void setPerceptionParamId(Integer perceptionParamId) {

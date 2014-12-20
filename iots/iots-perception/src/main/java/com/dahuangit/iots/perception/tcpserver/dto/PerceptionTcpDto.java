@@ -27,6 +27,9 @@ public class PerceptionTcpDto {
 	/** 操作时间 */
 	private Date optTime = new Date();
 
+	/** 报文16进制内容 */
+	private String hex = null;
+
 	public long getSeq() {
 		return seq;
 	}
@@ -89,6 +92,14 @@ public class PerceptionTcpDto {
 
 	public void setOptTime(Date optTime) {
 		this.optTime = optTime;
+	}
+
+	public String getHex() {
+		return hex;
+	}
+
+	public void setHex(String hex) {
+		this.hex = hex;
 	}
 
 }
