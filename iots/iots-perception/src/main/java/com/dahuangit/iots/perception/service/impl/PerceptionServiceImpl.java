@@ -314,7 +314,13 @@ public class PerceptionServiceImpl implements PerceptionService {
 		PerceptionTcpResponse response = perceptionProcessor.remoteOperateMachine(perceptionId, opt);
 
 		if (null == response || response.getResult() != 1) {
-			throw new RuntimeException("电机响应超时");
+			if (response.getResult() == 2) {
+				throw new RuntimeException("感知端响应超时");
+			}
+
+			else if (response.getResult() == 3) {
+				throw new RuntimeException("发现其他管理员正在控制当前感知端,请稍后再试...");
+			}
 		}
 	}
 

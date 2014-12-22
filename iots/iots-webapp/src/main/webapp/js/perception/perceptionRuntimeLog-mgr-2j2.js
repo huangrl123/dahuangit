@@ -408,8 +408,22 @@ function showPerceptionDetailwin(perceptionId) {
 							perceptionRuntimeLogStoreLoad();
 						},
 						failure : function(form, action, args) {
-							var response = Ext.JSON.decode(action.response.responseText);
-							Ext.Msg.alert('提示', response.msg);
+							rotateStatus_machine1_combobox.setValue();
+							rotateStatus_machine1_combobox.setDisabled(true);
+
+							rotateStatus_machine2_combobox.setValue();
+							rotateStatus_machine2_combobox.setDisabled(true);
+
+							i2cStatus_combobox.setValue();
+							i2cStatus_combobox.setDisabled(true);
+
+							pressKeyStatus_field.setValue();
+							infraredStatus_field.setValue();
+
+							hexTextArea.setValue();
+							// var response =
+							// Ext.JSON.decode(action.response.responseText);
+							// Ext.Msg.alert('提示', response.msg);
 						}
 					});
 		}
@@ -427,16 +441,13 @@ function showPerceptionDetailwin(perceptionId) {
 						},
 						success : function(form, action, args) {
 							var response = Ext.JSON.decode(action.response.responseText);
-							if (response.success) {
-								Ext.Msg.alert('提示', '远程控制设备成功!');
-								perceptionRuntimeLogStoreLoad();
-							} else {
-								Ext.Msg.alert('提示', '远程控制设备失败!');
-							}
+							Ext.Msg.alert('提示', '远程控制设备成功!');
+							perceptionRuntimeLogStoreLoad();
 						},
 						failure : function(form, action, args) {
-							Ext.Msg.alert('提示', '远程控制设备失败!');
-							//如果失败，则恢复到设备当前的真实状态
+							var response = Ext.JSON.decode(action.response.responseText);
+							Ext.Msg.alert('提示', response.msg);
+							// 如果失败，则恢复到设备当前的真实状态
 							remoteQueryPerception();
 						}
 					});
@@ -445,5 +456,5 @@ function showPerceptionDetailwin(perceptionId) {
 
 	remoteQueryPerception();
 
-	window.setInterval(remoteQueryPerception, 3000);
+	window.setInterval(remoteQueryPerception, 2000);
 }

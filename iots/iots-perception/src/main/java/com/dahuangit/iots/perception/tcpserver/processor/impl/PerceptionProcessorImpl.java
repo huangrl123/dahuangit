@@ -1,5 +1,8 @@
 package com.dahuangit.iots.perception.tcpserver.processor.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -28,6 +31,9 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	/** 感知端连接池 */
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
 
+	/** 感知端当前操作 key:感知端设备地址,value:感知端操作标识 */
+	private Map<String, Integer> perceptionCurOptMap = new HashMap<String, Integer>();
+
 	private long MAX_TRANSMIT_ROLLING_COUNT = 99999999l;
 
 	private long transmitSeq = 1l;
@@ -49,6 +55,14 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			throw new GenericException("当前设备没有连接到服务器，请联系设备管理员");
 		}
 
+		PerceptionTcpResponse response = new PerceptionTcpResponse();
+		
+		//判断当前感知端是否有操作，如果有，则返回
+		if(perceptionCurOptMap.containsKey(machineAddr)) {
+			response.setResult((byte) 0x03);
+			return response;
+		}
+		
 		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
@@ -81,7 +95,8 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		content[66] = (byte) 0xB2;
 		content[67] = 0x01;
 		content[68] = 0x02;
-
+		perceptionCurOptMap.put(machineAddr, 2);
+		
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
@@ -91,25 +106,23 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		long reqTime = System.currentTimeMillis();
 
-		PerceptionTcpResponse response = new PerceptionTcpResponse();
-
 		// 等待返回结果
 		while (true) {
 
-			// 每3秒扫描一次，节省系统资源
 			try {
-				Thread.sleep(500);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 60 * 1000;// 默认1分钟
+			long timeout = 30 * 1000;
 			long count = nowTime - reqTime;
 			if (count > timeout) {
 				log.debug("远程查询电机超时:帧序号seq=" + seq);
 				response.setResult((byte) 0x02);
+				perceptionCurOptMap.remove(machineAddr);
 				return response;
 			}
 
@@ -118,6 +131,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			if (null != obj) {
 				response = (PerceptionTcpResponse) obj;
 				session.removeAttribute(seq);// 不会清掉其他session的值
+				perceptionCurOptMap.remove(machineAddr);
 				return response;
 			}
 		}
@@ -133,6 +147,14 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			throw new GenericException("当前感知端已失去连接，可能已经离线 machineAddr=" + machineAddr);
 		}
 
+		PerceptionTcpResponse response = new PerceptionTcpResponse();
+		
+		//判断当前感知端是否有操作，如果有，则返回
+		if(perceptionCurOptMap.containsKey(machineAddr)) {
+			response.setResult((byte) 0x03);
+			return response;
+		}
+		
 		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
@@ -165,7 +187,8 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		content[66] = (byte) 0xB2;
 		content[67] = 0x01;
 		content[68] = (byte) opt.intValue();
-
+		perceptionCurOptMap.put(machineAddr, opt);
+		
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
@@ -175,25 +198,24 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		long reqTime = System.currentTimeMillis();
 
-		PerceptionTcpResponse response = new PerceptionTcpResponse();
-
 		// 等待返回结果
 		while (true) {
 
-			// 每3秒扫描一次，节省系统资源
 			try {
-				Thread.sleep(500);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 60 * 1000;// 默认1分钟
+			long timeout = 30 * 1000;
 			long count = nowTime - reqTime;
 			if (count > timeout) {
 				log.debug("远程控制电机超时:帧序号seq=" + seq);
 				response.setResult((byte) 0x02);
+				session.removeAttribute(seq);// 不会清掉其他session的值
+				perceptionCurOptMap.remove(machineAddr);
 				return response;
 			}
 
@@ -202,6 +224,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			if (null != obj) {
 				response = (PerceptionTcpResponse) obj;
 				session.removeAttribute(seq);// 不会清掉其他session的值
+				perceptionCurOptMap.remove(machineAddr);
 				return response;
 			}
 		}

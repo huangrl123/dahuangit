@@ -73,7 +73,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		byte perceptionType = 0;
 
 		String hex = null;
-		
+
 		try {
 			String errorMsg = null;
 
@@ -81,7 +81,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[0] != (byte) 0xA1) {
 				errorMsg = "未找到帧序列号标识，content[0] != (byte)0xA1";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			temArr = new byte[8];
 			System.arraycopy(content, 2, temArr, 0, 8);
@@ -91,7 +91,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[10] != (byte) 0xA2) {
 				errorMsg = "未找到帧总长度标识，content[10] != (byte)0xA2";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			temArr = new byte[4];
 			System.arraycopy(content, 12, temArr, 0, 4);
@@ -101,7 +101,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[16] != (byte) 0xA3) {
 				errorMsg = "未找到业务类型标识，content[16] != (byte)0xA3";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			busType = content[18];
 
@@ -109,7 +109,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[19] != (byte) 0xA4) {
 				errorMsg = "未找到CRC32校验和标识，content[19] != (byte)0xA4";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			temArr = new byte[8];
 			System.arraycopy(content, 21, temArr, 0, 8);
@@ -119,7 +119,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[29] != (byte) 0xA5) {
 				errorMsg = "未找到设备类型标识，content[29] != (byte)0xA5";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			perceptionType = content[31];
 
@@ -127,7 +127,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[32] != (byte) 0xB1) {
 				errorMsg = "未找到电机地址标识，content[32] != (byte)0xB1";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			temArr = new byte[32];
 			System.arraycopy(content, 34, temArr, 0, 32);
@@ -138,7 +138,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			if (content[66] != (byte) 0xB2) {
 				errorMsg = "未找到操作标识标识，content[66] != (byte)0xB2";
 				log.debug(errorMsg);
-				new RuntimeException(errorMsg);
+				throw new RuntimeException(errorMsg);
 			}
 			operateFlag = content[68];
 		} catch (Exception e) {
@@ -154,11 +154,15 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			case 0x01:// 客户端上传电机状态
 				try {
 					if (perceptionType == 1) {// 2+2的请求
+						if (content.length != 100) {
+							String errorMsg = "2+2上报状态请求报文内容长度错误：正确的长度是100，实际长度为" + content.length;
+							log.debug(errorMsg);
+							throw new RuntimeException(errorMsg);
+						}
+
 						hex = ByteUtils.byteArrToHexString(content);
 						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + hex);
 						log.debug("帧序号seq=" + seq);
-						
-						Machine2j2SendStatusRequest request = new Machine2j2SendStatusRequest();
 
 						byte machine1RotateStatus = content[71];
 						byte machine1SwitchStatus = content[74];
@@ -173,6 +177,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						byte machine2SwitchStatus = content[96];
 						byte pressKeyStatus = content[99];
 
+						Machine2j2SendStatusRequest request = new Machine2j2SendStatusRequest();
+
 						request.setBusType(busType);
 						request.setCrc32(crc32);
 						request.setLength(length);
@@ -181,16 +187,16 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setPerceptionType(perceptionType);
 						request.setSeq(seq);
 
-						//如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
-						if(machine1SwitchStatus != (byte)0x00) {
+						// 如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
+						if (machine1SwitchStatus != (byte) 0x00) {
 							request.setMachine1RotateStatus((byte) 0x03);
 						} else {
 							request.setMachine1RotateStatus(machine1RotateStatus);
 						}
-						
-						//如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
-						if(machine2SwitchStatus != (byte)0x00) {
-							request.setMachine2RotateStatus((byte)0x03);
+
+						// 如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
+						if (machine2SwitchStatus != (byte) 0x00) {
+							request.setMachine2RotateStatus((byte) 0x03);
 						} else {
 							request.setMachine2RotateStatus(machine2RotateStatus);
 						}
@@ -200,7 +206,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setI2cStatus(i2cStatus);
 
 						request.setHex(hex);
-						
+
 						perceptionService.saveLog(request);
 					} else if (perceptionType == 2) {// 6+6的请求
 						hex = ByteUtils.byteArrToHexString(content);
@@ -236,7 +242,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						request.setVibrateStatus(vibrateStatus);
 
 						request.setHex(hex);
-						
+
 						perceptionService.saveLog(request);
 					}
 
@@ -271,11 +277,21 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			switch (operateFlag) {
 			case 0x02:// 服务器向电机查询状态的响应
 				if (perceptionType == 1) {// 2+2的响应
+					ServerQueryMachine2j2StatusResponse response = new ServerQueryMachine2j2StatusResponse();
+					
+					if (content.length != 103) {
+						String errorMsg = "2+2服务器向电机查询状态的响应报文内容长度错误：正确的长度是103，实际长度为" + content.length;
+						log.debug(errorMsg);
+						// 将响应结果对象放到session上下文里
+						response.setResult((byte) 0);
+						session.setAttribute(seq, response);
+						throw new RuntimeException(errorMsg);
+					}
+
 					hex = ByteUtils.byteArrToHexString(content);
 					log.debug("服务器端收到客户端的信息[服务器向2+2电机查询状态的响应]，报文:" + hex);
 					log.debug("帧序号seq=" + seq);
-					
-					ServerQueryMachine2j2StatusResponse response = new ServerQueryMachine2j2StatusResponse();
+
 					byte machine1RotateStatus = content[71];
 					byte machine1SwitchStatus = content[74];
 
@@ -300,20 +316,20 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setPerceptionType(perceptionType);
 					response.setSeq(seq);
 
-					//如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
-					if(machine1SwitchStatus != (byte)0x00) {
+					// 如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
+					if (machine1SwitchStatus != (byte) 0x00) {
 						response.setMachine1RotateStatus((byte) 0x03);
 					} else {
 						response.setMachine1RotateStatus(machine1RotateStatus);
 					}
-					
-					//如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
-					if(machine2SwitchStatus != (byte)0x00) {
-						response.setMachine2RotateStatus((byte)0x03);
+
+					// 如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
+					if (machine2SwitchStatus != (byte) 0x00) {
+						response.setMachine2RotateStatus((byte) 0x03);
 					} else {
 						response.setMachine2RotateStatus(machine2RotateStatus);
 					}
-					
+
 					response.setResult(result);
 					response.setMachine1SwitchStatus(machine1SwitchStatus);
 					response.setMachine2SwitchStatus(machine2SwitchStatus);
@@ -331,7 +347,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					hex = ByteUtils.byteArrToHexString(content);
 					log.debug("服务器端收到客户端的信息[服务器向6+6电机查询状态的响应]，报文:" + hex);
 					log.debug("帧序号seq=" + seq);
-					
+
 					ServerQueryMachine6j6StatusResponse response = new ServerQueryMachine6j6StatusResponse();
 					byte rotateStatus = content[71];
 					byte switchStatus = content[74];
@@ -363,7 +379,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					response.setVibrateStatus(vibrateStatus);
 
 					response.setHex(hex);
-					
+
 					perceptionService.saveLog(response);
 
 					// 将响应结果对象放到session上下文里
@@ -419,10 +435,21 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					log.debug("服务器端收到客户端的信息[服务器远程控制电机2断电控制]，报文:" + ByteUtils.byteArrToHexString(content));
 				}
 				flag = false;
-				log.debug("帧序号seq=" + seq);
-				byte result = content[71];
 
 				ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();
+				
+				if (content.length != 72) {
+					String errorMsg = "2+2服务器远程控制设备的响应报文内容长度错误：正确的长度是72，实际长度为" + content.length;
+					log.debug(errorMsg);
+					response.setResult((byte) 0);
+					session.setAttribute(seq, response);
+					throw new RuntimeException(errorMsg);
+				}
+
+				log.debug("帧序号seq=" + seq);
+				
+				byte result = content[71];
+
 				response.setBusType(busType);
 				response.setCrc32(crc32);
 				response.setLength(length);
@@ -432,7 +459,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 				response.setSeq(seq);
 
 				response.setHex(hex);
-				
+
 				response.setResult(result);
 
 				perceptionService.saveLog(response);

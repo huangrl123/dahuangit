@@ -75,6 +75,7 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 			switch (operateFlag) {
 			case 0x02:// 服务查询电机状态的请求
 				byte[] respcontent = new byte[103];
+				
 				// 帧序列号
 				respcontent[0] = (byte) 0xA1;
 				respcontent[1] = 0x08;

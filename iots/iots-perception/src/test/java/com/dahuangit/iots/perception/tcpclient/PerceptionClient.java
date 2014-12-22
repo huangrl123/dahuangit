@@ -43,7 +43,7 @@ public class PerceptionClient {
 		connector.setConnectTimeoutCheckInterval(30);
 
 		// 建立连接
-	    ConnectFuture cf = connector.connect(new InetSocketAddress("127.0.0.1", 9999));
+	   ConnectFuture cf = connector.connect(new InetSocketAddress("127.0.0.1", 9999));
 		// ConnectFuture cf = connector.connect(new InetSocketAddress("120.24.86.107", 9999));
 
 		log.debug("客户端已经启动!");
