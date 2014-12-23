@@ -16,6 +16,7 @@ import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine2j
 import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine6j6StatusResponse;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
+import com.dahuangit.iots.perception.tcpserver.processor.impl.PerceptionProcessorImpl;
 import com.dahuangit.util.IoBufferUtils;
 import com.dahuangit.util.coder.ByteUtils;
 import com.dahuangit.util.log.Log4jUtils;
@@ -134,6 +135,8 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			machineAddr = new String(temArr);
 			machineAddr = machineAddr.trim();
 
+			session.setAttribute("machineAddr", machineAddr);
+			
 			// 操作标识
 			if (content[66] != (byte) 0xB2) {
 				errorMsg = "未找到操作标识标识，content[66] != (byte)0xB2";
@@ -161,9 +164,10 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						}
 
 						hex = ByteUtils.byteArrToHexString(content);
+						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态],帧序号为:[" + seq + "]");
 						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + hex);
 						log.debug("帧序号seq=" + seq);
-
+						
 						byte machine1RotateStatus = content[71];
 						byte machine1SwitchStatus = content[74];
 
@@ -489,6 +493,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		log.debug("当前被管理的session数量:" + currentSessionCount);
 
 		this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
+		PerceptionProcessorImpl.perceptionCurOptMap.remove(session.getAttribute("machineAddr"));
 		session.close(true);
 	}
 

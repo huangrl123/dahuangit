@@ -25,13 +25,17 @@ function showLogHexwin(hex) {
 				title : '设备报文',
 				plain : true,
 				closable : true,
+				draggable : false,
 				closeAction : 'destroy',
+				resizable : true,
 				layout : 'fit',
 				items : [form]
 			});
 
 	win.show();
 }
+
+var intervalId = null;
 
 function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////运行日志信息面板////////////////////////////////////////////
@@ -107,7 +111,7 @@ function showPerceptionDetailwin(perceptionId) {
 				}],
 		bbar : perceptionRuntimeLogPg,
 		forceFit : true,
-		height : 505,
+		height : 470,
 		split : true
 	});
 
@@ -336,20 +340,13 @@ function showPerceptionDetailwin(perceptionId) {
 			});
 
 	var perceptionRuntimeBasic = Ext.create('Ext.form.Panel', {
-				title : '状态参数信息',
+				title : '最新状态参数信息',
 				width : 600,
 				height : 500,
 				bodyPadding : 5,
 				frame : true,
 				items : [rotateStatus_machine1_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
-						infraredStatus_field, pressKeyStatus_field, hexTextArea, {
-							layout : 'column',
-							padding : '0 0 0 180',
-							items : [{
-										layout : 'form',
-										items : inTimeQueryBtn
-									}]
-						}]
+						infraredStatus_field, pressKeyStatus_field, hexTextArea]
 			});
 
 	form = perceptionRuntimeBasic.getForm();
@@ -357,13 +354,24 @@ function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////总体面板//////////////////////////////////////////////
 	var perceptionRuntimeMainWin = Ext.create('Ext.Window', {
 				title : '感知端设备详情',
-				closable : true,
+				closable : false,
 				modal : true,
 				draggable : false,
+				resizable : false,
 				closeAction : 'destroy',
 				layout : 'column',
 				height : 538,
-				items : [perceptionRuntimeBasic, perceptionRuntimeLogGrid]
+				items : [perceptionRuntimeBasic, perceptionRuntimeLogGrid],
+				buttonAlign : 'center',
+				buttons : [{
+							text : '关闭',
+							handler : function() {
+								perceptionRuntimeMainWin.close();
+								if (null != intervalId) {
+									window.clearInterval(intervalId);
+								}
+							}
+						}]
 			});
 
 	perceptionRuntimeMainWin.show();
@@ -456,5 +464,5 @@ function showPerceptionDetailwin(perceptionId) {
 
 	remoteQueryPerception();
 
-	window.setInterval(remoteQueryPerception, 2000);
+	intervalId = window.setInterval(remoteQueryPerception, 3000);
 }

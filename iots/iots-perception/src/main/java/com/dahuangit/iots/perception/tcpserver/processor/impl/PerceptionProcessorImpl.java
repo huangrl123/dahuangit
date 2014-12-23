@@ -15,6 +15,8 @@ import com.dahuangit.iots.perception.dao.PerceptionDao;
 import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.dto.response.PerceptionTcpResponse;
+import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine2j2StatusResponse;
+import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine6j6StatusResponse;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
 import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
@@ -32,7 +34,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
 
 	/** 感知端当前操作 key:感知端设备地址,value:感知端操作标识 */
-	private Map<String, Integer> perceptionCurOptMap = new HashMap<String, Integer>();
+	public static Map<String, Integer> perceptionCurOptMap = new HashMap<String, Integer>();
 
 	private long MAX_TRANSMIT_ROLLING_COUNT = 99999999l;
 
@@ -47,7 +49,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	public PerceptionTcpResponse queryRemoteMachine(Integer perceptionId) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		String machineAddr = p.getPerceptionAddr();
-
+		Integer typeId = p.getPerceptionTypeId();
 		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
 
 		if (null == clientConnection) {
@@ -55,14 +57,22 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			throw new GenericException("当前设备没有连接到服务器，请联系设备管理员");
 		}
 
-		PerceptionTcpResponse response = new PerceptionTcpResponse();
-		
-		//判断当前感知端是否有操作，如果有，则返回
-		if(perceptionCurOptMap.containsKey(machineAddr)) {
+		PerceptionTcpResponse response = null;
+
+		if (1 == typeId) {
+			response = new ServerQueryMachine2j2StatusResponse();
+		}
+
+		else if (2 == typeId) {
+			response = new ServerQueryMachine6j6StatusResponse();
+		}
+
+		// 判断当前感知端是否有操作，如果有，则返回
+		if (perceptionCurOptMap.containsKey(machineAddr)) {
 			response.setResult((byte) 0x03);
 			return response;
 		}
-		
+
 		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
@@ -96,11 +106,13 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		content[67] = 0x01;
 		content[68] = 0x02;
 		perceptionCurOptMap.put(machineAddr, 2);
-		
+
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 
 		final IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
+
+		log.debug("服务器远程查询设备请求开始发送,请求帧序号为:[" + seq + "]");
 
 		session.write(ib);
 
@@ -130,6 +142,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			if (null != obj) {
 				response = (PerceptionTcpResponse) obj;
+				log.debug("服务器远程查询设备请求收到响应,响应帧序号为:[" + response.getSeq() + "]");
 				session.removeAttribute(seq);// 不会清掉其他session的值
 				perceptionCurOptMap.remove(machineAddr);
 				return response;
@@ -148,13 +161,13 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		}
 
 		PerceptionTcpResponse response = new PerceptionTcpResponse();
-		
-		//判断当前感知端是否有操作，如果有，则返回
-		if(perceptionCurOptMap.containsKey(machineAddr)) {
+
+		// 判断当前感知端是否有操作，如果有，则返回
+		if (perceptionCurOptMap.containsKey(machineAddr)) {
 			response.setResult((byte) 0x03);
 			return response;
 		}
-		
+
 		final IoSession session = clientConnection.getIoSession();
 
 		byte[] content = new byte[69];
@@ -188,7 +201,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 		content[67] = 0x01;
 		content[68] = (byte) opt.intValue();
 		perceptionCurOptMap.put(machineAddr, opt);
-		
+
 		long crc32l = ByteUtils.byteArrCRC32Value(content);
 		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
 

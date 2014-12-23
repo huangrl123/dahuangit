@@ -319,7 +319,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 			}
 
 			else if (response.getResult() == 3) {
-				throw new RuntimeException("发现其他管理员正在控制当前感知端,请稍后再试...");
+				throw new RuntimeException("您的本次操作无效，请稍后再试...");
 			}
 		}
 	}
@@ -331,70 +331,55 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * @return
 	 */
 	public RemoteQuery2j2MachineResponse remoteQuery2j2Machine(Integer perceptionId) {
-		ServerQueryMachine2j2StatusResponse response = null;
-		String msg = null;
-		try {
-			response = (ServerQueryMachine2j2StatusResponse) this.perceptionProcessor.queryRemoteMachine(perceptionId);
-		} catch (Exception e) {
-			msg = "感知端查询响应的帧序号与其他请求的响应错乱";
-			e.printStackTrace();
+
+		PageQueryResult<PerceptionRuntimeLogResponse> pageQueryResult = new PageQueryResult<PerceptionRuntimeLogResponse>();
+
+		List<PerceptionRuntimeLogResponse> rows = new ArrayList<PerceptionRuntimeLogResponse>();
+		String listHql = "from PerceptionRuntimeLog p where p.perceptionId=? order by p.createDateTime desc";
+		List<PerceptionRuntimeLog> list = this.perceptionRuntimeLogDao.findByPage(listHql, 0, 5, perceptionId);
+
+		RemoteQuery2j2MachineResponse response = new RemoteQuery2j2MachineResponse();
+
+		for (PerceptionRuntimeLog p : list) {
+			// 电机1旋转状态
+			if (p.getPerceptionParamId() == 179) {
+				Integer machine1RotateStatus = p.getPerceptionParamValueInfo().getPerceptionParamValue();
+				response.setMachine1RotateStatus(machine1RotateStatus.toString());
+				response.setHex(p.getHex());
+				continue;
+			}
+
+			// 电机2旋转状态
+			if (p.getPerceptionParamId() == 187) {
+				Integer machine2RotateStatus = p.getPerceptionParamValueInfo().getPerceptionParamValue();
+				response.setMachine2RotateStatus(machine2RotateStatus.toString());
+				continue;
+			}
+
+			// i2c状态
+			if (p.getPerceptionParamId() == 182) {
+				Integer i2cStatus = p.getPerceptionParamValueInfo().getPerceptionParamValue();
+				response.setI2cStatus(i2cStatus.toString());
+				continue;
+			}
+
+			// 红外状态
+			if (p.getPerceptionParamId() == 183) {
+				String infraredStatus = p.getPerceptionParamValueInfo().getPerceptionParamValueDesc();
+				response.setInfraredStatus(infraredStatus);
+				continue;
+			}
+
+			// 按键状态
+			if (p.getPerceptionParamId() == 189) {
+				String pressKeyStatus = p.getPerceptionParamValueInfo().getPerceptionParamValueDesc();
+				response.setPressKeyStatus(pressKeyStatus);
+				continue;
+			}
+
 		}
 
-		RemoteQuery2j2MachineResponse r = new RemoteQuery2j2MachineResponse();
-
-		if (response == null || response.getResult() != (byte) 0x01) {
-			r.setSuccess(false);
-			if (msg == null) {
-				r.setMsg(msg);
-			} else {
-				r.setMsg("响应超时");
-			}
-		} else {
-			r.setSuccess(true);
-			r.setHex(response.getHex());
-
-			r.setPerceptionId(perceptionId);
-
-			if (!this.perceptionParamValueDao.existsPerceptionParamValue(179, (int) response.getMachine1RotateStatus())) {
-				Log.error("感知端响应非法电机1旋转状态值:" + ByteUtils.byteToHexString(response.getMachine1RotateStatus()));
-				throw new RuntimeException("感知端响应非法电机1旋转状态值:"
-						+ ByteUtils.byteToHexString(response.getMachine1RotateStatus()));
-			}
-			r.setMachine1RotateStatus(String.valueOf(response.getMachine1RotateStatus()));
-
-			int i2c = ByteUtils.byteArrToInt(response.getI2cStatus());
-			if (!this.perceptionParamValueDao.existsPerceptionParamValue(182, i2c)) {
-				Log.error("感知端响应非法i2c状态值:" + ByteUtils.byteArrToHexString(response.getI2cStatus()));
-				throw new RuntimeException("感知端响应非法i2c状态值:" + ByteUtils.byteArrToHexString(response.getI2cStatus()));
-			}
-			r.setI2cStatus(String.valueOf((i2c)));
-
-			// 红外（不可以远程控制）
-			String infraredStatus = this.perceptionParamValueDao.getPerceptionParamValueDesc(1, 183,
-					(int) response.getInfraredStatus());
-			if (null == infraredStatus) {
-				Log.error("感知端响应非法红外状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));
-				throw new RuntimeException("感知端响应非法红外状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));
-			}
-			r.setInfraredStatus(infraredStatus);
-
-			if (!this.perceptionParamValueDao.existsPerceptionParamValue(187, (int) response.getMachine2RotateStatus())) {
-				Log.error("感知端响应非法电机2旋转状态值:" + ByteUtils.byteToHexString(response.getMachine2RotateStatus()));
-				throw new RuntimeException("感知端响应非法电机2旋转状态值:"
-						+ ByteUtils.byteToHexString(response.getMachine2RotateStatus()));
-			}
-			r.setMachine2RotateStatus(String.valueOf(response.getMachine2RotateStatus()));
-
-			// 按键(不可以远程控制)
-			String pressKeyStatus = this.perceptionParamValueDao.getPerceptionParamValueDesc(1, 189,
-					(int) response.getPressKeyStatus());
-			if (null == pressKeyStatus) {
-				Log.error("感知端响应非法按键状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));
-				throw new RuntimeException("感知端响应非法按键状态值:" + ByteUtils.byteToHexString(response.getInfraredStatus()));
-			}
-			r.setPressKeyStatus(pressKeyStatus);
-		}
-		return r;
+		return response;
 	}
 
 	/**
