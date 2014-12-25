@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<power>
+		<power-id>1</power-id>
+		<power-name>抄表员</power-name>
+	</power>
+	<power>
+		<power-id>2</power-id>
+		<power-name>系统管理员</power-name>
+	</power>
+</response>

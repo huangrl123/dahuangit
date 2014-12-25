@@ -32,7 +32,7 @@
 	<import resource="classpath*:/bean/*-bean-config.xml" />
 
 	<!--对象与xml之间的转换管理配置 -->
-	<bean class="org.springframework.oxm.castor.CastorMarshaller" autowire-candidate="true">
+	<bean id="xmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller" autowire-candidate="true">
 		<property name="mappingLocations">
 			<list>
 				<value>classpath*:/castor/*-castor-mapping.xml</value>

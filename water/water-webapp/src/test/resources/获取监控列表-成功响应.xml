@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<jiankong-info>
+		<project-name>项目1</project-name>
+		<device-addr>111</device-addr>
+		<sum-yd>34</sum-yd>
+		<sum-ys>55</sum-ys>
+	</jiankong-info>
+	<jiankong-info>
+		<project-name>项目2</project-name>
+		<device-addr>111</device-addr>
+		<sum-yd>34</sum-yd>
+		<sum-ys>55</sum-ys>
+	</jiankong-info>
+	<jiankong-info>
+		<project-name>项目3</project-name>
+		<device-addr>111</device-addr>
+		<sum-yd>34</sum-yd>
+		<sum-ys>55</sum-ys>
+	</jiankong-info>
+</response>

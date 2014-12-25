@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<yujing-info>
+		<project-name>项目1</project-name>
+		<area-name>开发区</area-name>
+		<device-addr>设备地址1</device-addr>
+	</yujing-info>
+	<yujing-info>
+		<project-name>项目2</project-name>
+		<area-name>开发区</area-name>
+		<device-addr>设备地址1</device-addr>
+	</yujing-info>
+	<yujing-info>
+		<project-name>项目3</project-name>
+		<area-name>开发区</area-name>
+		<device-addr>设备地址1</device-addr>
+	</yujing-info>
+</response>

@@ -20,15 +20,15 @@ public class BeanUtils2 extends BeanUtils {
 	 * @param clazz
 	 * @return
 	 */
-	public static Map<String, Object> bean2Map(Object obj) {
+	public static Map<String, String> bean2Map(Object obj) {
 		Validate.notNull(obj, "传入对象不能为null");
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> map = new HashMap<String, String>();
 		Field[] fields = obj.getClass().getDeclaredFields();
 		
 		try {
 			for (Field field : fields) {
 				field.setAccessible(true);
-				map.put(field.getName(), field.get(obj));
+				map.put(field.getName(), String.valueOf(field.get(obj)));
 				field.setAccessible(false);
 			}
 		} catch (Exception e) {
