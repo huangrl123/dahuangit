@@ -5,61 +5,61 @@
 	<description>XML的映射</description>
 
 	<!-- 登录 -->
-	<class name="com.dahuang.water.proxy.dto.LoginResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.LoginResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="powerInfos" type="com.dahuang.water.proxy.dto.response.PowerInfo" collection="arraylist">
+		<field name="powerInfos" type="com.dahuangit.water.proxy.dto.response.PowerInfo" collection="arraylist">
 			<bind-xml name="power" />
 		</field>
 	</class>
 
 	<!-- 获取项目列表 -->
-	<class name="com.dahuang.water.proxy.dto.GetProjectListResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.GetProjectListResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="projectInfos" type="com.dahuang.water.proxy.dto.response.ProjectInfo" collection="arraylist">
+		<field name="projectInfos" type="com.dahuangit.water.proxy.dto.response.ProjectInfo" collection="arraylist">
 			<bind-xml name="project" />
 		</field>
 	</class>
 
 	<!-- 获取楼栋列表 -->
-	<class name="com.dahuang.water.proxy.dto.GetLdListResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.GetLdListResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="ldInfos" type="com.dahuang.water.proxy.dto.response.LdInfo" collection="arraylist">
+		<field name="ldInfos" type="com.dahuangit.water.proxy.dto.response.LdInfo" collection="arraylist">
 			<bind-xml name="ld" />
 		</field>
 	</class>
 
 	<!-- shouzi -->
-	<class name="com.dahuang.water.proxy.dto.ShouzhiResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.ShouzhiResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="shouzhiInfos" type="com.dahuang.water.proxy.dto.response.ShouzhiInfo" collection="arraylist">
+		<field name="shouzhiInfos" type="com.dahuangit.water.proxy.dto.response.ShouzhiInfo" collection="arraylist">
 			<bind-xml name="shouzhi-info" />
 		</field>
 	</class>
 
 	<!-- yujing -->
-	<class name="com.dahuang.water.proxy.dto.YujingResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.YujingResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="yujingInfos" type="com.dahuang.water.proxy.dto.response.YujingInfo" collection="arraylist">
+		<field name="yujingInfos" type="com.dahuangit.water.proxy.dto.response.YujingInfo" collection="arraylist">
 			<bind-xml name="yujing-info" />
 		</field>
 	</class>
 
 	<!-- jiankong -->
-	<class name="com.dahuang.water.proxy.dto.JiankongResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.JiankongResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="jiankongInfos" type="com.dahuang.water.proxy.dto.response.JiankongInfo" collection="arraylist">
+		<field name="jiankongInfos" type="com.dahuangit.water.proxy.dto.response.JiankongInfo" collection="arraylist">
 			<bind-xml name="jiankong-info" />
 		</field>
 	</class>
 
 	<!-- sunyi -->
-	<class name="com.dahuang.water.proxy.dto.SunyiResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.SunyiResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
-		<field name="semesterSumInfo" type="com.dahuang.water.proxy.dto.SemesterSumInfo" />
-		<field name="semesterMonthInfos" type="com.dahuang.water.proxy.dto.response.SemesterMonthInfo" collection="arraylist">
+		<field name="semesterSumInfo" type="com.dahuangit.water.proxy.dto.response.SemesterSumInfo" />
+		<field name="semesterMonthInfos" type="com.dahuangit.water.proxy.dto.response.SemesterMonthInfo" collection="arraylist">
 			<bind-xml name="semester-month-info" />
 		</field>
-		<field name="recentYearSemesterMonthInfos" type="com.dahuang.water.proxy.dto.response.RecentYearSemesterMonthInfo"
+		<field name="recentYearSemesterMonthInfos" type="com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthInfo"
 			collection="arraylist">
 			<bind-xml name="recent-year-semester-month-info" />
 		</field>
