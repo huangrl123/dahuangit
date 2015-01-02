@@ -36,6 +36,7 @@ import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
 import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
 import com.dahuangit.util.bean.dto.DtoBuilder;
 import com.dahuangit.util.coder.ByteUtils;
+import com.dahuangit.util.date.DateUtils;
 
 @Component
 @Transactional
@@ -58,6 +59,25 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 	/** 感知端连接池 */
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
+
+	/**
+	 * 获取单个感知端
+	 * 
+	 * @param perceptionId
+	 * @return
+	 */
+	public PerceptionOpResponse getPerception(Integer perceptionId) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
+		
+		if (this.clientConnectionPool.containsClientConnector(p.getPerceptionAddr())) {
+			por.setOnlineStatus("在线");
+		} else {
+			por.setOnlineStatus("离线");
+		}
+		
+		return por;
+	}
 
 	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(Integer start, Integer limit) {
 		PageQueryResult<PerceptionOpResponse> pageQueryResult = new PageQueryResult<PerceptionOpResponse>();
@@ -340,12 +360,16 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		RemoteQuery2j2MachineResponse response = new RemoteQuery2j2MachineResponse();
 
+		String perceptionAddr = null;
+		
 		for (PerceptionRuntimeLog p : list) {
 			// 电机1旋转状态
 			if (p.getPerceptionParamId() == 179) {
 				Integer machine1RotateStatus = p.getPerceptionParamValueInfo().getPerceptionParamValue();
 				response.setMachine1RotateStatus(machine1RotateStatus.toString());
 				response.setHex(p.getHex());
+				response.setCreateDatetime(DateUtils.format(p.getCreateDateTime()));
+				perceptionAddr = p.getPerception().getPerceptionAddr();
 				continue;
 			}
 
@@ -379,6 +403,19 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		}
 
+		if (null == response.getMachine1RotateStatus() || null == response.getMachine2RotateStatus()
+				|| null == response.getI2cStatus() || null == response.getInfraredStatus()
+				|| null == response.getPressKeyStatus()) {
+			response.setSuccess(false);
+			response.setMsg("感知端上送的状态参数个数不全");
+		}
+
+		if (this.clientConnectionPool.containsClientConnector(perceptionAddr)) {
+			response.setOnlineStatus("在线");
+		} else {
+			response.setOnlineStatus("离线");
+		}
+		
 		return response;
 	}
 

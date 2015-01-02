@@ -5,20 +5,17 @@
 <head>
 <title>损益统计表</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="../../plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
-<script type="text/javascript" src="../../plugin/jquery/jquery-2.1.3.min.js"></script>
-<script type="text/javascript" src="../../plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
+<meta http-equiv="content-language" content="zh-CN" />
 
-<script type="text/javascript" src="../../plugin/highcharts/highcharts-4.0.4.js"></script>
 </head>
 <body>
 
 	<div data-role="page">
 
 		<div data-role="header" data-position="fixed">
-			<a href="${ctx }/spring/mobile/index" data-icon="home">首页</a>
+			<a href="${ctx }/spring/mobile/functionList" data-icon="home" data-ajax="false">首页</a>
 			<h1>损益统计表</h1>
-			<a href="${ctx }/spring/mobile/sunyiQuery" data-icon="search">查询</a>
+			<a href="${ctx }/spring/mobile/sunyiQuery" data-icon="search" data-ajax="false">查询</a>
 		</div>
 
 		<div data-role="content">
@@ -46,6 +43,11 @@
 		</div>
 
 	</div>
+	<link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
+	<script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
+	<script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
+
+	<script src="${ctx }/plugin/highcharts/highcharts-4.0.4.js"></script>
 	<script type="text/javascript">
 		$(function() {
 			//学期每月收入

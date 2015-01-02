@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
@@ -34,9 +35,20 @@ public class WaterController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String login(ModelMap modelMap) {
+	@RequestMapping(value = "/functionList", method = RequestMethod.GET)
+	public String functionList(ModelMap modelMap) {
 		return "functionList";
+	}
+
+	/**
+	 * 登录
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index(ModelMap modelMap) {
+		return "login";
 	}
 
 	/**
@@ -47,17 +59,32 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(ModelMap modelMap, LoginRequest request) {
-		LoginResponse response = null;
+		// LoginResponse response = null;
+		//
+		// try {
+		// response = waterService.login(request);
+		// } catch (Exception e) {
+		// response.setSuccess(false);
+		// response.setMsg(e.getMessage());
+		// e.printStackTrace();
+		// }
+		//
+		// return this.responseToXml(response);
 
-		try {
-			response = waterService.login(request);
-		} catch (Exception e) {
-			response.setSuccess(false);
-			response.setMsg(e.getMessage());
-			e.printStackTrace();
-		}
+		return "functionList";
+	}
 
-		return this.responseToXml(response);
+	/**
+	 * 登录
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/submitLogin", method = RequestMethod.POST)
+	@ResponseBody
+	public Response submitLogin(ModelMap modelMap, LoginRequest request) {
+		Response response = new Response();
+		return response;
 	}
 
 	/**
@@ -188,6 +215,7 @@ public class WaterController extends BaseController {
 		}
 		return "sunyiQuery";
 	}
+
 	/**
 	 * 获取损益情况
 	 * 

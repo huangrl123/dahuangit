@@ -1,1 +1,0 @@
-Ext.define("Ext.data.identifier.Negative",{extend:"Ext.data.identifier.Sequential",alias:"data.identifier.negative",config:{increment:-1,seed:-1}});

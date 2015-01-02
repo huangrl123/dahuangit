@@ -5,6 +5,7 @@
 <head>
 <title>收支</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="content-language" content="zh-CN" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>

@@ -17,7 +17,7 @@
         <dependent-module archiveName="dahuangit-base-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dahuangit-base/dahuangit-base">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="iots-app-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-app/iots-app">
+        <dependent-module archiveName="iots-appserver-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-appserver/iots-appserver">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="iots"/>

@@ -9,16 +9,16 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 	private String machine1RotateStatus = null;
 	/** 电机2旋转状态 */
 	private String machine2RotateStatus = null;
-	/** 电机1开关状态 */
-	private String machine1SwitchStatus = null;
-	/** 电机2开关状态 */
-	private String machine2SwitchStatus = null;
 	/** i2c状态 */
 	private String i2cStatus = null;
 	/** 红外状态 */
 	private String infraredStatus = null;
 	/** 按键状态 */
 	private String pressKeyStatus = null;
+	/** 记录的创建时间 */
+	private String createDatetime = null;
+	/** 在线状态 */
+	private String onlineStatus = null;
 
 	private String hex = null;
 
@@ -44,22 +44,6 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 
 	public void setMachine2RotateStatus(String machine2RotateStatus) {
 		this.machine2RotateStatus = machine2RotateStatus;
-	}
-
-	public String getMachine1SwitchStatus() {
-		return machine1SwitchStatus;
-	}
-
-	public void setMachine1SwitchStatus(String machine1SwitchStatus) {
-		this.machine1SwitchStatus = machine1SwitchStatus;
-	}
-
-	public String getMachine2SwitchStatus() {
-		return machine2SwitchStatus;
-	}
-
-	public void setMachine2SwitchStatus(String machine2SwitchStatus) {
-		this.machine2SwitchStatus = machine2SwitchStatus;
 	}
 
 	public String getI2cStatus() {
@@ -92,6 +76,22 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 
 	public void setHex(String hex) {
 		this.hex = hex;
+	}
+
+	public String getCreateDatetime() {
+		return createDatetime;
+	}
+
+	public void setCreateDatetime(String createDatetime) {
+		this.createDatetime = createDatetime;
+	}
+
+	public String getOnlineStatus() {
+		return onlineStatus;
+	}
+
+	public void setOnlineStatus(String onlineStatus) {
+		this.onlineStatus = onlineStatus;
 	}
 
 }

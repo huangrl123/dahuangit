@@ -1,4 +1,4 @@
-package com.dahuangit.iots.manager.controller;
+package com.dahuangit.iots.app.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,8 +23,8 @@ import com.dahuangit.iots.manager.service.UserService;
  *         创建时间 2014年12月12日 上午10:40:00
  */
 @Controller
-@RequestMapping("/userController")
-public class UserController extends BaseController {
+@RequestMapping("/appUserController")
+public class AppUserController extends BaseController {
 
 	@Autowired
 	private UserService userService = null;
@@ -37,11 +37,10 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public UserLoginResponse login(HttpServletRequest httpServletRequest, UserLoginRequest request) {
+	public String login(HttpServletRequest httpServletRequest, UserLoginRequest request) {
 		UserLoginResponse response = new UserLoginResponse();
 
 		try {
-			response = userService.login(request);
 			response = userService.login(request);
 			httpServletRequest.getSession().setAttribute("curUser", response);
 			httpServletRequest.getSession().setAttribute("curUserId", response.getUserId());
@@ -51,7 +50,7 @@ public class UserController extends BaseController {
 			e.printStackTrace();
 		}
 
-		return response;
+		return this.responseToXml(response);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	@ResponseBody
-	public Response logout(UserLogoutRequest request) {
+	public String logout(UserLogoutRequest request) {
 		Response response = new Response();
 
 		try {
@@ -70,6 +69,6 @@ public class UserController extends BaseController {
 			e.printStackTrace();
 		}
 
-		return response;
+		return this.responseToXml(response);
 	}
 }

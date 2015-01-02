@@ -466,8 +466,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 				response.setResult(result);
 
-				perceptionService.saveLog(response);
-
 				// 将响应结果对象放到session上下文里
 				session.setAttribute(seq, response);
 				break;

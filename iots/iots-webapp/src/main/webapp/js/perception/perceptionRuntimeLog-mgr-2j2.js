@@ -40,13 +40,17 @@ var intervalId = null;
 function showPerceptionDetailwin(perceptionId) {
 	// ///////////////////////////////////运行日志信息面板////////////////////////////////////////////
 	var perceptionRuntimeLogStore = Ext.create('Ext.data.Store', {
-				fields : ['createDateTime', 'perceptionAddr', 'perceptionId', 'perceptionName', 'perceptionParamId',
-						'perceptionParamName', 'perceptionParamValueInfoId', 'perceptionParamValueDesc',
-						'perceptionRuntimeLogId', 'perceptionTypeId', 'perceptionTypeName', 'remark', 'hex'],
+				fields : ['createDateTime', 'perceptionAddr', 'perceptionId',
+						'perceptionName', 'perceptionParamId',
+						'perceptionParamName', 'perceptionParamValueInfoId',
+						'perceptionParamValueDesc', 'perceptionRuntimeLogId',
+						'perceptionTypeId', 'perceptionTypeName', 'remark',
+						'hex'],
 
 				proxy : {
 					type : 'ajax',
-					url : 'spring/perception/findPerceptionRuntimeLogByPage',
+					url : ctx
+							+ '/spring/perception/findPerceptionRuntimeLogByPage',
 
 					extraParams : {
 						perceptionId : perceptionId
@@ -120,27 +124,29 @@ function showPerceptionDetailwin(perceptionId) {
 	var opt = null;
 
 	// 电机1旋转状态combox
-	var rotateStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox', {
+	var rotateStatus_machine1_combobox = Ext.create('Ext.form.field.ComboBox',
+			{
 				fieldLabel : '电机1旋转状态',
 				store : Ext.create('Ext.data.Store', {
-							singleton : true,
-							proxy : {
-								type : 'ajax',
-								url : 'spring/perception/getPerceptionParamListByTypeId',
-								actionMethods : {
-									read : 'POST'
-								},
-								extraParams : {
-									paramId : 179
-								},
-								reader : {
-									type : 'json',
-									rootProperty : 'root'
-								}
-							},
-							fields : ['value', 'text'],
-							autoLoad : true
-						}),
+					singleton : true,
+					proxy : {
+						type : 'ajax',
+						url : ctx
+								+ '/spring/perception/getPerceptionParamListByTypeId',
+						actionMethods : {
+							read : 'POST'
+						},
+						extraParams : {
+							paramId : 179
+						},
+						reader : {
+							type : 'json',
+							rootProperty : 'root'
+						}
+					},
+					fields : ['value', 'text'],
+					autoLoad : true
+				}),
 				listeners : {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
@@ -161,10 +167,13 @@ function showPerceptionDetailwin(perceptionId) {
 									buttons : Ext.Msg.YESNO,
 									icon : Ext.Msg.QUESTION,
 									fn : function(btn) {
-										var value = rotateStatus_machine1_combobox.getValue();
+										var value = rotateStatus_machine1_combobox
+												.getValue();
 										if (btn === 'yes') {
 
-											remoteCtrlPerception(rotateStatus_machine1_combobox, value);
+											remoteCtrlPerception(
+													rotateStatus_machine1_combobox,
+													value);
 										} else if (btn === 'no') {
 											this.close();
 										} else {
@@ -185,27 +194,29 @@ function showPerceptionDetailwin(perceptionId) {
 			});
 
 	// 电机2旋转状态combox
-	var rotateStatus_machine2_combobox = Ext.create('Ext.form.field.ComboBox', {
+	var rotateStatus_machine2_combobox = Ext.create('Ext.form.field.ComboBox',
+			{
 				fieldLabel : '电机2旋转状态',
 				store : Ext.create('Ext.data.Store', {
-							singleton : true,
-							proxy : {
-								type : 'ajax',
-								url : 'spring/perception/getPerceptionParamListByTypeId',
-								actionMethods : {
-									read : 'POST'
-								},
-								extraParams : {
-									paramId : 187
-								},
-								reader : {
-									type : 'json',
-									rootProperty : 'root'
-								}
-							},
-							fields : ['value', 'text'],
-							autoLoad : true
-						}),
+					singleton : true,
+					proxy : {
+						type : 'ajax',
+						url : ctx
+								+ '/spring/perception/getPerceptionParamListByTypeId',
+						actionMethods : {
+							read : 'POST'
+						},
+						extraParams : {
+							paramId : 187
+						},
+						reader : {
+							type : 'json',
+							rootProperty : 'root'
+						}
+					},
+					fields : ['value', 'text'],
+					autoLoad : true
+				}),
 				listeners : {
 					beforeselect : function(combo, record, index, eOpts) {
 						var msg;
@@ -250,64 +261,65 @@ function showPerceptionDetailwin(perceptionId) {
 
 	// i2c状态combox
 	var i2cStatus_combobox = Ext.create('Ext.form.field.ComboBox', {
-				fieldLabel : 'i2c状态',
-				store : Ext.create('Ext.data.Store', {
-							singleton : true,
-							proxy : {
-								type : 'ajax',
-								url : 'spring/perception/getPerceptionParamListByTypeId',
-								actionMethods : {
-									read : 'POST'
-								},
-								extraParams : {
-									paramId : 182
-								},
-								reader : {
-									type : 'json',
-									rootProperty : 'root'
-								}
-							},
-							fields : ['value', 'text'],
-							autoLoad : true
-						}),
-				listeners : {
-					beforeselect : function(combo, record, index, eOpts) {
-						var msg;
-						if (record.data.value == '1') {
-							opt = 7;// I2C打开控制
-							msg = '是否要对i2c进行打开控制?';
-						} else {
-							opt = 8;// I2C关闭控制
-							msg = '是否要对i2c进行关闭控制?';
+		fieldLabel : 'i2c状态',
+		store : Ext.create('Ext.data.Store', {
+					singleton : true,
+					proxy : {
+						type : 'ajax',
+						url : ctx
+								+ '/spring/perception/getPerceptionParamListByTypeId',
+						actionMethods : {
+							read : 'POST'
+						},
+						extraParams : {
+							paramId : 182
+						},
+						reader : {
+							type : 'json',
+							rootProperty : 'root'
 						}
+					},
+					fields : ['value', 'text'],
+					autoLoad : true
+				}),
+		listeners : {
+			beforeselect : function(combo, record, index, eOpts) {
+				var msg;
+				if (record.data.value == '1') {
+					opt = 7;// I2C打开控制
+					msg = '是否要对i2c进行打开控制?';
+				} else {
+					opt = 8;// I2C关闭控制
+					msg = '是否要对i2c进行关闭控制?';
+				}
 
-						Ext.Msg.show({
-									title : '提示',
-									message : msg,
-									buttons : Ext.Msg.YESNO,
-									icon : Ext.Msg.QUESTION,
-									fn : function(btn) {
-										if (btn === 'yes') {
+				Ext.Msg.show({
+							title : '提示',
+							message : msg,
+							buttons : Ext.Msg.YESNO,
+							icon : Ext.Msg.QUESTION,
+							fn : function(btn) {
+								if (btn === 'yes') {
 
-											remoteCtrlPerception();
-										} else if (btn === 'no') {
-											this.close();
-										} else {
-											this.close();
-										}
-									}
-								});
-					}
-				},
-				displayField : 'text',
-				valueField : 'value',
-				emptyText : "请选择",
-				editable : false,
-				disabled : true,
-				mode : 'remote',
-				triggerAction : 'all',
-				width : 500
-			});
+									remoteCtrlPerception();
+								} else if (btn === 'no') {
+									this.close();
+								} else {
+									this.close();
+								}
+							}
+						});
+			}
+		},
+		displayField : 'text',
+		valueField : 'value',
+		emptyText : "请选择",
+		editable : false,
+		disabled : true,
+		mode : 'remote',
+		triggerAction : 'all',
+		width : 500
+	});
 
 	// 红外
 	var infraredStatus_field = new Ext.form.TextField({
@@ -345,7 +357,8 @@ function showPerceptionDetailwin(perceptionId) {
 				height : 500,
 				bodyPadding : 5,
 				frame : true,
-				items : [rotateStatus_machine1_combobox, rotateStatus_machine2_combobox, i2cStatus_combobox,
+				items : [rotateStatus_machine1_combobox,
+						rotateStatus_machine2_combobox, i2cStatus_combobox,
 						infraredStatus_field, pressKeyStatus_field, hexTextArea]
 			});
 
@@ -392,24 +405,29 @@ function showPerceptionDetailwin(perceptionId) {
 
 		if (form.isValid()) {
 			form.submit({
-						url : 'spring/perception/remoteQuery2j2Machine',
+						url : ctx + '/spring/perception/remoteQuery2j2Machine',
 						// waitMsg : '获取设备实时状态，请稍后...',
 						params : {
 							perceptionId : perceptionId
 						},
 						success : function(form, action, args) {
-							var response = Ext.JSON.decode(action.response.responseText);
-							rotateStatus_machine1_combobox.setValue(response.machine1RotateStatus);
+							var response = Ext.JSON
+									.decode(action.response.responseText);
+							rotateStatus_machine1_combobox
+									.setValue(response.machine1RotateStatus);
 							rotateStatus_machine1_combobox.setDisabled(false);
 
-							rotateStatus_machine2_combobox.setValue(response.machine2RotateStatus);
+							rotateStatus_machine2_combobox
+									.setValue(response.machine2RotateStatus);
 							rotateStatus_machine2_combobox.setDisabled(false);
 
 							i2cStatus_combobox.setValue(response.i2cStatus);
 							i2cStatus_combobox.setDisabled(false);
 
-							pressKeyStatus_field.setValue(response.pressKeyStatus);
-							infraredStatus_field.setValue(response.infraredStatus);
+							pressKeyStatus_field
+									.setValue(response.pressKeyStatus);
+							infraredStatus_field
+									.setValue(response.infraredStatus);
 
 							hexTextArea.setValue(response.hex);
 
@@ -441,19 +459,21 @@ function showPerceptionDetailwin(perceptionId) {
 
 		if (form.isValid()) {
 			form.submit({
-						url : 'spring/perception/remoteCtrlPerception',
+						url : ctx + '/spring/perception/remoteCtrlPerception',
 						waitMsg : '远程控制设备，请稍后...',
 						params : {
 							perceptionId : perceptionId,
 							opt : opt
 						},
 						success : function(form, action, args) {
-							var response = Ext.JSON.decode(action.response.responseText);
+							var response = Ext.JSON
+									.decode(action.response.responseText);
 							Ext.Msg.alert('提示', '远程控制设备成功!');
 							perceptionRuntimeLogStoreLoad();
 						},
 						failure : function(form, action, args) {
-							var response = Ext.JSON.decode(action.response.responseText);
+							var response = Ext.JSON
+									.decode(action.response.responseText);
 							Ext.Msg.alert('提示', response.msg);
 							// 如果失败，则恢复到设备当前的真实状态
 							remoteQueryPerception();

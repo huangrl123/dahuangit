@@ -5,15 +5,18 @@ Ext.require('Ext.PagingToolbar');
 Ext.require('Ext.grid.column.RowNumberer');
 
 Ext.onReady(function() {
-	Ext.BLANK_IMAGE_URL = "/iots/plugin/extjs/packages/ext-theme-crisp/resources/images/s.gif";
+	Ext.BLANK_IMAGE_URL = ctx
+			+ "/plugin/extjs/packages/ext-theme-crisp/resources/images/s.gif";
 
 	var store = Ext.create('Ext.data.Store', {
-				fields : ['createDateTime', 'lastCommTime', 'installSite', 'lastModifyTime', 'perceptionAddr',
-						'perceptionName', 'perceptionTypeId', 'perceptionTypeName', 'perceptionId', 'onlineStatus'],
+				fields : ['createDateTime', 'lastCommTime', 'installSite',
+						'lastModifyTime', 'perceptionAddr', 'perceptionName',
+						'perceptionTypeId', 'perceptionTypeName',
+						'perceptionId', 'onlineStatus'],
 
 				proxy : {
 					type : 'ajax',
-					url : 'spring/perception/findPerceptionByPage',
+					url : ctx + '/spring/perception/findPerceptionByPage',
 
 					actionMethods : {
 						read : 'POST'

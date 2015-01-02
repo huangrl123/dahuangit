@@ -107,6 +107,17 @@ public class PerceptionController extends BaseController {
 	}
 
 	/**
+	 * 感知端列表
+	 * 
+	 * @param opRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/perceptionList", method = RequestMethod.GET)
+	public String perceptionList() {
+		return "pc/perceptionList";
+	}
+
+	/**
 	 * 分页查询感知端
 	 * 
 	 * @param opRequest

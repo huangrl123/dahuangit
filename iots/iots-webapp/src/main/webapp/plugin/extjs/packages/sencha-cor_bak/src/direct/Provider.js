@@ -1,1 +1,0 @@
-Ext.define("Ext.direct.Provider",{alias:"direct.provider",mixins:{observable:"Ext.util.Observable"},isProvider:true,constructor:function(A){var B=this;Ext.apply(B,A);Ext.applyIf(B,{id:Ext.id(null,"provider-")});B.mixins.observable.constructor.call(B,A)},isConnected:function(){return false},connect:Ext.emptyFn,disconnect:Ext.emptyFn});

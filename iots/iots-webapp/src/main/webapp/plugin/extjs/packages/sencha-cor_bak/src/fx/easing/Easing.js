@@ -1,1 +1,0 @@
-Ext.define("Ext.fx.easing.Easing",{requires:["Ext.fx.easing.Linear"],constructor:function(A){return Ext.factory(A,Ext.fx.easing.Linear,null,"easing")}});

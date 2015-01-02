@@ -21,6 +21,14 @@ public interface PerceptionService {
 	public void saveLog(PerceptionTcpDto perceptionTcpDto);
 
 	/**
+	 * 获取单个感知端
+	 * 
+	 * @param perceptionId
+	 * @return
+	 */
+	public PerceptionOpResponse getPerception(Integer perceptionId);
+
+	/**
 	 * 远程控制电机
 	 * 
 	 * @param perceptionId

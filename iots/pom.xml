@@ -15,7 +15,7 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
-		<module>iots-app</module>
+		<module>iots-appserver</module>
 		<module>iots-manager</module>
 		<module>iots-perception</module>
 		<module>iots-webapp</module>
