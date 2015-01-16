@@ -11,15 +11,37 @@ import com.dahuangit.base.dto.Request;
  */
 public class YujingRequest extends Request {
 
-	/** 项目id */
-	private String PrjID = null;
+	/** 开始时间 */
+	private String beginTime = null;
 
-	public String getPrjID() {
-		return PrjID;
+	/** 结束时间 */
+	private String endTime = null;
+
+	/** 项目id */
+	private String projectId = null;
+
+	public String getBeginTime() {
+		return beginTime;
 	}
 
-	public void setPrjID(String prjID) {
-		PrjID = prjID;
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 }

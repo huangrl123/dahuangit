@@ -11,17 +11,17 @@ import com.dahuangit.base.dto.Request;
  */
 public class LoginRequest extends Request {
 	/** 操作员编号 */
-	private String operatorNo = null;
+	private String optNum = null;
 
 	/** 操作员密码 */
 	private String password = null;
 
-	public String getOperatorNo() {
-		return operatorNo;
+	public String getOptNum() {
+		return optNum;
 	}
 
-	public void setOperatorNo(String operatorNo) {
-		this.operatorNo = operatorNo;
+	public void setOptNum(String optNum) {
+		this.optNum = optNum;
 	}
 
 	public String getPassword() {

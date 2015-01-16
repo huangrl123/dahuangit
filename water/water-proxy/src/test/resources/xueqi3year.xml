@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>12年上</ymonth>
+		<sumsy>3400</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>12年下</ymonth>
+		<sumsy>4500</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>13年上</ymonth>
+		<sumsy>8900</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>13年下</ymonth>
+		<sumsy>7600</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14年上</ymonth>
+		<sumsy>10000</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14年下</ymonth>
+		<sumsy>9809.59</sumsy>
+	</data>
+</response>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<areaname>东区</areaname>
+		<buildname>公寓1</buildname>
+		<buildid>2</buildid>
+	</data>
+	<data>
+		<areaname>西区</areaname>
+		<buildname>公寓A</buildname>
+		<buildid>6</buildid>
+	</data>
+</response>

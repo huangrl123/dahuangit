@@ -69,13 +69,13 @@ public class PerceptionServiceImpl implements PerceptionService {
 	public PerceptionOpResponse getPerception(Integer perceptionId) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
-		
+
 		if (this.clientConnectionPool.containsClientConnector(p.getPerceptionAddr())) {
 			por.setOnlineStatus("在线");
 		} else {
 			por.setOnlineStatus("离线");
 		}
-		
+
 		return por;
 	}
 
@@ -361,7 +361,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 		RemoteQuery2j2MachineResponse response = new RemoteQuery2j2MachineResponse();
 
 		String perceptionAddr = null;
-		
+
 		for (PerceptionRuntimeLog p : list) {
 			// 电机1旋转状态
 			if (p.getPerceptionParamId() == 179) {
@@ -391,6 +391,11 @@ public class PerceptionServiceImpl implements PerceptionService {
 			if (p.getPerceptionParamId() == 183) {
 				String infraredStatus = p.getPerceptionParamValueInfo().getPerceptionParamValueDesc();
 				response.setInfraredStatus(infraredStatus);
+
+				if (p.getPerceptionParamValueInfo().getPerceptionParamValue() == 1) {
+					response.setNeedWarning(true);
+				}
+
 				continue;
 			}
 
@@ -398,6 +403,11 @@ public class PerceptionServiceImpl implements PerceptionService {
 			if (p.getPerceptionParamId() == 189) {
 				String pressKeyStatus = p.getPerceptionParamValueInfo().getPerceptionParamValueDesc();
 				response.setPressKeyStatus(pressKeyStatus);
+
+				if (p.getPerceptionParamValueInfo().getPerceptionParamValue() == 1) {
+					response.setNeedWarning(true);
+				}
+
 				continue;
 			}
 
@@ -415,7 +425,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 		} else {
 			response.setOnlineStatus("离线");
 		}
-		
+
 		return response;
 	}
 

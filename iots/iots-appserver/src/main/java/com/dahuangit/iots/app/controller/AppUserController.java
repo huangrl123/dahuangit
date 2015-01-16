@@ -1,6 +1,7 @@
 package com.dahuangit.iots.app.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import com.dahuangit.iots.manager.dto.request.UserLoginRequest;
 import com.dahuangit.iots.manager.dto.request.UserLogoutRequest;
 import com.dahuangit.iots.manager.dto.response.UserLoginResponse;
 import com.dahuangit.iots.manager.service.UserService;
+import com.dahuangit.util.CookieUtils;
 
 /**
  * 用户controller
@@ -37,13 +39,13 @@ public class AppUserController extends BaseController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public String login(HttpServletRequest httpServletRequest, UserLoginRequest request) {
+	public String login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			UserLoginRequest request) {
 		UserLoginResponse response = new UserLoginResponse();
 
 		try {
 			response = userService.login(request);
-			httpServletRequest.getSession().setAttribute("curUser", response);
-			httpServletRequest.getSession().setAttribute("curUserId", response.getUserId());
+			CookieUtils.addCookie(httpServletResponse, "curUserId", response.getUserId().toString(), -1);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

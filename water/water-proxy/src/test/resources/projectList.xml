@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<project>
+		<projectid>1</projectid>
+		<projectnum>0101</projectnum>
+		<projectname>项目1</projectname>
+	</project>
+	<project>
+		<projectid>2</projectid>
+		<projectnum>0102</projectnum>
+		<projectname>项目2</projectname>
+	</project>
+</response>

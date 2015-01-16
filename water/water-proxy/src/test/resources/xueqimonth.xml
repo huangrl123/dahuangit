@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14-09</ymonth>
+		<sumsy>4000</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14-10</ymonth>
+		<sumsy>6000</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14-11</ymonth>
+		<sumsy>8000</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>14-12</ymonth>
+		<sumsy>9949.59</sumsy>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<ymonth>15-01</ymonth>
+		<sumsy>12000</sumsy>
+	</data>
+</response>

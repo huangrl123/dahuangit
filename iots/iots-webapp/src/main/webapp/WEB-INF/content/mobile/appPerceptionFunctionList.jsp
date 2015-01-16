@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
-<script src="${ctx }/plugin/jquery/jquery-dialog.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 <style type="text/css">
 .liStatus {
@@ -130,6 +129,13 @@
 	    				$('#rotateStatus_machine1_combobox').val(result.machine1RotateStatus).selectmenu("refresh");
 	    				$('#rotateStatus_machine2_combobox').val(result.machine2RotateStatus).selectmenu("refresh");
 	    				$('#i2cStatus_combobox').val(result.i2cStatus).selectmenu("refresh");
+	    				
+	    				if(result.needWarning == true) {
+	    					try {
+			    				window.iots.playMp3('${perceptionOpResponse.perceptionId}', 'warning_msg_receive');
+	    					} catch(e) {
+	    					}
+	    				}
     				}
     			}
     		});

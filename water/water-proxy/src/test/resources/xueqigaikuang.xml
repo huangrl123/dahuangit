@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<projname>项目1</projname>
+		<suminout>3637.2</suminout>
+		<sumxf>10027.6</sumxf>
+		<sumcb>28</sumcb>
+		<sumzs>190</sumzs>
+		<sumsy>9809.59</sumsy>
+	</data>
+</response>

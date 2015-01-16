@@ -11,29 +11,25 @@ import com.dahuangit.base.dto.Request;
  */
 public class SunyiRequest extends Request {
 	/** 项目id */
-	private String PrjID = null;
+	private String projectId = null;
 
-	/**
-	 * 请求动作类型 1：学期概况 2：学期月份收益 3：近三年学期收益
-	 * 
-	 * 多个请求动作类型以逗号分隔
-	 */
-	private String actionType = null;
+	/** 项目名称 */
+	private String projectName = null;
 
-	public String getPrjID() {
-		return PrjID;
+	public String getProjectId() {
+		return projectId;
 	}
 
-	public void setPrjID(String prjID) {
-		PrjID = prjID;
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
-	public String getActionType() {
-		return actionType;
+	public String getProjectName() {
+		return projectName;
 	}
 
-	public void setActionType(String actionType) {
-		this.actionType = actionType;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 }

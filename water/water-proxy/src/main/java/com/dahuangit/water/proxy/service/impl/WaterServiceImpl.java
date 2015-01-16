@@ -1,5 +1,7 @@
 package com.dahuangit.water.proxy.service.impl;
 
+import java.text.MessageFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.oxm.castor.CastorMarshaller;
@@ -10,14 +12,19 @@ import com.dahuangit.base.dto.Response;
 import com.dahuangit.water.proxy.dto.request.JiankongRequest;
 import com.dahuangit.water.proxy.dto.request.LoginRequest;
 import com.dahuangit.water.proxy.dto.request.ShouzhiRequest;
-import com.dahuangit.water.proxy.dto.request.SunyiRequest;
-import com.dahuangit.water.proxy.dto.request.YongshuiRequest;
+import com.dahuangit.water.proxy.dto.request.SubmitYongshuiRequest;
+import com.dahuangit.water.proxy.dto.request.YongshuiRecordRequest;
+import com.dahuangit.water.proxy.dto.request.YujingRequest;
 import com.dahuangit.water.proxy.dto.response.GetLdListResponse;
 import com.dahuangit.water.proxy.dto.response.GetProjectListResponse;
 import com.dahuangit.water.proxy.dto.response.JiankongResponse;
 import com.dahuangit.water.proxy.dto.response.LoginResponse;
+import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthResponse;
+import com.dahuangit.water.proxy.dto.response.SemesterMonthResponse;
+import com.dahuangit.water.proxy.dto.response.SemesterSumResponse;
 import com.dahuangit.water.proxy.dto.response.ShouzhiResponse;
-import com.dahuangit.water.proxy.dto.response.SunyiResponse;
+import com.dahuangit.water.proxy.dto.response.YongshuiRecordResponse;
+import com.dahuangit.water.proxy.dto.response.YujingResponse;
 import com.dahuangit.water.proxy.service.WaterService;
 import com.dahuangit.water.proxy.util.ConnectWaterSysUtils;
 
@@ -37,6 +44,9 @@ public class WaterServiceImpl implements WaterService {
 	@Value("${water.system.server.url.Shouzhi}")
 	private String shouzhi_url = null;
 
+	@Value("${water.system.server.url.Yujing}")
+	private String yujing_url = null;
+
 	@Value("${water.system.server.url.Jiankong}")
 	private String jiankong_url = null;
 
@@ -46,6 +56,9 @@ public class WaterServiceImpl implements WaterService {
 	@Value("${water.system.server.url.Yongshui}")
 	private String yongshui_url = null;
 
+	@Value("${water.system.server.url.YongshuiRecord}")
+	private String yongshuiRecord_url = null;
+
 	@Autowired
 	protected CastorMarshaller xmlMarshaller = null;
 
@@ -54,12 +67,12 @@ public class WaterServiceImpl implements WaterService {
 	 * 
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public LoginResponse login(LoginRequest request) throws Exception {
 
-		LoginResponse response = (LoginResponse) ConnectWaterSysUtils.connect(request, login_url, xmlMarshaller,
-				LoginResponse.class);
+		String url = MessageFormat.format(login_url, request.getOptNum(), request.getPassword());
+		LoginResponse response = (LoginResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller, LoginResponse.class);
 
 		return response;
 	}
@@ -68,12 +81,12 @@ public class WaterServiceImpl implements WaterService {
 	 * 获取项目列表
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public GetProjectListResponse getProjectList() throws Exception {
 
-		GetProjectListResponse response = (GetProjectListResponse) ConnectWaterSysUtils.connect(null,
-				getProjectList_url, xmlMarshaller, GetProjectListResponse.class);
+		GetProjectListResponse response = (GetProjectListResponse) ConnectWaterSysUtils.connect(getProjectList_url,
+				xmlMarshaller, GetProjectListResponse.class);
 
 		return response;
 	}
@@ -82,27 +95,49 @@ public class WaterServiceImpl implements WaterService {
 	 * 获取楼栋列表
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public GetLdListResponse getLdList() throws Exception {
+	public GetLdListResponse getLdList(String projectId) throws Exception {
 
-		GetLdListResponse response = (GetLdListResponse) ConnectWaterSysUtils.connect(null, getLdList_url,
-				xmlMarshaller, GetLdListResponse.class);
+		String url = MessageFormat.format(getLdList_url, projectId);
+
+		GetLdListResponse response = (GetLdListResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
+				GetLdListResponse.class);
 
 		return response;
 	}
 
 	/**
-	 * 获取收资情况
+	 * 获取收支情况
 	 * 
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public ShouzhiResponse shouzhi(ShouzhiRequest request) throws Exception {
 
-		ShouzhiResponse response = (ShouzhiResponse) ConnectWaterSysUtils.connect(request, shouzhi_url, xmlMarshaller,
+		String url = MessageFormat.format(shouzhi_url, request.getProjectId(), request.getBeginTime(),
+				request.getEndTime());
+
+		ShouzhiResponse response = (ShouzhiResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
 				ShouzhiResponse.class);
+
+		return response;
+	}
+
+	/**
+	 * 获取预警信息
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public YujingResponse yujing(YujingRequest request) throws Exception {
+		String url = MessageFormat.format(yujing_url, request.getProjectId(), request.getBeginTime(),
+				request.getEndTime());
+
+		YujingResponse response = (YujingResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
+				YujingResponse.class);
 
 		return response;
 	}
@@ -112,27 +147,60 @@ public class WaterServiceImpl implements WaterService {
 	 * 
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public JiankongResponse jiankong(JiankongRequest request) throws Exception {
 
-		JiankongResponse response = (JiankongResponse) ConnectWaterSysUtils.connect(request, jiankong_url,
-				xmlMarshaller, JiankongResponse.class);
+		JiankongResponse response = (JiankongResponse) ConnectWaterSysUtils.connect(jiankong_url, xmlMarshaller,
+				JiankongResponse.class);
 
 		return response;
 	}
 
 	/**
-	 * 获取损益情况
+	 * 获取学期概况
 	 * 
-	 * @param request
+	 * @param projectId
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public SunyiResponse sunyi(SunyiRequest request) throws Exception {
+	public SemesterSumResponse getSemesterSum(String projectId) throws Exception {
 
-		SunyiResponse response = (SunyiResponse) ConnectWaterSysUtils.connect(request, sunyi_url, xmlMarshaller,
-				SunyiResponse.class);
+		String url = MessageFormat.format(sunyi_url, projectId, "1");
+		SemesterSumResponse response = (SemesterSumResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
+				SemesterSumResponse.class);
+
+		return response;
+	}
+
+	/**
+	 * 学期月份收益
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws Exception
+	 */
+	public SemesterMonthResponse getSemesterMonth(String projectId) throws Exception {
+		String url = MessageFormat.format(sunyi_url, projectId, "2");
+		SemesterMonthResponse response = (SemesterMonthResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
+				SemesterMonthResponse.class);
+
+		return response;
+	}
+
+	/**
+	 * 近三年学期收益
+	 * 
+	 * @param projectId
+	 * @return
+	 * @throws Exception
+	 */
+	public RecentYearSemesterMonthResponse getRecentYearSemesterMonth(String projectId) throws Exception {
+
+		String url = MessageFormat.format(sunyi_url, projectId, "3");
+
+		RecentYearSemesterMonthResponse response = (RecentYearSemesterMonthResponse) ConnectWaterSysUtils.connect(url,
+				xmlMarshaller, RecentYearSemesterMonthResponse.class);
 
 		return response;
 	}
@@ -142,14 +210,31 @@ public class WaterServiceImpl implements WaterService {
 	 * 
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public Response yongshui(YongshuiRequest request) throws Exception {
+	public Response yongshui(SubmitYongshuiRequest request) throws Exception {
 
-		Response response = (Response) ConnectWaterSysUtils.connect(request, yongshui_url, xmlMarshaller,
-				Response.class);
+		String url = MessageFormat.format(sunyi_url, request.getProjectId(), request.getLdId(),
+				request.getYongshuiSum());
+
+		Response response = (Response) ConnectWaterSysUtils.connect(url, xmlMarshaller, Response.class);
 
 		return response;
 	}
 
+	/**
+	 * 用水记录
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public YongshuiRecordResponse yongshuiRecord(YongshuiRecordRequest request) throws Exception {
+		String url = MessageFormat.format(yongshuiRecord_url, request.getProjectId(), request.getLdId());
+
+		YongshuiRecordResponse response = (YongshuiRecordResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
+				YongshuiRecordResponse.class);
+
+		return response;
+	}
 }

@@ -11,36 +11,36 @@ import com.dahuangit.base.dto.Request;
  */
 public class ShouzhiRequest extends Request {
 	/** 开始时间 */
-	private String beginDT = null;
+	private String beginTime = null;
 
 	/** 结束时间 */
-	private String EndDT = null;
+	private String endTime = null;
 
 	/** 项目id */
-	private String PrjID = null;
+	private String projectId = null;
 
-	public String getBeginDT() {
-		return beginDT;
+	public String getBeginTime() {
+		return beginTime;
 	}
 
-	public void setBeginDT(String beginDT) {
-		this.beginDT = beginDT;
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
 	}
 
-	public String getEndDT() {
-		return EndDT;
+	public String getEndTime() {
+		return endTime;
 	}
 
-	public void setEndDT(String endDT) {
-		EndDT = endDT;
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
-	public String getPrjID() {
-		return PrjID;
+	public String getProjectId() {
+		return projectId;
 	}
 
-	public void setPrjID(String prjID) {
-		PrjID = prjID;
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 }

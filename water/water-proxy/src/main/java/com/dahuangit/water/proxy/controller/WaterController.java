@@ -1,5 +1,11 @@
 package com.dahuangit.water.proxy.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -9,17 +15,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
+import com.dahuangit.util.date.DateUtils;
 import com.dahuangit.water.proxy.dto.request.JiankongRequest;
 import com.dahuangit.water.proxy.dto.request.LoginRequest;
 import com.dahuangit.water.proxy.dto.request.ShouzhiRequest;
+import com.dahuangit.water.proxy.dto.request.SubmitYongshuiRequest;
 import com.dahuangit.water.proxy.dto.request.SunyiRequest;
+import com.dahuangit.water.proxy.dto.request.YongshuiRecordRequest;
 import com.dahuangit.water.proxy.dto.request.YongshuiRequest;
+import com.dahuangit.water.proxy.dto.request.YujingRequest;
+import com.dahuangit.water.proxy.dto.response.ChartInfo;
 import com.dahuangit.water.proxy.dto.response.GetLdListResponse;
 import com.dahuangit.water.proxy.dto.response.GetProjectListResponse;
 import com.dahuangit.water.proxy.dto.response.JiankongResponse;
 import com.dahuangit.water.proxy.dto.response.LoginResponse;
+import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthInfo;
+import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthResponse;
+import com.dahuangit.water.proxy.dto.response.SemesterMonthInfo;
+import com.dahuangit.water.proxy.dto.response.SemesterMonthResponse;
+import com.dahuangit.water.proxy.dto.response.SemesterSumResponse;
+import com.dahuangit.water.proxy.dto.response.ShouzhiInfo;
 import com.dahuangit.water.proxy.dto.response.ShouzhiResponse;
-import com.dahuangit.water.proxy.dto.response.SunyiResponse;
+import com.dahuangit.water.proxy.dto.response.SubmitYongshuiResponse;
+import com.dahuangit.water.proxy.dto.response.SunyiAjaxDataResponse;
+import com.dahuangit.water.proxy.dto.response.YongshuiRecordResponse;
+import com.dahuangit.water.proxy.dto.response.YujingInfo;
+import com.dahuangit.water.proxy.dto.response.YujingResponse;
 import com.dahuangit.water.proxy.service.WaterService;
 
 @Controller
@@ -59,18 +80,6 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(ModelMap modelMap, LoginRequest request) {
-		// LoginResponse response = null;
-		//
-		// try {
-		// response = waterService.login(request);
-		// } catch (Exception e) {
-		// response.setSuccess(false);
-		// response.setMsg(e.getMessage());
-		// e.printStackTrace();
-		// }
-		//
-		// return this.responseToXml(response);
-
 		return "functionList";
 	}
 
@@ -83,7 +92,16 @@ public class WaterController extends BaseController {
 	@RequestMapping(value = "/submitLogin", method = RequestMethod.POST)
 	@ResponseBody
 	public Response submitLogin(ModelMap modelMap, LoginRequest request) {
-		Response response = new Response();
+		LoginResponse response = new LoginResponse();
+
+		try {
+			response = waterService.login(request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
 		return response;
 	}
 
@@ -112,19 +130,69 @@ public class WaterController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/getLdList", method = RequestMethod.GET)
-	public String getLdList(ModelMap modelMap) {
-		GetLdListResponse response = null;
+	@RequestMapping(value = "/getLdList", method = RequestMethod.POST)
+	@ResponseBody
+	public GetLdListResponse getLdList(String projectId) {
+		GetLdListResponse response = new GetLdListResponse();
 
 		try {
-			response = waterService.getLdList();
+			response = waterService.getLdList(projectId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
 			e.printStackTrace();
 		}
 
-		return this.responseToXml(response);
+		return response;
+	}
+
+	/**
+	 * 获取收支情况
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/shouzhi", method = RequestMethod.GET)
+	public String shouzhi(ModelMap modelMap, ShouzhiRequest request) {
+		ShouzhiResponse response = new ShouzhiResponse();
+
+		try {
+			if (null == request.getBeginTime()) {
+				String beginDT = DateUtils.format(DateUtils.addYears(new Date(), -1), "yyyy-MM-dd");
+				request.setBeginTime(beginDT);
+			}
+
+			if (null == request.getEndTime()) {
+				String endDT = DateUtils.format(new Date(), "yyyy-MM-dd");
+				request.setEndTime(endDT);
+			}
+
+			response = waterService.shouzhi(request);
+			Map<String, List<ShouzhiInfo>> proShouzhi = new HashMap<String, List<ShouzhiInfo>>();
+			List<ShouzhiInfo> shouzhiInfos = response.getShouzhiInfos();
+
+			for (ShouzhiInfo info : shouzhiInfos) {
+				String key = info.getProjectName();
+				if (proShouzhi.containsKey(key)) {
+					proShouzhi.get(key).add(info);
+				}
+
+				else {
+					List<ShouzhiInfo> list = new ArrayList<ShouzhiInfo>();
+					list.add(info);
+					proShouzhi.put(key, list);
+				}
+			}
+
+			modelMap.put("shouzhiMap", proShouzhi);
+			modelMap.put("request", request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return "shouzhi";
 	}
 
 	/**
@@ -136,10 +204,10 @@ public class WaterController extends BaseController {
 	@RequestMapping(value = "/shouzhiQuery", method = RequestMethod.GET)
 	public String shouzhiQuery(ModelMap modelMap) {
 		GetProjectListResponse response = null;
+
 		try {
 			response = waterService.getProjectList();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (null != response && !response.getProjectInfos().isEmpty()) {
@@ -150,26 +218,84 @@ public class WaterController extends BaseController {
 	}
 
 	/**
-	 * 获取收支情况
+	 * 个人账号信息
 	 * 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/shouzhi", method = RequestMethod.GET)
-	public String shouzhi(ModelMap modelMap, ShouzhiRequest request) {
-		ShouzhiResponse response = null;
+	@RequestMapping(value = "/account", method = RequestMethod.GET)
+	public String account(ModelMap modelMap, ShouzhiRequest request) {
+		return "account";
+	}
 
-		// try {
-		// response = waterService.shouzhi(request);
-		// } catch (Exception e) {
-		// response.setSuccess(false);
-		// response.setMsg(e.getMessage());
-		// e.printStackTrace();
-		// }
-		//
-		// return this.responseToXml(response);
+	/**
+	 * 设备预警统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/yujing", method = RequestMethod.GET)
+	public String yujing(ModelMap modelMap, YujingRequest request) {
+		YujingResponse response = new YujingResponse();
 
-		return "shouzhi";
+		try {
+			if (null == request.getBeginTime()) {
+				String beginDT = DateUtils.format(DateUtils.addYears(new Date(), -1), "yyyy-MM-dd");
+				request.setBeginTime(beginDT);
+			}
+
+			if (null == request.getEndTime()) {
+				String endDT = DateUtils.format(new Date(), "yyyy-MM-dd");
+				request.setEndTime(endDT);
+			}
+
+			response = waterService.yujing(request);
+			Map<String, List<YujingInfo>> yujingMap = new HashMap<String, List<YujingInfo>>();
+			List<YujingInfo> yujingInfos = response.getYujingInfos();
+
+			for (YujingInfo info : yujingInfos) {
+				String key = info.getProjectName();
+				if (yujingMap.containsKey(key)) {
+					yujingMap.get(key).add(info);
+				}
+
+				else {
+					List<YujingInfo> list = new ArrayList<YujingInfo>();
+					list.add(info);
+					yujingMap.put(key, list);
+				}
+			}
+
+			modelMap.put("yujingMap", yujingMap);
+			modelMap.put("request", request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return "yujing";
+	}
+
+	/**
+	 * 设备预警查询界面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/yujingQuery", method = RequestMethod.GET)
+	public String yujingQuery(ModelMap modelMap, ShouzhiRequest request) {
+		GetProjectListResponse response = null;
+		try {
+			response = waterService.getProjectList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (null != response && !response.getProjectInfos().isEmpty()) {
+			modelMap.put("projectInfos", response.getProjectInfos());
+		}
+		return "yujingQuery";
 	}
 
 	/**
@@ -193,6 +319,28 @@ public class WaterController extends BaseController {
 		// return this.responseToXml(response);
 
 		return "jiankong";
+	}
+
+	/**
+	 * 设备预警查询界面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/jiankongQuery", method = RequestMethod.GET)
+	public String jiankongQuery(ModelMap modelMap, ShouzhiRequest request) {
+		GetProjectListResponse response = null;
+		try {
+			response = waterService.getProjectList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (null != response && !response.getProjectInfos().isEmpty()) {
+			modelMap.put("projectInfos", response.getProjectInfos());
+		}
+
+		return "jiankongQuery";
 	}
 
 	/**
@@ -224,19 +372,58 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/sunyi", method = RequestMethod.GET)
 	public String sunyi(ModelMap modelMap, SunyiRequest request) {
-		SunyiResponse response = null;
+		try {
+			String projectId = request.getProjectId();
+			String projectName = new String(request.getProjectName().getBytes("ISO8859-1"), "UTF-8");
 
-		// try {
-		// response = waterService.sunyi(request);
-		// } catch (Exception e) {
-		// response.setSuccess(false);
-		// response.setMsg(e.getMessage());
-		// e.printStackTrace();
-		// }
-		//
-		// return this.responseToXml(response);
+			// 学期概况
+			SemesterSumResponse semesterSumResponse = this.waterService.getSemesterSum(projectId);
+			modelMap.put("semesterSumInfo", semesterSumResponse.getSemesterSumInfo());
+
+			modelMap.put("projectId", request.getProjectId());
+			modelMap.put("projectName", projectName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return "sunyi";
+	}
+
+	/**
+	 * 获取损益ajax数据(包括了学期月份的数据库和近三年数据)
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	@RequestMapping(value = "/getSunyiAjaxData", method = RequestMethod.POST)
+	@ResponseBody
+	public SunyiAjaxDataResponse getSunyiAjaxData(String projectId) {
+		SunyiAjaxDataResponse response = new SunyiAjaxDataResponse();
+		try {
+			SemesterMonthResponse semesterMonthResponse = this.waterService.getSemesterMonth(projectId);
+
+			ChartInfo semesterMonthChartInfo = new ChartInfo();
+			for (SemesterMonthInfo semesterMonthInfo : semesterMonthResponse.getSemesterMonthInfos()) {
+				semesterMonthChartInfo.getCategories().add(semesterMonthInfo.getMonth());
+				semesterMonthChartInfo.getData().add(semesterMonthInfo.getSumSy());
+			}
+			response.setSemesterMonthChartInfo(semesterMonthChartInfo);
+
+			RecentYearSemesterMonthResponse recentYearSemesterMonthResponse = this.waterService
+					.getRecentYearSemesterMonth(projectId);
+
+			ChartInfo recentYearSemesterMonthChartInfo = new ChartInfo();
+			for (RecentYearSemesterMonthInfo info : recentYearSemesterMonthResponse.getRecentYearSemesterMonthInfos()) {
+				recentYearSemesterMonthChartInfo.getCategories().add(info.getMonth());
+				recentYearSemesterMonthChartInfo.getData().add(info.getSumSy());
+			}
+			response.setRecentYearSemesterMonthChartInfo(recentYearSemesterMonthChartInfo);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 	/**
@@ -247,18 +434,73 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/yongshui", method = RequestMethod.GET)
 	public String yongshui(ModelMap modelMap, YongshuiRequest request) {
-		Response response = null;
+		GetProjectListResponse response = null;
 
-		// try {
-		// response = waterService.yongshui(request);
-		// } catch (Exception e) {
-		// response.setSuccess(false);
-		// response.setMsg(e.getMessage());
-		// e.printStackTrace();
-		// }
-		//
-		// return this.responseToXml(response);
+		try {
+			response = waterService.getProjectList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (null != response && !response.getProjectInfos().isEmpty()) {
+			modelMap.put("projectInfos", response.getProjectInfos());
+		}
 
 		return "yongshui";
 	}
+
+	/**
+	 * 获取楼栋列表
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getYongshuiRecord", method = RequestMethod.POST)
+	@ResponseBody
+	public YongshuiRecordResponse getYongshuiRecord(YongshuiRecordRequest request) {
+		YongshuiRecordResponse response = new YongshuiRecordResponse();
+
+		try {
+			response = waterService.yongshuiRecord(request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 提交用水记录
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/submitYongshui", method = RequestMethod.POST)
+	@ResponseBody
+	public SubmitYongshuiResponse submitYongshui(SubmitYongshuiRequest request) {
+		SubmitYongshuiResponse response = new SubmitYongshuiResponse();
+
+		try {
+			Response r = waterService.yongshui(request);
+
+			if (r.isSuccess()) {
+				YongshuiRecordRequest yongshuiRecordRequest = new YongshuiRecordRequest();
+				yongshuiRecordRequest.setProjectId(request.getProjectId());
+				yongshuiRecordRequest.setLdId(request.getLdId());
+				YongshuiRecordResponse yongshuiRecordResponse = waterService.yongshuiRecord(yongshuiRecordRequest);
+				response.setYongshuiRecords(yongshuiRecordResponse.getYongshuiRecords());
+			} else {
+				response.setSuccess(false);
+				response.setMsg(r.getMsg());
+			}
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
 }

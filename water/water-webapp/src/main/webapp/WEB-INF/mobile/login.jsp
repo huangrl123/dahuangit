@@ -11,6 +11,14 @@
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript">
+	window.onload = function() {
+		try{
+			hideLoader();
+		}catch(e){
+		}
+	}
+</script>
+<script type="text/javascript">
 	function login() {
 		var formData = $("#loginForm").serialize();
 
@@ -24,9 +32,9 @@
 			cache : false,
 			success : function(result, textStatus) {
 				if (result.success) {
-					location.href = '${ctx}/spring/mobile/functionList';
+					window.location.href = '${ctx}/spring/mobile/functionList';
 				} else {
-					alert(result.msg);
+					showAlertDialog(result.msg);
 				}
 
 				hideLoader();
@@ -47,13 +55,13 @@
 
 			<form id="loginForm" action="${ctx }/spring/mobile/login" method="post">
 				<div data-role="fieldcontain">
-					<input type="text" id="username" name="username" placeholder="请输入账号" />
+					<input type="text" id="optNum" name="optNum" value="admin" placeholder="请输入账号" />
 				</div>
 				<div data-role="fieldcontain">
-					<input type="password" id="password" name="password" placeholder="请输入密码" />
+					<input type="password" id="password" name="password" value="admin" placeholder="请输入密码" />
 				</div>
 				<div data-role="fieldcontain">
-					<input type="button" value="登录" onclick="javascript:login()" />
+					<input type="button" value="登录" onclick="login()" />
 				</div>
 			</form>
 

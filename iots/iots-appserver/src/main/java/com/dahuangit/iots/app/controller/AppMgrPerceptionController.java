@@ -25,6 +25,7 @@ import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
 import com.dahuangit.iots.perception.service.PerceptionService;
+import com.dahuangit.util.CookieUtils;
 
 /**
  * app端查询感知端情况
@@ -65,7 +66,7 @@ public class AppMgrPerceptionController extends BaseController {
 		AppGetPerceptionListResponse response = new AppGetPerceptionListResponse();
 
 		try {
-			Integer userId = Integer.valueOf(httpServletRequest.getSession().getAttribute("curUserId").toString());
+			Integer userId = Integer.valueOf(CookieUtils.getCookieByName(httpServletRequest, "curUserId"));
 			request.setUserId(userId);
 			response = this.appQueryPerceptionService.appGetPerceptionList(request);
 

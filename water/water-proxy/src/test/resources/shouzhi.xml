@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<projname>项目1</projname>
+		<dealname>收工本费</dealname>
+		<summoney>670</summoney>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<dealname>退工本费</dealname>
+		<summoney>-90</summoney>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<dealname>POS机充值</dealname>
+		<summoney>1230</summoney>
+	</data>
+	<data>
+		<projname>项目2</projname>
+		<dealname>收工本费</dealname>
+		<summoney>670</summoney>
+	</data>
+	<data>
+		<projname>项目2</projname>
+		<dealname>退工本费</dealname>
+		<summoney>-90</summoney>
+	</data>
+	<data>
+		<projname>项目2</projname>
+		<dealname>POS机充值</dealname>
+		<summoney>1230</summoney>
+	</data>
+</response>

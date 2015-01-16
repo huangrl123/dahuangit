@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<month>2015-01</month>
+		<consumedata>103.2</consumedata>
+	</data>
+	<data>
+		<month>2014-12</month>
+		<consumedata>107</consumedata>
+	</data>
+	<data>
+		<month>2014-11</month>
+		<consumedata>99</consumedata>
+	</data>
+	<data>
+		<month>2014-10</month>
+		<consumedata>117</consumedata>
+	</data>
+	<data>
+		<month>2014-09</month>
+		<consumedata>80</consumedata>
+	</data>
+</response>

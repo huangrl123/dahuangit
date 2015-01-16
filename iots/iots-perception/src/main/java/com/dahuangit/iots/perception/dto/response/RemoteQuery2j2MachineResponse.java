@@ -20,6 +20,9 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 	/** 在线状态 */
 	private String onlineStatus = null;
 
+	/** 是否需要告警 */
+	private boolean needWarning = false;
+
 	private String hex = null;
 
 	public Integer getPerceptionId() {
@@ -92,6 +95,14 @@ public class RemoteQuery2j2MachineResponse extends OxResponse {
 
 	public void setOnlineStatus(String onlineStatus) {
 		this.onlineStatus = onlineStatus;
+	}
+
+	public boolean isNeedWarning() {
+		return needWarning;
+	}
+
+	public void setNeedWarning(boolean needWarning) {
+		this.needWarning = needWarning;
 	}
 
 }

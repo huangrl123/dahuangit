@@ -12,10 +12,10 @@ public class SemesterMonthInfo {
 	private String projectName = null;
 
 	/** 月份 */
-	private String yMonth = null;
+	private String month = null;
 
 	/** 收益 */
-	private String sumSy = null;
+	private Float sumSy = null;
 
 	public String getProjectName() {
 		return projectName;
@@ -25,19 +25,19 @@ public class SemesterMonthInfo {
 		this.projectName = projectName;
 	}
 
-	public String getyMonth() {
-		return yMonth;
+	public String getMonth() {
+		return month;
 	}
 
-	public void setyMonth(String yMonth) {
-		this.yMonth = yMonth;
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
-	public String getSumSy() {
+	public Float getSumSy() {
 		return sumSy;
 	}
 
-	public void setSumSy(String sumSy) {
+	public void setSumSy(Float sumSy) {
 		this.sumSy = sumSy;
 	}
 

@@ -11,11 +11,14 @@ public class YujingInfo {
 	/** 项目名称 */
 	private String projectName = null;
 
-	/** 所属区域 */
-	private String areaName = null;
+	/** 公寓名称 */
+	private String buildName = null;
 
-	/** 设备地址 */
-	private String deviceAddr = null;
+	/** 房间名称 */
+	private String roomName = null;
+
+	/** 消费金额 */
+	private String sumMoney = null;
 
 	public String getProjectName() {
 		return projectName;
@@ -25,20 +28,28 @@ public class YujingInfo {
 		this.projectName = projectName;
 	}
 
-	public String getAreaName() {
-		return areaName;
+	public String getBuildName() {
+		return buildName;
 	}
 
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
+	public void setBuildName(String buildName) {
+		this.buildName = buildName;
 	}
 
-	public String getDeviceAddr() {
-		return deviceAddr;
+	public String getRoomName() {
+		return roomName;
 	}
 
-	public void setDeviceAddr(String deviceAddr) {
-		this.deviceAddr = deviceAddr;
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getSumMoney() {
+		return sumMoney;
+	}
+
+	public void setSumMoney(String sumMoney) {
+		this.sumMoney = sumMoney;
 	}
 
 }

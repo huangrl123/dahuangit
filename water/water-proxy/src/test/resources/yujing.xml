@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<msg>查询成功</msg>
+	<data>
+		<projname>项目1</projname>
+		<buildname>公寓1</buildname>
+		<roomname>010101101</roomname>
+		<summoney>343</summoney>
+	</data>
+	<data>
+		<projname>项目1</projname>
+		<buildname>公寓1</buildname>
+		<roomname>01010101010102</roomname>
+		<summoney>3434.7</summoney>
+	</data>
+	<data>
+		<projname>项目2</projname>
+		<buildname>公寓1</buildname>
+		<roomname>010101101</roomname>
+		<summoney>343</summoney>
+	</data>
+	<data>
+		<projname>项目2</projname>
+		<buildname>公寓3</buildname>
+		<roomname>01010101010102</roomname>
+		<summoney>3434.7</summoney>
+	</data>
+</response>
