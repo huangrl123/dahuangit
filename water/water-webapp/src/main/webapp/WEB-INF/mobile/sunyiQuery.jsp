@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>收支查询界面</title>
+<title>损益查询界面</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
@@ -33,7 +33,7 @@ function submit() {
 
 		<div data-role="header" data-position="fixed">
 			<a href="${ctx }/spring/mobile/functionList" data-icon="home" data-ajax="false">首页</a>
-			<h1>收支情况查询</h1>
+			<h1>损益情况查询</h1>
 		</div>
 
 		<div data-role="content">

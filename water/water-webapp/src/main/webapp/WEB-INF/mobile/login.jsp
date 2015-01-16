@@ -20,6 +20,18 @@
 </script>
 <script type="text/javascript">
 	function login() {
+		var optNum = $('#optNum').val();
+		if(!optNum) {
+			showAlertDialog('账号不能为空');
+			return;
+		}
+		
+		var password = $('#password').val();
+		if(!password) {
+			showAlertDialog('密码不能为空');
+			return;
+		}
+		
 		var formData = $("#loginForm").serialize();
 
 		showLoader();
@@ -55,10 +67,10 @@
 
 			<form id="loginForm" action="${ctx }/spring/mobile/login" method="post">
 				<div data-role="fieldcontain">
-					<input type="text" id="optNum" name="optNum" value="admin" placeholder="请输入账号" />
+					<input type="text" id="optNum" name="optNum" placeholder="请输入账号" />
 				</div>
 				<div data-role="fieldcontain">
-					<input type="password" id="password" name="password" value="admin" placeholder="请输入密码" />
+					<input type="password" id="password" name="password" placeholder="请输入密码" />
 				</div>
 				<div data-role="fieldcontain">
 					<input type="button" value="登录" onclick="login()" />

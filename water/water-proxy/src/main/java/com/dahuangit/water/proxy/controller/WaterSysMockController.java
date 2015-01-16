@@ -22,7 +22,7 @@ public class WaterSysMockController extends BaseController {
 	@Autowired
 	private WaterService waterService = null;
 
-	private String basePath = "E:/dahuang-workspace/dahuangit/water/water-proxy/src/test/resources/";
+	private String basePath = "C:/water-test-xml/";
 
 	/**
 	 * 登录

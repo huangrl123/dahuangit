@@ -16,16 +16,16 @@ public class ConnectWaterSysUtils {
 		Response response = new Response();
 
 		try {
-			log.debug("接收到请求，请求url为:");
+			log.debug("本代理程序接收到app的请求，请求url为:");
 			log.debug(url);
 
 			String xml = HttpKit.getHttpRequestContent(url, "UTF-8");
 
-			log.debug("接收到响应");
-			log.debug("请求url为:");
+			log.debug("本代理程序接收到热水管理平台的响应");
+			log.debug("app的请求url为:");
 			log.debug(url);
-			log.debug("响应报文为:");
-			log.debug(xml);
+			log.debug("本代理程序收到热水管理平台的响应报文为:");
+			log.debug(XmlUtils.formatXMLStr(xml));
 
 			Object obj = XmlUtils.xml2obj(xmlMarshaller, xml, clazz);
 
@@ -34,7 +34,7 @@ public class ConnectWaterSysUtils {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
 			
-			log.debug("请求报错，url为：");
+			log.debug("请求报错，app请求的url为：");
 			log.debug(url);
 			
 			log.debug("报错信息：");
