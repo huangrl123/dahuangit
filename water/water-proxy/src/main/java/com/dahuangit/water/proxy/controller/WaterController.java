@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -91,11 +93,13 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/submitLogin", method = RequestMethod.POST)
 	@ResponseBody
-	public Response submitLogin(ModelMap modelMap, LoginRequest request) {
+	public Response submitLogin(ModelMap modelMap, HttpServletRequest httpServletRequest, LoginRequest request) {
 		LoginResponse response = new LoginResponse();
 
 		try {
 			response = waterService.login(request);
+
+			httpServletRequest.getSession().setAttribute("systemId", response.getSystemId());
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -111,11 +115,12 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getProjectList", method = RequestMethod.GET)
-	public String getProjectList(ModelMap modelMap) {
-		GetProjectListResponse response = null;
+	public String getProjectList(ModelMap modelMap, HttpServletRequest httpServletRequest) {
+		GetProjectListResponse response = new GetProjectListResponse();
 
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -132,11 +137,13 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/getLdList", method = RequestMethod.POST)
 	@ResponseBody
-	public GetLdListResponse getLdList(String projectId) {
+	public GetLdListResponse getLdList(String projectId, HttpServletRequest httpServletRequest) {
 		GetLdListResponse response = new GetLdListResponse();
 
 		try {
-			response = waterService.getLdList(projectId);
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+
+			response = waterService.getLdList(systemId, projectId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -153,7 +160,7 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/shouzhi", method = RequestMethod.GET)
-	public String shouzhi(ModelMap modelMap, ShouzhiRequest request) {
+	public String shouzhi(ModelMap modelMap, HttpServletRequest httpServletRequest, ShouzhiRequest request) {
 		ShouzhiResponse response = new ShouzhiResponse();
 
 		try {
@@ -166,6 +173,9 @@ public class WaterController extends BaseController {
 				String endDT = DateUtils.format(new Date(), "yyyy-MM-dd");
 				request.setEndTime(endDT);
 			}
+
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			request.setSystemId(systemId);
 
 			response = waterService.shouzhi(request);
 			Map<String, List<ShouzhiInfo>> proShouzhi = new HashMap<String, List<ShouzhiInfo>>();
@@ -202,11 +212,13 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/shouzhiQuery", method = RequestMethod.GET)
-	public String shouzhiQuery(ModelMap modelMap) {
+	public String shouzhiQuery(ModelMap modelMap, HttpServletRequest httpServletRequest) {
 		GetProjectListResponse response = null;
 
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -235,7 +247,7 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/yujing", method = RequestMethod.GET)
-	public String yujing(ModelMap modelMap, YujingRequest request) {
+	public String yujing(ModelMap modelMap, HttpServletRequest httpServletRequest, YujingRequest request) {
 		YujingResponse response = new YujingResponse();
 
 		try {
@@ -248,6 +260,13 @@ public class WaterController extends BaseController {
 				String endDT = DateUtils.format(new Date(), "yyyy-MM-dd");
 				request.setEndTime(endDT);
 			}
+
+			if(null == request.getProjectId()) {
+				request.setProjectId("0");
+			}
+			
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			request.setSystemId(systemId);
 
 			response = waterService.yujing(request);
 			Map<String, List<YujingInfo>> yujingMap = new HashMap<String, List<YujingInfo>>();
@@ -284,10 +303,16 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/yujingQuery", method = RequestMethod.GET)
-	public String yujingQuery(ModelMap modelMap, ShouzhiRequest request) {
+	public String yujingQuery(ModelMap modelMap, HttpServletRequest httpServletRequest, ShouzhiRequest request) {
 		GetProjectListResponse response = null;
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+
+			if(null == request.getProjectId()) {
+				request.setProjectId("0");
+			}
+			
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -328,10 +353,16 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/jiankongQuery", method = RequestMethod.GET)
-	public String jiankongQuery(ModelMap modelMap, ShouzhiRequest request) {
+	public String jiankongQuery(ModelMap modelMap, HttpServletRequest httpServletRequest, ShouzhiRequest request) {
 		GetProjectListResponse response = null;
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+
+			if(null == request.getProjectId()) {
+				request.setProjectId("0");
+			}
+			
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -350,10 +381,12 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/sunyiQuery", method = RequestMethod.GET)
-	public String sunyiQuery(ModelMap modelMap) {
+	public String sunyiQuery(ModelMap modelMap, HttpServletRequest httpServletRequest) {
 		GetProjectListResponse response = null;
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -371,13 +404,14 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/sunyi", method = RequestMethod.GET)
-	public String sunyi(ModelMap modelMap, SunyiRequest request) {
+	public String sunyi(ModelMap modelMap, HttpServletRequest httpServletRequest, SunyiRequest request) {
 		try {
 			String projectId = request.getProjectId();
 			String projectName = new String(request.getProjectName().getBytes("ISO8859-1"), "UTF-8");
 
 			// 学期概况
-			SemesterSumResponse semesterSumResponse = this.waterService.getSemesterSum(projectId);
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			SemesterSumResponse semesterSumResponse = this.waterService.getSemesterSum(systemId, projectId);
 			modelMap.put("semesterSumInfo", semesterSumResponse.getSemesterSumInfo());
 
 			modelMap.put("projectId", request.getProjectId());
@@ -397,10 +431,11 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/getSunyiAjaxData", method = RequestMethod.POST)
 	@ResponseBody
-	public SunyiAjaxDataResponse getSunyiAjaxData(String projectId) {
+	public SunyiAjaxDataResponse getSunyiAjaxData(String projectId, HttpServletRequest httpServletRequest) {
 		SunyiAjaxDataResponse response = new SunyiAjaxDataResponse();
 		try {
-			SemesterMonthResponse semesterMonthResponse = this.waterService.getSemesterMonth(projectId);
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			SemesterMonthResponse semesterMonthResponse = this.waterService.getSemesterMonth(systemId, projectId);
 
 			ChartInfo semesterMonthChartInfo = new ChartInfo();
 			for (SemesterMonthInfo semesterMonthInfo : semesterMonthResponse.getSemesterMonthInfos()) {
@@ -410,7 +445,7 @@ public class WaterController extends BaseController {
 			response.setSemesterMonthChartInfo(semesterMonthChartInfo);
 
 			RecentYearSemesterMonthResponse recentYearSemesterMonthResponse = this.waterService
-					.getRecentYearSemesterMonth(projectId);
+					.getRecentYearSemesterMonth(systemId, projectId);
 
 			ChartInfo recentYearSemesterMonthChartInfo = new ChartInfo();
 			for (RecentYearSemesterMonthInfo info : recentYearSemesterMonthResponse.getRecentYearSemesterMonthInfos()) {
@@ -433,11 +468,13 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/yongshui", method = RequestMethod.GET)
-	public String yongshui(ModelMap modelMap, YongshuiRequest request) {
+	public String yongshui(ModelMap modelMap, HttpServletRequest httpServletRequest, YongshuiRequest request) {
 		GetProjectListResponse response = null;
 
 		try {
-			response = waterService.getProjectList();
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			
+			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

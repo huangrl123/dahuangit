@@ -19,6 +19,17 @@ public class JiankongRequest extends Request {
 	/** 项目id */
 	private String PrjID = null;
 
+	/** 系统id */
+	private String systemId = null;
+
+	public String getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
 	public String getBeginDT() {
 		return beginDT;
 	}

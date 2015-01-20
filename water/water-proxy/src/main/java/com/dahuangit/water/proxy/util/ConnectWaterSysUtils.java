@@ -21,6 +21,8 @@ public class ConnectWaterSysUtils {
 
 			String xml = HttpKit.getHttpRequestContent(url, "UTF-8");
 
+			xml = xml.replaceAll("(?s)<!--.*?-->", "");
+
 			log.debug("本代理程序接收到热水管理平台的响应");
 			log.debug("app的请求url为:");
 			log.debug(url);
@@ -33,10 +35,10 @@ public class ConnectWaterSysUtils {
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
-			
+
 			log.debug("请求报错，app请求的url为：");
 			log.debug(url);
-			
+
 			log.debug("报错信息：");
 			e.printStackTrace();
 			throw e;

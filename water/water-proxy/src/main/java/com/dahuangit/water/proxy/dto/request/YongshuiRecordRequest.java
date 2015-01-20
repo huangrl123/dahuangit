@@ -9,6 +9,17 @@ public class YongshuiRecordRequest extends Request {
 	/** 楼栋id */
 	private String ldId = null;
 
+	/** 系统id */
+	private String systemId = null;
+
+	public String getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
 	public String getProjectId() {
 		return projectId;
 	}

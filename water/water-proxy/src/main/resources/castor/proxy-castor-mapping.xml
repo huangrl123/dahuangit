@@ -7,6 +7,7 @@
 	<!-- 登录 -->
 	<class name="com.dahuangit.water.proxy.dto.response.LoginResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
+		<field name="systemId"/>
 	</class>
 
 	<!-- 获取项目列表 -->
@@ -157,7 +158,7 @@
 	<class name="com.dahuangit.water.proxy.dto.response.YongshuiRecordResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
 		<field name="yongshuiRecords" type="com.dahuangit.water.proxy.dto.response.YongshuiRecord" collection="arraylist">
-        	<bind-xml name="data"/>
+			<bind-xml name="data" />
 		</field>
 	</class>
 </mapping>

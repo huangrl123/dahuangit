@@ -30,7 +30,7 @@
 	        mode : 'mixed', 
 	        dateFormat : 'yy-mm-dd', 
 	        minDate: new Date(2000, 1, 1),
-            maxDate: new Date(), 
+            //maxDate: new Date(), 
 	        setText : '确定', 
 	        cancelText : '取消',
 	        dateOrder : 'yymmdd', 

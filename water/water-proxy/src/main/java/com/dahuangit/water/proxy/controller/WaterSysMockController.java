@@ -16,7 +16,7 @@ import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.water.proxy.service.WaterService;
 
 @Controller
-@RequestMapping("/energyswot")
+@RequestMapping("/yiji")
 public class WaterSysMockController extends BaseController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class WaterSysMockController extends BaseController {
 		String query = request.getParameter("query");
 		
 		if("login".equals(query)) {
-			return FileUtils.readFileToString(new File(basePath + "success.xml"));
+			return FileUtils.readFileToString(new File(basePath + "login.xml"));
 		}
 		
 		else if("inoutmoney".equals(query)) {

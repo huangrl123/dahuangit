@@ -12,6 +12,17 @@ public class SubmitYongshuiRequest extends Request {
 	/** 用水金额 */
 	private String yongshuiSum = null;
 
+	/**系统id*/
+	private String systemId = null;
+	
+	public String getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
 	public String getProjectId() {
 		return projectId;
 	}

@@ -31,18 +31,21 @@ public interface WaterService {
 	/**
 	 * 获取项目列表
 	 * 
+	 * @param systemId
 	 * @return
 	 * @throws Exception
 	 */
-	public GetProjectListResponse getProjectList() throws Exception;
+	public GetProjectListResponse getProjectList(String systemId) throws Exception;
 
 	/**
 	 * 获取楼栋列表
 	 * 
+	 * @param systemId
+	 * @param projectId
 	 * @return
 	 * @throws Exception
 	 */
-	public GetLdListResponse getLdList(String projectId) throws Exception;
+	public GetLdListResponse getLdList(String systemId, String projectId) throws Exception;
 
 	/**
 	 * 获取收资情况
@@ -74,29 +77,33 @@ public interface WaterService {
 	/**
 	 * 获取学期概况
 	 * 
+	 * @param systemId
 	 * @param projectId
 	 * @return
 	 * @throws Exception
 	 */
-	public SemesterSumResponse getSemesterSum(String projectId) throws Exception;
+	public SemesterSumResponse getSemesterSum(String systemId, String projectId) throws Exception;
 
 	/**
 	 * 学期月份收益
 	 * 
+	 * @param systemId
 	 * @param projectId
 	 * @return
 	 * @throws Exception
 	 */
-	public SemesterMonthResponse getSemesterMonth(String projectId) throws Exception;
+	public SemesterMonthResponse getSemesterMonth(String systemId, String projectId) throws Exception;
 
 	/**
 	 * 近三年学期收益
 	 * 
+	 * @param systemId
 	 * @param projectId
 	 * @return
 	 * @throws Exception
 	 */
-	public RecentYearSemesterMonthResponse getRecentYearSemesterMonth(String projectId) throws Exception;
+	public RecentYearSemesterMonthResponse getRecentYearSemesterMonth(String systemId, String projectId)
+			throws Exception;
 
 	/**
 	 * 用水登记

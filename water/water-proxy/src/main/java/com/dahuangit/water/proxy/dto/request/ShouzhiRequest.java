@@ -19,6 +19,9 @@ public class ShouzhiRequest extends Request {
 	/** 项目id */
 	private String projectId = null;
 
+	/** 系统id */
+	private String systemId = null;
+
 	public String getBeginTime() {
 		return beginTime;
 	}
@@ -41,6 +44,14 @@ public class ShouzhiRequest extends Request {
 
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
+	}
+
+	public String getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 }

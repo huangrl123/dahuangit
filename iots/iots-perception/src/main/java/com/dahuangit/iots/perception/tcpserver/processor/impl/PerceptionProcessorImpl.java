@@ -129,7 +129,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 30 * 1000;
+			long timeout = 7 * 1000;
 			long count = nowTime - reqTime;
 			if (count > timeout) {
 				log.debug("远程查询电机超时:帧序号seq=" + seq);
@@ -222,7 +222,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 			// 响应超时
 			long nowTime = System.currentTimeMillis();
-			long timeout = 30 * 1000;
+			long timeout = 7 * 1000;
 			long count = nowTime - reqTime;
 			if (count > timeout) {
 				log.debug("远程控制电机超时:帧序号seq=" + seq);

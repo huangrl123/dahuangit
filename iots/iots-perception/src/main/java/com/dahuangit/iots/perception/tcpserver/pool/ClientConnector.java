@@ -1,5 +1,8 @@
 package com.dahuangit.iots.perception.tcpserver.pool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.mina.core.session.IoSession;
 
 /**
@@ -18,6 +21,9 @@ public class ClientConnector {
 
 	/** mina iosession */
 	private IoSession ioSession = null;
+
+	/** 当前状态 key:状态参数id，value ：状态值 */
+	private Map<Integer, Integer> currentStatus = new HashMap<Integer, Integer>();
 
 	public IoSession getIoSession() {
 		return ioSession;
@@ -41,6 +47,14 @@ public class ClientConnector {
 
 	public void setClientKey(String clientKey) {
 		this.clientKey = clientKey;
+	}
+
+	public Map<Integer, Integer> getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(Map<Integer, Integer> currentStatus) {
+		this.currentStatus = currentStatus;
 	}
 
 }

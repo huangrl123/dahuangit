@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<success>true</success>
+	<systemId>3</systemId>
+	<!-- powerList是权限列表,对应位为1有权限,非1为没有权限 -->
+	<powerList>11111111111111111111</powerList>
+</response>

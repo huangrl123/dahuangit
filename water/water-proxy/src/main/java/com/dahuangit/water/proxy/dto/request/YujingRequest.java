@@ -20,6 +20,17 @@ public class YujingRequest extends Request {
 	/** 项目id */
 	private String projectId = null;
 
+	/** 系统id */
+	private String systemId = null;
+
+	public String getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
 	public String getBeginTime() {
 		return beginTime;
 	}
