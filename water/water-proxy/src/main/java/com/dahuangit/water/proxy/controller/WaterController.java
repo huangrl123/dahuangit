@@ -261,10 +261,10 @@ public class WaterController extends BaseController {
 				request.setEndTime(endDT);
 			}
 
-			if(null == request.getProjectId()) {
+			if (null == request.getProjectId()) {
 				request.setProjectId("0");
 			}
-			
+
 			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
 			request.setSystemId(systemId);
 
@@ -308,10 +308,10 @@ public class WaterController extends BaseController {
 		try {
 			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
 
-			if(null == request.getProjectId()) {
+			if (null == request.getProjectId()) {
 				request.setProjectId("0");
 			}
-			
+
 			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -358,10 +358,10 @@ public class WaterController extends BaseController {
 		try {
 			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
 
-			if(null == request.getProjectId()) {
+			if (null == request.getProjectId()) {
 				request.setProjectId("0");
 			}
-			
+
 			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -473,7 +473,7 @@ public class WaterController extends BaseController {
 
 		try {
 			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
-			
+
 			response = waterService.getProjectList(systemId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -493,10 +493,13 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/getYongshuiRecord", method = RequestMethod.POST)
 	@ResponseBody
-	public YongshuiRecordResponse getYongshuiRecord(YongshuiRecordRequest request) {
+	public YongshuiRecordResponse getYongshuiRecord(YongshuiRecordRequest request, HttpServletRequest httpServletRequest) {
 		YongshuiRecordResponse response = new YongshuiRecordResponse();
 
 		try {
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			request.setSystemId(systemId);
+
 			response = waterService.yongshuiRecord(request);
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -515,16 +518,22 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/submitYongshui", method = RequestMethod.POST)
 	@ResponseBody
-	public SubmitYongshuiResponse submitYongshui(SubmitYongshuiRequest request) {
+	public SubmitYongshuiResponse submitYongshui(SubmitYongshuiRequest request, HttpServletRequest httpServletRequest) {
 		SubmitYongshuiResponse response = new SubmitYongshuiResponse();
 
 		try {
+			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
+			request.setSystemId(systemId);
+			
 			Response r = waterService.yongshui(request);
 
 			if (r.isSuccess()) {
 				YongshuiRecordRequest yongshuiRecordRequest = new YongshuiRecordRequest();
 				yongshuiRecordRequest.setProjectId(request.getProjectId());
 				yongshuiRecordRequest.setLdId(request.getLdId());
+
+				yongshuiRecordRequest.setSystemId(systemId);
+
 				YongshuiRecordResponse yongshuiRecordResponse = waterService.yongshuiRecord(yongshuiRecordRequest);
 				response.setYongshuiRecords(yongshuiRecordResponse.getYongshuiRecords());
 			} else {

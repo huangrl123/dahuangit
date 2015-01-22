@@ -64,7 +64,7 @@ function loadChart(result) {
 	//近三年收入
 	$('#recentYearSemesterMonthInfos').highcharts({
 		title : {
-			text : '学期收入',
+			text : '近三年收入',
 			x : -20
 		},
 
@@ -155,7 +155,7 @@ function loadChart(result) {
 					<span id="semesterMonthInfos"></span>
 				</li>
 
-				<li data-role="list-divider">最近三年月份收益</li>
+				<li data-role="list-divider">最近三年收益</li>
 				<li>
 					<span id="recentYearSemesterMonthInfos"></span>
 				</li>
