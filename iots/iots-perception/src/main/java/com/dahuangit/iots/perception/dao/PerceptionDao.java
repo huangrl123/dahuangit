@@ -30,4 +30,8 @@ public class PerceptionDao extends BaseDao<Perception, Integer> {
 		String hql = "select count(*) from Perception";
 		return this.findRecordsCount(hql);
 	}
+
+	public Perception findPerceptionByAddr(String addr) {
+		return this.findUniqueBy("perceptionAddr", addr);
+	}
 }

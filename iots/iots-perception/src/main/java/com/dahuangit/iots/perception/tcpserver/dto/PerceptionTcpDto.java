@@ -10,7 +10,7 @@ public class PerceptionTcpDto {
 	private int length = 0;
 
 	/** 业务类型 0xA3 BYTE */
-	private byte busType = (byte) 0x00;
+	private int busType = (byte) 0x00;
 
 	/** CRC32校验和 0xA4 LONG */
 	private long crc32 = 0;
@@ -19,10 +19,10 @@ public class PerceptionTcpDto {
 	private String machineAddr = null;
 
 	/** 操作标识 0xB2 BYTE */
-	private byte operateFlag = (byte) 0x00;
+	private int operateFlag = 0;
 
 	/** 感知端设备类型 */
-	private byte perceptionType = 0;
+	private int perceptionType = 0;
 
 	/** 操作时间 */
 	private Date optTime = new Date();
@@ -46,11 +46,11 @@ public class PerceptionTcpDto {
 		this.length = length;
 	}
 
-	public byte getBusType() {
+	public int getBusType() {
 		return busType;
 	}
 
-	public void setBusType(byte busType) {
+	public void setBusType(int busType) {
 		this.busType = busType;
 	}
 
@@ -70,19 +70,19 @@ public class PerceptionTcpDto {
 		this.machineAddr = machineAddr;
 	}
 
-	public byte getOperateFlag() {
+	public int getOperateFlag() {
 		return operateFlag;
 	}
 
-	public void setOperateFlag(byte operateFlag) {
+	public void setOperateFlag(int operateFlag) {
 		this.operateFlag = operateFlag;
 	}
 
-	public byte getPerceptionType() {
+	public int getPerceptionType() {
 		return perceptionType;
 	}
 
-	public void setPerceptionType(byte perceptionType) {
+	public void setPerceptionType(int perceptionType) {
 		this.perceptionType = perceptionType;
 	}
 

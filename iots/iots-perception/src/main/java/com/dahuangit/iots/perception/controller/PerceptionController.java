@@ -17,11 +17,11 @@ import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageR
 import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
 import com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
-import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.PerceptionVediaService;
 import com.dahuangit.util.log.Log4jUtils;
@@ -62,29 +62,6 @@ public class PerceptionController extends BaseController {
 	}
 
 	/**
-	 * 6+6远程控制
-	 * 
-	 * @param perceptionId
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/remoteQuery6j6Machine", method = RequestMethod.POST)
-	@ResponseBody
-	public RemoteQuery6j6MachineResponse remoteQuery6j6Machine(Integer perceptionId) throws Exception {
-		RemoteQuery6j6MachineResponse response = new RemoteQuery6j6MachineResponse();
-
-		try {
-			response = perceptionService.remoteQuery6j6Machine(perceptionId);
-		} catch (Exception e) {
-			response.setSuccess(false);
-			response.setMsg(e.getMessage());
-			e.printStackTrace();
-		}
-
-		return response;
-	}
-
-	/**
 	 * 感知端远程控制
 	 * 
 	 * @param req
@@ -96,7 +73,12 @@ public class PerceptionController extends BaseController {
 		OpResponse response = new OpResponse();
 
 		try {
-			perceptionService.remoteCtrlMachine(req.getPerceptionId(), req.getOpt());
+			if (req.getPerceptionTypeId() == 1) {
+				perceptionService.remoteCtrlMachine2j2(req);
+			} else {
+				this.perceptionService.remoteOperateMachine(req.getPerceptionId(), req.getParamId(),
+						req.getParamValue());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setSuccess(false);
@@ -187,7 +169,7 @@ public class PerceptionController extends BaseController {
 	 */
 	@RequestMapping(value = "/fileUploadNotice", method = RequestMethod.POST)
 	@ResponseBody
-	public String fileUploadNotice(String fileInfoXml) {
+	public Response fileUploadNotice(String fileInfoXml) {
 		Response response = new Response();
 
 		try {
@@ -201,6 +183,38 @@ public class PerceptionController extends BaseController {
 			response.setMsg(e.getMessage());
 		}
 
-		return this.responseToXml(response);
+		return response;
+	}
+
+	/**
+	 * 设备上传当前状态参数到服务器
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/uploadCurStatusParam", method = RequestMethod.POST)
+	@ResponseBody
+	public Response uploadCurStatusParam(UploadCurStatusParamRequest request) {
+		Response response = new Response();
+
+		if (null == request.getPerceptionAddr()) {
+			response.setSuccess(false);
+			response.setMsg("设备地址[perceptionAddr]不能为空");
+			return response;
+		}
+
+		if (null == request.getPerceptionStatusInfoXml()) {
+			response.setSuccess(false);
+			response.setMsg("设备状态参数XML字符串[perceptionStatusInfoXml]不能为空");
+			return response;
+		}
+
+		try {
+			response = this.uploadCurStatusParam(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
 	}
 }

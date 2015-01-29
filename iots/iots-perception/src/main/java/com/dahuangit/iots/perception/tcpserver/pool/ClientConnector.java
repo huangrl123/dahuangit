@@ -1,5 +1,6 @@
 package com.dahuangit.iots.perception.tcpserver.pool;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class ClientConnector {
 	private String clientKey = null;
 
 	/** 最后通信时间 */
-	private long lastCommTime;
+	private Date lastCommTime = new Date();
 
 	/** mina iosession */
 	private IoSession ioSession = null;
@@ -33,11 +34,11 @@ public class ClientConnector {
 		this.ioSession = ioSession;
 	}
 
-	public long getLastCommTime() {
+	public Date getLastCommTime() {
 		return lastCommTime;
 	}
 
-	public void setLastCommTime(long lastCommTime) {
+	public void setLastCommTime(Date lastCommTime) {
 		this.lastCommTime = lastCommTime;
 	}
 

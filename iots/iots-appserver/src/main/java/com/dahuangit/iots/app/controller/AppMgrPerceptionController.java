@@ -10,20 +10,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
-import com.dahuangit.base.dto.ComboboxData;
-import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.app.dto.request.AppGetPerceptionListRequest;
 import com.dahuangit.iots.app.dto.request.AppGetPerceptionRuntimeLogListRequest;
+import com.dahuangit.iots.app.dto.request.getRuntimeLogByParamIdReq;
 import com.dahuangit.iots.app.dto.response.AppGetPerceptionListResponse;
 import com.dahuangit.iots.app.dto.response.AppGetPerceptionRuntimeLogListResponse;
 import com.dahuangit.iots.app.service.AppQueryPerceptionService;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
-import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
-import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
+import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
-import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.util.CookieUtils;
 
@@ -81,44 +79,74 @@ public class AppMgrPerceptionController extends BaseController {
 	}
 
 	/**
+	 * 通过参数id获取当前参数下的运行日志
+	 * 
+	 * @param httpServletRequest
+	 * @param modelMap
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getRuntimeLogByParamId", method = RequestMethod.GET)
+	public String getRuntimeLogByParamId(HttpServletRequest httpServletRequest, ModelMap modelMap,
+			getRuntimeLogByParamIdReq request) {
+
+		FindPerceptionRuntimeLogByPageReq findPerceptionRuntimeLogByPageReq = new FindPerceptionRuntimeLogByPageReq();
+		findPerceptionRuntimeLogByPageReq.setPerceptionId(request.getPerceptionId());
+		findPerceptionRuntimeLogByPageReq.setParamId(request.getParamId());
+
+		PageQueryResult<PerceptionRuntimeLogResponse> queryResult = this.perceptionService
+				.findPerceptionRuntimeLogByPage(findPerceptionRuntimeLogByPageReq);
+
+		modelMap.put("req", request);
+		modelMap.put("queryResult", queryResult);
+
+		return "mobile/appPerceptionParamLog";
+	}
+
+	/**
 	 * 跳转到app 感知端功能列表界面
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/appPerceptionFunctionList", method = RequestMethod.GET)
-	public String appPerceptionFunctionList(ModelMap modelMap, Integer perceptionId) {
-		// 获取感知端基本信息
-		PerceptionOpResponse perceptionOpResponse = this.perceptionService.getPerception(perceptionId);
+	public String appPerceptionFunctionList(ModelMap modelMap, Integer perceptionId, Boolean isInit) {
+		PerceptionParamStatusRequest req = new PerceptionParamStatusRequest();
+		if (null == isInit) {
+			req.setInit(true);
+		} else {
+			req.setInit(isInit);
+		}
+		req.setPerceptionId(perceptionId);
+
+		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
 
-		// 获取感知端状态列表
-		if (perceptionOpResponse.getPerceptionTypeId() == 1) {// 2+2
-			RemoteQuery2j2MachineResponse query2j2MachineResponse = this.perceptionService
-					.remoteQuery2j2Machine(perceptionId);
-			modelMap.put("query2j2MachineResponse", query2j2MachineResponse);
+		return "mobile/appPerceptionFunctionList";
+	}
 
-			// 获取状态下拉选列表
-			// 电机1旋转状态
-			ComboboxData rotateStatus_machine1_combobox = this.perceptionService
-					.getPerceptionParamValueListByParam(179);
-			modelMap.put("rotateStatus_machine1_combobox", rotateStatus_machine1_combobox);
-
-			// 电机2旋转状态
-			ComboboxData rotateStatus_machine2_combobox = this.perceptionService
-					.getPerceptionParamValueListByParam(187);
-			modelMap.put("rotateStatus_machine2_combobox", rotateStatus_machine2_combobox);
-
-			// i2c状态
-			ComboboxData i2cStatus_combobox = this.perceptionService.getPerceptionParamValueListByParam(182);
-			modelMap.put("i2cStatus_combobox", i2cStatus_combobox);
-
-			return "mobile/appPerceptionFunctionList";
-
+	/**
+	 * 通过ajax获取设备当前状态
+	 * 
+	 * @param modelMap
+	 * @param perceptionId
+	 * @param isInit
+	 * @return
+	 */
+	@RequestMapping(value = "/appPerceptionFunctionListAjax", method = RequestMethod.GET)
+	@ResponseBody
+	public PerceptionParamStatusQueryResponse appPerceptionFunctionListAjax(ModelMap modelMap, Integer perceptionId,
+			Boolean isInit) {
+		PerceptionParamStatusRequest req = new PerceptionParamStatusRequest();
+		if (null == isInit) {
+			req.setInit(true);
+		} else {
+			req.setInit(isInit);
 		}
+		req.setPerceptionId(perceptionId);
 
-		else {
-			return null;
-		}
+		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
+
+		return perceptionOpResponse;
 	}
 
 	/**
@@ -141,7 +169,7 @@ public class AppMgrPerceptionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/appPerceptionLog", method = RequestMethod.GET)
-	public String appPerceptionLog(ModelMap modelMap, Integer perceptionId, Integer reqPage) {
+	public String appPerceptionLog(ModelMap modelMap, Integer perceptionId, Integer paramId, Integer reqPage) {
 
 		FindPerceptionRuntimeLogByPageReq req = new FindPerceptionRuntimeLogByPageReq();
 
@@ -152,7 +180,8 @@ public class AppMgrPerceptionController extends BaseController {
 		Integer start = (reqPage - 1) * req.getLimit();
 		req.setStart(start);
 		req.setPerceptionId(perceptionId);
-		
+		req.setParamId(paramId);
+
 		PageQueryResult<PerceptionRuntimeLogResponse> result = this.perceptionService
 				.findPerceptionRuntimeLogByPage(req);
 
@@ -163,7 +192,7 @@ public class AppMgrPerceptionController extends BaseController {
 		modelMap.put("curPage", reqPage);
 		modelMap.put("totalPage", totalPage);
 		modelMap.put("PerceptionRuntimeLogList", result.getResults());
-		
+
 		return "mobile/appPerceptionLog";
 	}
 
@@ -236,48 +265,4 @@ public class AppMgrPerceptionController extends BaseController {
 		return this.responseToXml(response);
 	}
 
-	/**
-	 * 6+6远程控制
-	 * 
-	 * @param perceptionId
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/remoteQuery6j6Machine", method = RequestMethod.POST)
-	@ResponseBody
-	public String remoteQuery6j6Machine(Integer perceptionId) throws Exception {
-		RemoteQuery6j6MachineResponse response = new RemoteQuery6j6MachineResponse();
-
-		try {
-			response = perceptionService.remoteQuery6j6Machine(perceptionId);
-		} catch (Exception e) {
-			response.setSuccess(false);
-			response.setMsg(e.getMessage());
-			e.printStackTrace();
-		}
-
-		return this.responseToXml(response);
-	}
-
-	/**
-	 * 感知端远程控制
-	 * 
-	 * @param req
-	 * @return
-	 */
-	@RequestMapping(value = "/remoteCtrlPerception", method = RequestMethod.POST)
-	@ResponseBody
-	public String remoteCtrlPerception(RemoteCtrlPerceptionRequest req) {
-		Response response = new Response();
-
-		try {
-			perceptionService.remoteCtrlMachine(req.getPerceptionId(), req.getOpt());
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setSuccess(false);
-			response.setMsg(e.getMessage());
-		}
-
-		return this.responseToXml(response);
-	}
 }

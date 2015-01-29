@@ -11,7 +11,9 @@ public class FindPerceptionRuntimeLogByPageReq extends OpRequest {
 	private Integer limit = 25;
 
 	private Integer perceptionId = null;
-	
+
+	private Integer paramId = null;
+
 	public Integer getStart() {
 		return start;
 	}
@@ -34,6 +36,14 @@ public class FindPerceptionRuntimeLogByPageReq extends OpRequest {
 
 	public void setPerceptionId(Integer perceptionId) {
 		this.perceptionId = perceptionId;
+	}
+
+	public Integer getParamId() {
+		return paramId;
+	}
+
+	public void setParamId(Integer paramId) {
+		this.paramId = paramId;
 	}
 
 }

@@ -1,13 +1,7 @@
 package com.dahuangit.iots.perception.dto.response;
 
-import java.util.Date;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.dahuangit.util.bean.dto.Dto;
 import com.dahuangit.util.bean.dto.DtoField;
-import com.dahuangit.util.spring.JsonDateSerializer;
 
 @Dto
 public class PerceptionRuntimeLogResponse {
@@ -36,7 +30,8 @@ public class PerceptionRuntimeLogResponse {
 	@DtoField(field = "perceptionParamValueInfo.perceptionParamValueDesc")
 	private String perceptionParamValueDesc = null;
 
-	private Date createDateTime = null;
+	@DtoField(ignore = true)
+	private String createDateTime = null;
 
 	private String remark = null;
 
@@ -122,13 +117,11 @@ public class PerceptionRuntimeLogResponse {
 		this.perceptionParamValueDesc = perceptionParamValueDesc;
 	}
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonSerialize(using = JsonDateSerializer.class)
-	public Date getCreateDateTime() {
+	public String getCreateDateTime() {
 		return createDateTime;
 	}
 
-	public void setCreateDateTime(Date createDateTime) {
+	public void setCreateDateTime(String createDateTime) {
 		this.createDateTime = createDateTime;
 	}
 

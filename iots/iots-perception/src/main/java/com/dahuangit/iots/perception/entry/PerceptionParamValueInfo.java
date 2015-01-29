@@ -8,23 +8,36 @@ import javax.persistence.Table;
 
 import com.dahuangit.base.entry.BaseModel;
 
+/**
+ * 参数值
+ * 
+ * @author 大黄
+ * 
+ *         2015年1月22日下午2:28:52
+ */
 @Entity
 @Table(name = "t_perception_param_value_info")
 public class PerceptionParamValueInfo extends BaseModel {
+	
+	/**参数值主键id*/
 	@Id
 	@GeneratedValue
 	@Column(name = "ppv_id")
 	private Integer perceptionParamValueInfoId = null;
 
+	/**所属的设备类型*/
 	@Column(name = "pt_id")
 	private Integer perceptionTypeId = null;
 
+	/**所属参数*/
 	@Column(name = "pp_id")
 	private Integer perceptionParamId = null;
 
+	/**具体值*/
 	@Column(name = "pp_value")
 	private Integer perceptionParamValue = null;
 
+	/**参数值描述*/
 	@Column(name = "param_value_desc")
 	private String perceptionParamValueDesc = null;
 

@@ -3,13 +3,15 @@ package com.dahuangit.iots.perception.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.base.dto.ComboboxData;
+import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.ValueTextModel;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.perception.dao.PerceptionDao;
@@ -17,26 +19,32 @@ import com.dahuangit.iots.perception.dao.PerceptionParamDao;
 import com.dahuangit.iots.perception.dao.PerceptionParamValueDao;
 import com.dahuangit.iots.perception.dao.PerceptionRuntimeLogDao;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
+import com.dahuangit.iots.perception.dto.request.ParamInfo;
+import com.dahuangit.iots.perception.dto.request.ParamInfoList;
+import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
+import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
-import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
 import com.dahuangit.iots.perception.entry.Perception;
+import com.dahuangit.iots.perception.entry.PerceptionParam;
 import com.dahuangit.iots.perception.entry.PerceptionParamValueInfo;
 import com.dahuangit.iots.perception.entry.PerceptionRuntimeLog;
+import com.dahuangit.iots.perception.enums.ParamType;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
 import com.dahuangit.iots.perception.tcpserver.dto.request.Machine2j2SendStatusRequest;
-import com.dahuangit.iots.perception.tcpserver.dto.request.Machine6j6SendStatusRequest;
 import com.dahuangit.iots.perception.tcpserver.dto.response.PerceptionTcpResponse;
 import com.dahuangit.iots.perception.tcpserver.dto.response.ServerCtrlMachineResponse;
-import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine2j2StatusResponse;
-import com.dahuangit.iots.perception.tcpserver.dto.response.ServerQueryMachine6j6StatusResponse;
+import com.dahuangit.iots.perception.tcpserver.pool.ClientConnector;
 import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
 import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
 import com.dahuangit.util.bean.dto.DtoBuilder;
 import com.dahuangit.util.coder.ByteUtils;
 import com.dahuangit.util.date.DateUtils;
+import com.dahuangit.util.xml.XmlUtils;
 
 @Component
 @Transactional
@@ -59,6 +67,9 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 	/** 感知端连接池 */
 	private ClientConnectorPool clientConnectionPool = ClientConnectorPool.getInstance();
+
+	@Autowired
+	protected CastorMarshaller xmlMarshaller = null;
 
 	/**
 	 * 获取单个感知端
@@ -110,17 +121,33 @@ public class PerceptionServiceImpl implements PerceptionService {
 		PageQueryResult<PerceptionRuntimeLogResponse> pageQueryResult = new PageQueryResult<PerceptionRuntimeLogResponse>();
 
 		List<PerceptionRuntimeLogResponse> rows = new ArrayList<PerceptionRuntimeLogResponse>();
-		String listHql = "from PerceptionRuntimeLog p where p.perceptionId=? order by p.createDateTime desc";
-		List<PerceptionRuntimeLog> list = this.perceptionRuntimeLogDao.findByPage(listHql, req.getStart(),
-				req.getLimit(), req.getPerceptionId());
+
+		StringBuffer listHql = new StringBuffer("from PerceptionRuntimeLog p ");
+		StringBuffer countHql = new StringBuffer("select count(*) from PerceptionRuntimeLog p ");
+
+		List<Object> values = new ArrayList<Object>();
+		StringBuffer conditionStr = new StringBuffer("where p.perceptionId=? ");
+		values.add(req.getPerceptionId());
+		if (null != req.getParamId()) {
+			conditionStr.append(" and p.perceptionParamId=? ");
+			values.add(req.getParamId());
+		}
+
+		listHql = listHql.append(conditionStr);
+		listHql = listHql.append(" order by p.createDateTime desc ");
+
+		List<PerceptionRuntimeLog> list = this.perceptionRuntimeLogDao.findByPage(listHql.toString(), req.getStart(),
+				req.getLimit(), values.toArray(new Object[values.size()]));
 
 		for (PerceptionRuntimeLog p : list) {
 			PerceptionRuntimeLogResponse por = DtoBuilder.buildDto(PerceptionRuntimeLogResponse.class, p);
+			por.setCreateDateTime(DateUtils.format(p.getCreateDateTime()));
 			rows.add(por);
 		}
 
-		String countHql = "select count(*) from PerceptionRuntimeLog p where p.perceptionId=?";
-		Long totalCount = this.perceptionRuntimeLogDao.findRecordsCount(countHql, req.getPerceptionId());
+		countHql = countHql.append(conditionStr);
+		Long totalCount = this.perceptionRuntimeLogDao.findRecordsCount(countHql.toString(),
+				values.toArray(new Object[values.size()]));
 
 		pageQueryResult.setResults(rows);
 		pageQueryResult.setTotalCount(totalCount);
@@ -158,45 +185,51 @@ public class PerceptionServiceImpl implements PerceptionService {
 			p.setLastCommTime(new Date());
 			p.setPerceptionAddr(addr);
 			p.setPerceptionName("测试设备");
-			p.setPerceptionTypeId(1);// 2+2
+			p.setPerceptionTypeId(perceptionTcpDto.getPerceptionType());// 2+2
 			perceptionDao.add(p);
 		}
+
+		if (p.getPerceptionTypeId() != 1) {
+			return;
+		}
+
+		Integer perceptionId = p.getPerceptionId();
 
 		// 记录该感知端的参数日志
 		if (perceptionTcpDto instanceof ServerCtrlMachineResponse) {// 简单的响应，比如远程控制类
 			PerceptionTcpResponse perceptionTcpResponse = (PerceptionTcpResponse) perceptionTcpDto;
-			byte opt = perceptionTcpResponse.getOperateFlag();
+			int opt = perceptionTcpResponse.getOperateFlag();
 			PerceptionRuntimeLog perceptionRuntimeLog = null;
 			switch (opt) {
 			case 0x03:// 电机1远程正转控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 1, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 179, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x04:// 电机1远程反转控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 2, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 179, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x05:// 电机1远程通电控制的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 180, 1, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 180, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x06:// 电机1远程断电控制的响应,当电机旋转状态参数方式来处理
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 179, 3, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 179, 3, perceptionTcpDto.getHex());
 				break;
 			case 0x07:// 远程I2C开的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 1, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 182, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x08:// 远程I2C关的响应
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 182, 2, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 182, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x09:// 电机2远程控制旋转状态 正转
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 1, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 187, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x0A:// 电机2控制旋转状态2 反转
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 2, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 187, 2, perceptionTcpDto.getHex());
 				break;
 			case 0x0B:// 电机2通电控制
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 188, 1, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 188, 1, perceptionTcpDto.getHex());
 				break;
 			case 0x0C:// 电机2断电控制，以电机2的旋转状态的方式来处理
-				perceptionRuntimeLog = createPerceptionRuntimeLog(p, 187, 3, perceptionTcpDto.getHex());
+				perceptionRuntimeLog = createPerceptionRuntimeLog(perceptionId, 187, 3, perceptionTcpDto.getHex());
 				break;
 			}
 
@@ -207,97 +240,31 @@ public class PerceptionServiceImpl implements PerceptionService {
 			Machine2j2SendStatusRequest request = (Machine2j2SendStatusRequest) perceptionTcpDto;
 
 			// 电机1旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_machine1RotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) request.getMachine1RotateStatus(), perceptionTcpDto.getHex());
+			PerceptionRuntimeLog perceptionRuntimeLog_machine1RotateStatus = this.createPerceptionRuntimeLog(
+					perceptionId, 179, (int) request.getMachine1RotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine1RotateStatus);
 
 			// i2c状态
-			PerceptionRuntimeLog perceptionRuntimeLog_i2cStatus = this.createPerceptionRuntimeLog(p, 182,
+			PerceptionRuntimeLog perceptionRuntimeLog_i2cStatus = this.createPerceptionRuntimeLog(perceptionId, 182,
 					ByteUtils.byteArrToInt(request.getI2cStatus()), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_i2cStatus);
 
 			// 红外状态
-			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					(int) request.getInfraredStatus(), perceptionTcpDto.getHex());
+			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(perceptionId,
+					183, (int) request.getInfraredStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
 
 			// 电机2旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_machine2RotateStatus = this.createPerceptionRuntimeLog(p, 187,
-					(int) request.getMachine2RotateStatus(), perceptionTcpDto.getHex());
+			PerceptionRuntimeLog perceptionRuntimeLog_machine2RotateStatus = this.createPerceptionRuntimeLog(
+					perceptionId, 187, (int) request.getMachine2RotateStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_machine2RotateStatus);
 
 			// 按键状态
-			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(p, 189,
+			PerceptionRuntimeLog perceptionRuntimeLog_pressKey = this.createPerceptionRuntimeLog(perceptionId, 189,
 					(int) request.getPressKeyStatus(), perceptionTcpDto.getHex());
 			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressKey);
 		}
 
-		else if (perceptionTcpDto instanceof ServerQueryMachine6j6StatusResponse) {// 6+6远程查询的响应
-			ServerQueryMachine6j6StatusResponse response = (ServerQueryMachine6j6StatusResponse) perceptionTcpDto;
-			// 开关状态
-			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) response.getSwitchStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
-
-			// 旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) response.getRotateStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
-
-			// 红外状态
-			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					(int) response.getInfraredStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
-
-			// 压力状态
-			PerceptionRuntimeLog perceptionRuntimeLog_pressureStatus = this.createPerceptionRuntimeLog(p, 185,
-					(int) response.getPressureStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressureStatus);
-
-			// 振动状态
-			PerceptionRuntimeLog perceptionRuntimeLog_vibrateStatus = this.createPerceptionRuntimeLog(p, 184,
-					(int) response.getVibrateStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_vibrateStatus);
-
-			// 接近状态
-			PerceptionRuntimeLog perceptionRuntimeLog_approachStatus = this.createPerceptionRuntimeLog(p, 186,
-					(int) response.getApproachStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_approachStatus);
-
-		}
-
-		else if (perceptionTcpDto instanceof Machine6j6SendStatusRequest) {// 6+6电机上传状态的请求
-			Machine6j6SendStatusRequest request = (Machine6j6SendStatusRequest) perceptionTcpDto;
-			// 开关状态
-			PerceptionRuntimeLog perceptionRuntimeLog_switch = this.createPerceptionRuntimeLog(p, 180,
-					(int) request.getSwitchStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_switch);
-
-			// 旋转状态
-			PerceptionRuntimeLog perceptionRuntimeLog_rotateStatus = this.createPerceptionRuntimeLog(p, 179,
-					(int) request.getRotateStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_rotateStatus);
-
-			// 红外状态
-			PerceptionRuntimeLog perceptionRuntimeLog_infraredStatus = this.createPerceptionRuntimeLog(p, 183,
-					(int) request.getInfraredStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_infraredStatus);
-
-			// 压力状态
-			PerceptionRuntimeLog perceptionRuntimeLog_pressureStatus = this.createPerceptionRuntimeLog(p, 185,
-					(int) request.getPressureStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_pressureStatus);
-
-			// 振动状态
-			PerceptionRuntimeLog perceptionRuntimeLog_vibrateStatus = this.createPerceptionRuntimeLog(p, 184,
-					(int) request.getVibrateStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_vibrateStatus);
-
-			// 接近状态
-			PerceptionRuntimeLog perceptionRuntimeLog_approachStatus = this.createPerceptionRuntimeLog(p, 186,
-					(int) request.getApproachStatus(), perceptionTcpDto.getHex());
-			this.perceptionRuntimeLogDao.add(perceptionRuntimeLog_approachStatus);
-		}
 	}
 
 	/**
@@ -308,11 +275,13 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * @param perceptionParamValue
 	 * @return
 	 */
-	private PerceptionRuntimeLog createPerceptionRuntimeLog(Perception perception, Integer perceptionParamId,
+	private PerceptionRuntimeLog createPerceptionRuntimeLog(Integer perceptionId, Integer perceptionParamId,
 			Integer perceptionParamValue, String hex) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+
 		PerceptionRuntimeLog perceptionRuntimeLog = new PerceptionRuntimeLog();
 		perceptionRuntimeLog.setCreateDateTime(new Date());
-		perceptionRuntimeLog.setPerceptionId(perception.getPerceptionId());
+		perceptionRuntimeLog.setPerceptionId(p.getPerceptionId());
 		perceptionRuntimeLog.setPerceptionParamId(perceptionParamId);
 		perceptionRuntimeLog.setHex(hex);
 
@@ -320,7 +289,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 				perceptionParamId, perceptionParamValue);
 
 		perceptionRuntimeLog.setPerceptionParamValueInfoId(perceptionParamValueInfoId);
-		perceptionRuntimeLog.setPerceptionTypeId(perception.getPerceptionTypeId());
+		perceptionRuntimeLog.setPerceptionTypeId(p.getPerceptionTypeId());
 		return perceptionRuntimeLog;
 	}
 
@@ -330,8 +299,41 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * @param perceptionId
 	 * @param opt
 	 */
-	public void remoteCtrlMachine(Integer perceptionId, Integer opt) {
-		PerceptionTcpResponse response = perceptionProcessor.remoteOperateMachine(perceptionId, opt);
+	public void remoteCtrlMachine2j2(RemoteCtrlPerceptionRequest req) {
+		Integer opt = null;
+
+		// 电机1旋转状态
+		if (req.getParamId() == 179) {
+			if (req.getParamValue() == 1) {
+				opt = 3;
+			} else if (req.getParamValue() == 2) {
+				opt = 4;
+			} else if (req.getParamValue() == 3) {
+				opt = 6;
+			}
+		}
+
+		// 电机2旋转状态
+		if (req.getParamId() == 187) {
+			if (req.getParamValue() == 1) {
+				opt = 9;// 电机2正转控制
+			} else if (req.getParamValue() == 2) {
+				opt = 10;// 0x0A: 电机2反转控制
+			} else if (req.getParamValue() == 3) {
+				opt = 12;// 0x0C：电机2断电控制
+			}
+		}
+
+		// i2c状态
+		if (req.getParamId() == 182) {
+			if (req.getParamValue() == 1) {
+				opt = 7;// I2C打开控制
+			} else if (req.getParamValue() == 2) {
+				opt = 8;// I2C关闭控制
+			}
+		}
+
+		PerceptionTcpResponse response = perceptionProcessor.remoteOperateMachine(req.getPerceptionId(), opt);
 
 		if (null == response || response.getResult() != 1) {
 			if (response.getResult() == 2) {
@@ -342,6 +344,103 @@ public class PerceptionServiceImpl implements PerceptionService {
 				throw new RuntimeException("您的本次操作无效，请稍后再试...");
 			}
 		}
+
+		// 电机的正转反转成功之后需要自动执行一次停
+		if (req.getParamId() == 179 && opt != 6) {
+			PerceptionTcpResponse response1 = perceptionProcessor.remoteOperateMachine(req.getPerceptionId(), opt);
+			if (null == response1 || response1.getResult() != 1) {
+				if (response1.getResult() == 2) {
+					throw new RuntimeException("感知端响应超时");
+				}
+
+				else if (response1.getResult() == 3) {
+					throw new RuntimeException("您的本次操作无效，请稍后再试...");
+				}
+			}
+		}
+	}
+
+	/**
+	 * 查询设备状态
+	 * 
+	 * @param perceptionId
+	 * @return
+	 */
+	public PerceptionParamStatusQueryResponse queryPerceptionStatus(PerceptionParamStatusRequest request) {
+		PerceptionParamStatusQueryResponse response = new PerceptionParamStatusQueryResponse();
+
+		Perception p = this.perceptionDao.get(Perception.class, request.getPerceptionId());
+		response.setPerceptionAddr(p.getPerceptionAddr());
+		response.setPerceptionName(p.getPerceptionName());
+		response.setPerceptionId(p.getPerceptionId());
+		response.setPerceptionTypeId(p.getPerceptionTypeId());
+
+		List<PerceptionParam> list = p.getPerceptionType().getParams();
+
+		ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(p.getPerceptionAddr());
+		if (null != clientConnector) {
+			response.setOnline(true);
+			response.setOnlineStatusDesc("在线");
+			response.setLastCommTime(DateUtils.format(clientConnector.getLastCommTime()));
+		} else {
+			response.setOnline(false);
+			response.setOnlineStatusDesc("离线");
+		}
+
+		for (PerceptionParam param : list) {
+			Integer paramValue = null;
+
+			// 从内存中取
+			if (response.isOnline()) {
+				paramValue = clientConnector.getCurrentStatus().get(param.getPerceptionParamId());
+			}
+
+			// 从数据库取
+			if (null == paramValue) {
+				PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(
+						p.getPerceptionId(), param.getPerceptionParamId());
+
+				if (null != log) {
+					paramValue = log.getPerceptionParamValueInfo().getPerceptionParamValue();
+				}
+			}
+
+			ParamInfo info = new ParamInfo();
+			info.setParamDesc(param.getPerceptionParamDesc());
+			info.setParamId(param.getPerceptionParamId());
+			info.setParamType(param.getParamType().toString());
+
+			// 查询值描述
+			if (null != paramValue) {
+				info.setParamValue(paramValue);
+
+				if (param.getParamType().equals(ParamType.TEXT)) {
+					String valueDesc = this.perceptionParamValueDao.getPerceptionParamValueDesc(
+							param.getPerceptionParamId(), paramValue);
+					info.setParamValueDesc(valueDesc);
+				}
+			}
+
+			// 只有初始化状态才会查询下拉选数据
+			if (request.isInit()) {
+				if (param.getParamType().equals(ParamType.COMBOBOX)) {
+					ComboboxData ComboboxData = this.getPerceptionParamValueListByParam(param.getPerceptionParamId());
+					info.setComboboxData(ComboboxData);
+				}
+			}
+
+			if (param.getParamType().equals(ParamType.TEXT)) {
+				response.getWarningParamInfos().add(info);
+			} else {
+				response.getCtrlParamInfos().add(info);
+			}
+		}
+
+		if (null == response.getLastCommTime()) {
+			response.setLastCommTime(DateUtils.format(p.getLastCommTime()));
+		}
+
+		return response;
 	}
 
 	/**
@@ -430,30 +529,82 @@ public class PerceptionServiceImpl implements PerceptionService {
 	}
 
 	/**
-	 * 查询6+6电机状态
+	 * 设备上传当前状态
 	 * 
-	 * @param perceptionId
+	 * @param request
 	 * @return
+	 * @throws Exception
 	 */
-	public RemoteQuery6j6MachineResponse remoteQuery6j6Machine(Integer perceptionId) {
-		ServerQueryMachine6j6StatusResponse response = (ServerQueryMachine6j6StatusResponse) this.perceptionProcessor
-				.queryRemoteMachine(perceptionId);
-		RemoteQuery6j6MachineResponse r = new RemoteQuery6j6MachineResponse();
+	public Response uploadCurStatusParam(UploadCurStatusParamRequest request) throws Exception {
+		Response response = new Response();
 
-		if (null == response || response.getResult() != (byte) 0x01) {
-			r.setSuccess(false);
-			r.setMsg("电机响应超时");
-		} else {
-			r.setRotateStatus(String.valueOf(response.getRotateStatus()));
-			r.setSwitchStatus(String.valueOf(response.getSwitchStatus()));
-			r.setPerceptionId(perceptionId);
-			r.setApproachStatus(String.valueOf(response.getApproachStatus()));
-			r.setInfraredStatus(String.valueOf(response.getInfraredStatus()));
-			r.setPressureStatus(String.valueOf(response.getPerceptionType()));
-			r.setVibrateStatus(String.valueOf(response.getVibrateStatus()));
+		String addr = request.getPerceptionAddr();
+
+		ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(addr);
+		if (null == clientConnector) {
+			throw new RuntimeException("当前设备的tcp心跳未连接或失效");
 		}
 
-		return r;
+		Map<Integer, Integer> currentStatus = clientConnector.getCurrentStatus();
+
+		ParamInfoList pList = XmlUtils
+				.xml2obj(xmlMarshaller, request.getPerceptionStatusInfoXml(), ParamInfoList.class);
+
+		Perception p = this.perceptionDao.findPerceptionByAddr(addr);
+		Integer perceptionId = p.getPerceptionId();
+
+		for (ParamInfo info : pList.getParamInfos()) {
+			// 判断当前状态和数据库中上次当前状态的值是否一致. 如果是一致,则跳过; 如果不一致，则保存数据库
+			Integer paramId = info.getParamId();
+			Integer paramValue = info.getParamValue();
+
+			PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(perceptionId,
+					paramId);
+
+			if (null != log && log.getPerceptionParamValueInfo().getPerceptionParamValue() == paramValue) {
+				continue;
+			} else {
+				log = new PerceptionRuntimeLog();
+				log.setCreateDateTime(new Date());
+				log.setPerceptionId(perceptionId);
+				log.setPerceptionParamId(paramId);
+
+				Integer valueId = this.perceptionParamValueDao.getPerceptionParamValueInfoId(paramId, paramValue);
+				log.setPerceptionParamValueInfoId(valueId);
+
+				log.setPerceptionTypeId(p.getPerceptionTypeId());
+				this.perceptionRuntimeLogDao.add(log);
+
+				// 更新内存中的当状态
+				currentStatus.put(paramId, paramValue);
+			}
+		}
+
+		return response;
 	}
 
+	/**
+	 * 远程控制(通用)
+	 * 
+	 * @param perceptionId
+	 * @param paramId
+	 * @param paramValue
+	 * @return
+	 */
+	public Response remoteOperateMachine(Integer perceptionId, Integer paramId, Integer paramValue) {
+		Response response = new Response();
+
+		PerceptionTcpResponse perceptionTcpResponse = this.perceptionProcessor.remoteOperateMachine(perceptionId,
+				paramId, paramValue);
+
+		if (perceptionTcpResponse.getResult() != 1) {
+			response.setSuccess(false);
+			response.setMsg("设备内部发生错误");
+			return response;
+		}
+
+		PerceptionRuntimeLog log = this.createPerceptionRuntimeLog(perceptionId, paramId, paramValue, null);
+		this.perceptionRuntimeLogDao.add(log);
+		return response;
+	}
 }

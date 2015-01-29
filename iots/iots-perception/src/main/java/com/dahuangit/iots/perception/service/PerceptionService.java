@@ -1,9 +1,14 @@
 package com.dahuangit.iots.perception.service;
 
 import com.dahuangit.base.dto.ComboboxData;
+import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
+import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
+import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
@@ -34,7 +39,7 @@ public interface PerceptionService {
 	 * @param perceptionId
 	 * @param opt
 	 */
-	public void remoteCtrlMachine(Integer perceptionId, Integer opt);
+	public void remoteCtrlMachine2j2(RemoteCtrlPerceptionRequest req);
 
 	/**
 	 * 查询2+2电机状态
@@ -45,10 +50,29 @@ public interface PerceptionService {
 	public RemoteQuery2j2MachineResponse remoteQuery2j2Machine(Integer perceptionId);
 
 	/**
-	 * 查询6+6电机状态
+	 * 设备上传当前状态
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public Response uploadCurStatusParam(UploadCurStatusParamRequest request) throws Exception;
+
+	/**
+	 * 远程控制(通用)
+	 * 
+	 * @param perceptionId
+	 * @param paramId
+	 * @param paramValue
+	 * @return
+	 */
+	public Response remoteOperateMachine(Integer perceptionId, Integer paramId, Integer paramValue);
+
+	/**
+	 * 查询设备状态
 	 * 
 	 * @param perceptionId
 	 * @return
 	 */
-	public RemoteQuery6j6MachineResponse remoteQuery6j6Machine(Integer perceptionId);
+	public PerceptionParamStatusQueryResponse queryPerceptionStatus(PerceptionParamStatusRequest request);
 }

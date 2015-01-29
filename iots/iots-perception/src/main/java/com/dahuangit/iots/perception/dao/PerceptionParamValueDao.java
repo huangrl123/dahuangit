@@ -14,6 +14,13 @@ public class PerceptionParamValueDao extends BaseDao<PerceptionParamValueInfo, I
 		return value;
 	}
 
+	public PerceptionParamValueInfo getPerceptionParamValueInfo(Integer perceptionParamId, Integer perceptionParamValue) {
+		String hql = "select * from PerceptionParamValueInfo p where p.perceptionParamId=? and p.perceptionParamValue=?";
+		PerceptionParamValueInfo perceptionParamValueInfo = this.findUnique(hql, perceptionParamId,
+				perceptionParamValue);
+		return perceptionParamValueInfo;
+	}
+
 	public boolean existsPerceptionParamValue(Integer perceptionParamId, Integer perceptionParamValue) {
 		String hql = "select p.perceptionParamValueInfoId from PerceptionParamValueInfo p where p.perceptionParamId=? and p.perceptionParamValue=?";
 		Integer pk = this.findUnique(hql, perceptionParamId, perceptionParamValue);
@@ -25,10 +32,9 @@ public class PerceptionParamValueDao extends BaseDao<PerceptionParamValueInfo, I
 		return true;
 	}
 
-	public String getPerceptionParamValueDesc(Integer perceptionTypeId, Integer perceptionParamId,
-			Integer perceptionParamValue) {
-		String hql = "select p.perceptionParamValueDesc from PerceptionParamValueInfo p where p.perceptionTypeId=? and p.perceptionParamId=? and p.perceptionParamValue=?";
-		String desc = this.findUnique(hql, perceptionTypeId, perceptionParamId, perceptionParamValue);
+	public String getPerceptionParamValueDesc(Integer perceptionParamId, Integer perceptionParamValue) {
+		String hql = "select p.perceptionParamValueDesc from PerceptionParamValueInfo p where p.perceptionParamId=? and p.perceptionParamValue=?";
+		String desc = this.findUnique(hql, perceptionParamId, perceptionParamValue);
 		return desc;
 	}
 

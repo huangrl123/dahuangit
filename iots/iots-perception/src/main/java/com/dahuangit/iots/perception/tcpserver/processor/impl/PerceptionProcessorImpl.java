@@ -36,8 +36,10 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 	/** 感知端当前操作 key:感知端设备地址,value:感知端操作标识 */
 	public static Map<String, Integer> perceptionCurOptMap = new HashMap<String, Integer>();
 
+	/** 帧序号的最大值 */
 	private long MAX_TRANSMIT_ROLLING_COUNT = 99999999l;
 
+	/** 帧序号 */
 	private long transmitSeq = 1l;
 
 	@Autowired
@@ -226,6 +228,112 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 			long count = nowTime - reqTime;
 			if (count > timeout) {
 				log.debug("远程控制电机超时:帧序号seq=" + seq);
+				response.setResult((byte) 0x02);
+				session.removeAttribute(seq);// 不会清掉其他session的值
+				perceptionCurOptMap.remove(machineAddr);
+				return response;
+			}
+
+			Object obj = session.getAttribute(seq);
+
+			if (null != obj) {
+				response = (PerceptionTcpResponse) obj;
+				session.removeAttribute(seq);// 不会清掉其他session的值
+				perceptionCurOptMap.remove(machineAddr);
+				return response;
+			}
+		}
+	}
+
+	/**
+	 * 远程控制(通用)
+	 * 
+	 * @param perceptionId
+	 * @param paramId
+	 * @param paramValue
+	 * @return
+	 */
+	public PerceptionTcpResponse remoteOperateMachine(Integer perceptionId, Integer paramId, Integer paramValue) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		String machineAddr = p.getPerceptionAddr();
+		ClientConnector clientConnection = this.clientConnectionPool.getClientConnector(machineAddr);
+
+		if (null == clientConnection) {
+			log.debug("当前设备和服务器失去连接，设备地址为：" + machineAddr);
+			throw new GenericException("当前设备没有连接到服务器，请联系设备管理员");
+		}
+
+		PerceptionTcpResponse response = new PerceptionTcpResponse();
+
+		// 判断当前感知端是否有操作，如果有，则返回
+		if (perceptionCurOptMap.containsKey(machineAddr)) {
+			response.setResult((byte) 0x03);
+			return response;
+		}
+
+		final IoSession session = clientConnection.getIoSession();
+
+		byte[] content = new byte[69];
+		// 帧序列号
+		content[0] = (byte) 0xA1;
+		content[1] = 0x08;
+		long seq = this.nextSeq();
+		System.arraycopy(ByteUtils.longToByteArray(seq), 0, content, 2, 8);
+		// 帧总长度
+		content[10] = (byte) 0xA2;
+		content[11] = 0x04;
+		System.arraycopy(ByteUtils.intToByteArray(68), 0, content, 12, 4);
+		// 业务类型
+		content[16] = (byte) 0xA3;
+		content[17] = 0x01;
+		content[18] = 0x01;
+		// CRC32校验和
+		content[19] = (byte) 0xA4;
+		content[20] = 0x08;
+		// 设备类型
+		content[29] = (byte) 0xA5;
+		content[30] = 0x01;
+		byte bytePerceptionTypeId = (byte) p.getPerceptionTypeId().intValue();
+		content[31] = bytePerceptionTypeId;
+		// 电机地址
+		content[32] = (byte) 0xB1;
+		content[33] = 0x20;
+		System.arraycopy(machineAddr.getBytes(), 0, content, 34, machineAddr.getBytes().length);
+		// 操作标识
+		content[66] = (byte) 0xB2;
+		content[67] = 0x04;
+		System.arraycopy(ByteUtils.intToByteArray(paramId), 0, content, 68, 4);
+		// 操作值
+		content[72] = (byte) 0xB3;
+		content[73] = 0x01;
+		content[74] = ByteUtils.oneIntToByteArray(paramValue);
+
+		perceptionCurOptMap.put(machineAddr, paramId);
+
+		long crc32l = ByteUtils.byteArrCRC32Value(content);
+		System.arraycopy(ByteUtils.longToByteArray(crc32l), 0, content, 21, 8);
+
+		final IoBuffer ib = IoBufferUtils.byteToIoBuffer(content);
+
+		session.write(ib);
+
+		long reqTime = System.currentTimeMillis();
+
+		// 等待返回结果
+		while (true) {
+
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			// 响应超时
+			long nowTime = System.currentTimeMillis();
+			long timeout = 7 * 1000;
+			long count = nowTime - reqTime;
+			if (count > timeout) {
+				log.debug("远程控制设备超时:帧序号seq=" + seq);
 				response.setResult((byte) 0x02);
 				session.removeAttribute(seq);// 不会清掉其他session的值
 				perceptionCurOptMap.remove(machineAddr);

@@ -122,7 +122,7 @@ public class ClientConnectorPool {
 						String connectionKey = entry.getKey();
 						ClientConnector connection = entry.getValue();
 
-						long lastCommTime = connection.getLastCommTime();
+						long lastCommTime = connection.getLastCommTime().getTime();
 						long now = System.currentTimeMillis();
 
 						// 超时时间，默认3小时

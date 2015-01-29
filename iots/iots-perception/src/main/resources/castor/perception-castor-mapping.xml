@@ -4,6 +4,7 @@
 <mapping>
 	<description>XML的映射</description>
 
+	<!-- 设备上传文件后的通知 -->
 	<class name="com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest">
 		<map-to xml="request" />
 		<field name="perceptionAddr" />
@@ -12,4 +13,16 @@
 		</field>
 	</class>
 
+	<!-- 设备上传参数状态 -->
+	<class name="com.dahuangit.iots.perception.dto.request.ParamInfo">
+		<field name="paramId"/>
+		<field name="paramValue"/>
+		<field name="paramDesc"/>
+	</class>
+	<class name="com.dahuangit.iots.perception.dto.request.ParamInfoList">
+		<map-to xml="request" />
+		<field name="paramInfos" type="com.dahuangit.iots.perception.dto.request.ParamInfo" collection="arraylist">
+			<bind-xml name="perception-param" />
+		</field>
+	</class>
 </mapping>
