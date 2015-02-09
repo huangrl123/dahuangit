@@ -527,7 +527,7 @@ public class WaterController extends BaseController {
 			
 			Response r = waterService.yongshui(request);
 
-			if (r.isSuccess()) {
+			if (r.getSuccess()) {
 				YongshuiRecordRequest yongshuiRecordRequest = new YongshuiRecordRequest();
 				yongshuiRecordRequest.setProjectId(request.getProjectId());
 				yongshuiRecordRequest.setLdId(request.getLdId());

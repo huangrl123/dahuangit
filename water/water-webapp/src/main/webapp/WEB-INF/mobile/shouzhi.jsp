@@ -42,9 +42,9 @@
 
 	<div data-role="page">
 
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="background:#70A4C9;">
 			<a href="${ctx}/spring/mobile/functionList" data-icon="home" data-ajax="false" onclick="showLoader()">首页</a>
-			<h1>收支统计表</h1>
+			<h1><font color="#FFFFFF">收支统计表</font></h1>
 			<a href="${ctx }/spring/mobile/shouzhiQuery" data-icon="search" data-ajax="false" onclick="showLoader()">查询</a>
 		</div>
 

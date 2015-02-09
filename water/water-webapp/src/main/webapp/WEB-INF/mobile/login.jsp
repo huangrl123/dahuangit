@@ -59,8 +59,8 @@
 <body>
 
 	<div data-role="page">
-		<div data-role="header" data-position="fixed">
-			<h1>用户登录</h1>
+		<div data-role="header" data-position="fixed" style="background:#70A4C9;">
+			<h1><font color="#FFFFFF">用户登录</font></h1>
 		</div>
 
 		<div data-role="content">

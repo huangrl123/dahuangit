@@ -5,9 +5,10 @@
 	<description>XML的映射</description>
 
 	<!-- 登录 -->
-	<class name="com.dahuangit.water.proxy.dto.response.LoginResponse" extends="com.dahuangit.base.dto.Response">
+	<class name="com.dahuangit.water.proxy.dto.response.LoginResponse" extends="com.dahuangit.base.dto.Response"
+		auto-complete="true">
 		<map-to xml="response" />
-		<field name="systemId"/>
+		<field name="systemId" />
 	</class>
 
 	<!-- 获取项目列表 -->

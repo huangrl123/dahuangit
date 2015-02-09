@@ -12,6 +12,7 @@
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 <script src="${ctx }/plugin/mobiscroll/js/mobiscroll.custom-2.5.0.min.js"></script>
+<script src="${ctx }/plugin/My97DatePicker/WdatePicker.js"></script>
 <style type="text/css">
 </style>
 <script type="text/javascript">

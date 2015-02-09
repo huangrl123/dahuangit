@@ -1,15 +1,15 @@
 package com.dahuangit.base.dto;
 
 public class Response {
-	private boolean success = true;
+	private Boolean success = true;
 
 	private String msg = null;
 
-	public boolean isSuccess() {
+	public Boolean getSuccess() {
 		return success;
 	}
 
-	public void setSuccess(boolean success) {
+	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
 
