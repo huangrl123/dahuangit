@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>登录界面</title>
+<title>用户登录</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
@@ -59,8 +59,8 @@
 <body>
 
 	<div data-role="page">
-		<div data-role="header" data-position="fixed" style="background:#70A4C9;">
-			<h1><font color="#FFFFFF">用户登录</font></h1>
+		<div data-role="header" data-position="fixed">
+			<h1>用户登录</h1>
 		</div>
 
 		<div data-role="content">

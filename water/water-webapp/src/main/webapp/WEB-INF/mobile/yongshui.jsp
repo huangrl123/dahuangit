@@ -174,7 +174,7 @@
 
 		<div data-role="header" data-position="fixed">
 			<a href="${ctx}/spring/mobile/functionList" data-icon="home" data-ajax="false" onclick="showLoader()">首页</a>
-			<h1>楼栋用水总额登记</h1>
+			<h1>楼栋水电成本登记</h1>
 		</div>
 
 		<div data-role="content">
@@ -205,6 +205,12 @@
 						<div data-role="fieldcontain">
 							<label for="name">用水总额:</label> 
 							<input type="number" id="yongshuiSum" name="yongshuiSum">
+						</div>
+                    </li>
+	                <li>
+						<div data-role="fieldcontain">
+							<label for="name">用电总额:</label> 
+							<input type="number" id="yongdianSum" name="yongdianSum">
 						</div>
                     </li>
 				</ul>

@@ -7,7 +7,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.apache.tools.ant.types.resources.selectors.Date;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,14 +52,11 @@ public class PerceptionTcpServerHandler implements IoHandler {
 	 */
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
-		log.debug("session收到信息-messageReceived，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
 
 		byte[] content = (byte[]) message;
 
-		if (content.length != 72 && content.length != 75 && content.length != 100) {
-			log.debug("发生错误，报文长度不对, 正确的长度应为72或者75或者100, 实际报文长度为:" + content.length);
+		if (content.length != 72 && content.length != 69 && content.length != 75 && content.length != 100) {
+			log.debug("发生错误，报文长度不对, 正确的长度应为69或者72或者75或者100, 实际报文长度为:" + content.length);
 			session.close(true);
 			throw new RuntimeException("发生错误，报文长度不对");
 		}
@@ -154,7 +150,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			// 其他类型的设备
 			else {
 				temArr = new byte[4];
-				System.arraycopy(content, 69, temArr, 0, 4);
+				System.arraycopy(content, 68, temArr, 0, 4);
 				operateFlag = ByteUtils.byteArrToInt(temArr);
 			}
 
@@ -175,67 +171,72 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 					// 2+2的设备
 					if (perceptionType == 1) {
-						if (content.length != 100) {
-							String errorMsg = "2+2上报状态请求报文内容长度错误：正确的长度是100，实际长度为" + content.length;
-							log.debug(errorMsg);
-							throw new RuntimeException(errorMsg);
+
+						// 长度等于69为2+2心跳操作
+						if (content.length != 69) {
+							if (content.length != 100) {
+								String errorMsg = "2+2上报状态请求报文内容长度错误：正确的长度是100，实际长度为" + content.length;
+								log.debug(errorMsg);
+								throw new RuntimeException(errorMsg);
+							}
+
+							hex = ByteUtils.byteArrToHexString(content);
+							log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态],帧序号为:[" + seq + "]");
+							log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + hex);
+							log.debug("帧序号seq=" + seq);
+
+							byte machine1RotateStatus = content[71];
+							byte machine1SwitchStatus = content[74];
+
+							temArr = new byte[2];
+							System.arraycopy(content, 77, temArr, 0, 2);
+							byte[] i2cStatus = temArr;
+
+							byte infraredStatus = content[81];
+
+							byte machine2RotateStatus = content[93];
+							byte machine2SwitchStatus = content[96];
+							byte pressKeyStatus = content[99];
+
+							request = new Machine2j2SendStatusRequest();
+
+							request.setBusType(busType);
+							request.setCrc32(crc32);
+							request.setLength(length);
+							request.setMachineAddr(machineAddr);
+							request.setOperateFlag(operateFlag);
+							request.setPerceptionType(perceptionType);
+							request.setSeq(seq);
+
+							// 如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
+							if (machine1SwitchStatus != (byte) 0x00) {
+								request.setMachine1RotateStatus((byte) 0x03);
+							} else {
+								request.setMachine1RotateStatus(machine1RotateStatus);
+							}
+
+							// 如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
+							if (machine2SwitchStatus != (byte) 0x00) {
+								request.setMachine2RotateStatus((byte) 0x03);
+							} else {
+								request.setMachine2RotateStatus(machine2RotateStatus);
+							}
+
+							request.setPressKeyStatus(pressKeyStatus);
+							request.setInfraredStatus(infraredStatus);
+							request.setI2cStatus(i2cStatus);
+							request.setHex(hex);
+							perceptionService.saveLog(request);
+
+							responseContent = new byte[72];
+							System.arraycopy(content, 0, responseContent, 0, 69);
+							responseContent[69] = (byte) 0xB5;
+							responseContent[70] = 0x01;
+							responseContent[71] = 0x01;// 结果为成功
 						}
-
-						hex = ByteUtils.byteArrToHexString(content);
-						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态],帧序号为:[" + seq + "]");
-						log.debug("服务器端收到客户端的信息[2+2客户端上传电机状态]，报文:" + hex);
-						log.debug("帧序号seq=" + seq);
-
-						byte machine1RotateStatus = content[71];
-						byte machine1SwitchStatus = content[74];
-
-						temArr = new byte[2];
-						System.arraycopy(content, 77, temArr, 0, 2);
-						byte[] i2cStatus = temArr;
-
-						byte infraredStatus = content[81];
-
-						byte machine2RotateStatus = content[93];
-						byte machine2SwitchStatus = content[96];
-						byte pressKeyStatus = content[99];
-
-						request = new Machine2j2SendStatusRequest();
-
-						request.setBusType(busType);
-						request.setCrc32(crc32);
-						request.setLength(length);
-						request.setMachineAddr(machineAddr);
-						request.setOperateFlag(operateFlag);
-						request.setPerceptionType(perceptionType);
-						request.setSeq(seq);
-
-						// 如果电机1的开关状态不是0，则将0x03赋值给电机1的旋转状态
-						if (machine1SwitchStatus != (byte) 0x00) {
-							request.setMachine1RotateStatus((byte) 0x03);
-						} else {
-							request.setMachine1RotateStatus(machine1RotateStatus);
-						}
-
-						// 如果电机2的开关状态不是0，则将0x03赋值给电机2的旋转状态
-						if (machine2SwitchStatus != (byte) 0x00) {
-							request.setMachine2RotateStatus((byte) 0x03);
-						} else {
-							request.setMachine2RotateStatus(machine2RotateStatus);
-						}
-
-						request.setPressKeyStatus(pressKeyStatus);
-						request.setInfraredStatus(infraredStatus);
-						request.setI2cStatus(i2cStatus);
-						request.setHex(hex);
-						perceptionService.saveLog(request);
-
-						responseContent = new byte[72];
-						System.arraycopy(content, 0, responseContent, 0, 69);
-						responseContent[69] = (byte) 0xB5;
-						responseContent[70] = 0x01;
-						responseContent[71] = 0x01;// 结果为成功
 					}
 
+					// 除了2+2设备外的其他设备的请求
 					else {
 						PerceptionTcpDto perceptionTcpDto = new PerceptionTcpDto();
 						perceptionTcpDto.setBusType(busType);
@@ -247,7 +248,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 						perceptionTcpDto.setPerceptionType(perceptionType);
 						perceptionTcpDto.setSeq(seq);
 						perceptionService.saveLog(perceptionTcpDto);
-						
+
 						responseContent = new byte[75];
 						System.arraycopy(content, 0, responseContent, 0, 66);
 						responseContent[66] = (byte) 0xB2;
@@ -331,42 +332,44 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		log.debug("session发送信息-messageSent，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
-		log.debug("服务器端向客户端发送的信息");
 	}
 
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
-		log.debug("session关闭-sessionClosed，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
-
-		this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
+		// int currentSessionCount =
+		// session.getService().getManagedSessionCount();
+		// log.debug("当前被管理的session数量:" + currentSessionCount);
+		//
+		// this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
 		PerceptionProcessorImpl.perceptionCurOptMap.remove(session.getAttribute("machineAddr"));
 		session.close(true);
 	}
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		log.debug("session创建-sessionCreated，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
+		// log.debug("session创建-sessionCreated，session.getId()=" +
+		// session.getId());
+		// int currentSessionCount =
+		// session.getService().getManagedSessionCount();
+		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		log.debug("session空闲-sessionIdle，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
+		// log.debug("session空闲-sessionIdle，session.getId()=" +
+		// session.getId());
+		// int currentSessionCount =
+		// session.getService().getManagedSessionCount();
+		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		log.debug("session打开-sessionOpened，session.getId()=" + session.getId());
-		int currentSessionCount = session.getService().getManagedSessionCount();
-		log.debug("当前被管理的session数量:" + currentSessionCount);
+		// log.debug("session打开-sessionOpened，session.getId()=" +
+		// session.getId());
+		// int currentSessionCount =
+		// session.getService().getManagedSessionCount();
+		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 }

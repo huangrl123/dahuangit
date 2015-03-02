@@ -192,29 +192,30 @@ public class PerceptionController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/uploadCurStatusParam", method = RequestMethod.POST)
+	@RequestMapping(value = "/savePerceptionStatusInfo", method = RequestMethod.POST)
 	@ResponseBody
-	public Response uploadCurStatusParam(UploadCurStatusParamRequest request) {
+	public String uploadCurStatusParam(UploadCurStatusParamRequest request) {
 		Response response = new Response();
-
-		if (null == request.getPerceptionAddr()) {
-			response.setSuccess(false);
-			response.setMsg("设备地址[perceptionAddr]不能为空");
-			return response;
-		}
-
-		if (null == request.getPerceptionStatusInfoXml()) {
-			response.setSuccess(false);
-			response.setMsg("设备状态参数XML字符串[perceptionStatusInfoXml]不能为空");
-			return response;
-		}
-
+		
 		try {
-			response = this.uploadCurStatusParam(request);
+			if (null == request.getPerceptionAddr()) {
+				response.setSuccess(false);
+				response.setMsg("设备地址[perceptionAddr]不能为空");
+				return this.responseToXml(response);
+			}
+
+			if (null == request.getPerceptionStatusInfoXml()) {
+				response.setSuccess(false);
+				response.setMsg("设备状态参数XML字符串[perceptionStatusInfoXml]不能为空");
+				return this.responseToXml(response);
+			}
+
+			response = this.perceptionService.uploadCurStatusParam(request);
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
 		}
 
-		return response;
+		return this.responseToXml(response);
 	}
 }

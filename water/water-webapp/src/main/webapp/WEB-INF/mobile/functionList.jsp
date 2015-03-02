@@ -22,16 +22,16 @@
 <body>
 
 	<div data-role="page">
-		<div data-role="header" data-position="fixed" style="background:#70A4C9;">
-			<h1><font color="#FFFFFF">功能列表</font></h1>
+		<div data-role="header" data-position="fixed">
+			<h1>功能列表</h1>
 		</div>
 
 		<div data-role="content">
 			<ul data-role="listview" data-inset="true">
-				<li><a href="${ctx }/spring/mobile/shouzhi" data-ajax="false" onclick="showLoader()">收资统计表</a></li>
+				<li><a href="${ctx }/spring/mobile/shouzhiQuery" data-ajax="false" onclick="showLoader()">收支统计表</a></li>
 				<li><a href="${ctx }/spring/mobile/yujing" data-ajax="false" onclick="showLoader()">设备预警表</a></li>
 				<li><a href="${ctx }/spring/mobile/sunyiQuery" data-ajax="false" onclick="showLoader()">损益表</a></li>
-				<li><a href="${ctx }/spring/mobile/yongshui" data-ajax="false" onclick="showLoader()">楼栋用水总额登记</a></li>
+				<li><a href="${ctx }/spring/mobile/yongshui" data-ajax="false" onclick="showLoader()">楼栋水电成本登记</a></li>
 			</ul>
 
 			<form action="${ctx }/spring/mobile/index" method="get" data-ajax="false">

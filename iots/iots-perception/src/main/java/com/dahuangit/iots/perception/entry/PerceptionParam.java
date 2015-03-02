@@ -33,6 +33,10 @@ public class PerceptionParam extends BaseModel {
 	@Column(name = "pt_id")
 	private Integer perceptionTypeId = null;
 
+	/** 默认值 */
+	@Column(name = "default_value")
+	private Integer defaultValue = null;
+
 	/** 参数类型 */
 	@Column(name = "param_type")
 	@Enumerated(EnumType.STRING)
@@ -57,6 +61,14 @@ public class PerceptionParam extends BaseModel {
 
 	public Integer getPerceptionTypeId() {
 		return perceptionTypeId;
+	}
+
+	public Integer getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(Integer defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	public void setPerceptionTypeId(Integer perceptionTypeId) {

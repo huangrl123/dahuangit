@@ -223,7 +223,7 @@ public class WaterServiceImpl implements WaterService {
 	 */
 	public Response yongshui(SubmitYongshuiRequest request) throws Exception {
 
-		String url = MessageFormat.format(sunyi_url, request.getSystemId(), request.getProjectId(), request.getLdId(),
+		String url = MessageFormat.format(yongshui_url, request.getSystemId(), request.getProjectId(), request.getLdId(),
 				request.getYongshuiSum());
 
 		Response response = (Response) ConnectWaterSysUtils.connect(url, xmlMarshaller, Response.class);

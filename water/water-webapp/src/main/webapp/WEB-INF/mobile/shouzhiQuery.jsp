@@ -71,8 +71,8 @@
 <body>
 	<div data-role="page" data-ajax="false">
 
-		<div data-role="header">
-			<a href="${ctx }/spring/mobile/shouzhi" data-icon="back" data-ajax="false" onclick="showLoader()">返回</a>
+		<div data-role="header" style="background-color: red;">
+			<a href="${ctx }/spring/mobile/functionList" data-icon="home" data-ajax="false">首页</a>
 			<h1>收支情况查询</h1>
 		</div>
 

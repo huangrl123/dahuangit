@@ -400,7 +400,10 @@ public class PerceptionServiceImpl implements PerceptionService {
 				PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(
 						p.getPerceptionId(), param.getPerceptionParamId());
 
-				if (null != log) {
+				//如果数据库中没有日志，则去该参数的默认值
+				if (null == log) {
+					paramValue = param.getDefaultValue();
+				} else {
 					paramValue = log.getPerceptionParamValueInfo().getPerceptionParamValue();
 				}
 			}
