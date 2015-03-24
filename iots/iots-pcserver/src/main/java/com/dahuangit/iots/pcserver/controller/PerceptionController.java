@@ -127,14 +127,6 @@ public class PerceptionController extends BaseController {
 	@ResponseBody
 	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(OpRequest opRequest) {
 
-		if (null != opRequest.getPage()) {
-			opRequest.setStart(opRequest.getPage());
-		}
-
-		if (null != opRequest.getLimit()) {
-			opRequest.setRows(opRequest.getLimit());
-		}
-
 		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(
 				opRequest.getStart(), opRequest.getLimit());
 		return result;

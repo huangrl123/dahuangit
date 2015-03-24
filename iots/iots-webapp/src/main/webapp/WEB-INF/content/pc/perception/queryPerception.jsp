@@ -29,7 +29,7 @@
 		</tr>
 	</table>
 
-	<div id="perception-datagrid"></div>
+	<div id="perception-datagrid" style="width: 100%"></div>
 	<div id="perception-pagination" style="border: 1px solid #95B8E7; margin-top: 5px;"></div>
 
 	<script type="text/javascript">
@@ -65,23 +65,32 @@
 				afterPageText : '页    共 {pages} 页',
 				displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录',
 				onSelectPage : function(pageNumber, pageSize) {
+					var start = 0;
+					if (0 != pageNumber) {
+						var willStart = pageNumber * pageSize;
+						if (willStart < pg.total) {
+							start = willStart;
+						}
+					}
+
 					grid.datagrid({
 						url : '../perception/findPerceptionByPage',
 						method : 'post',
 						queryParams : {
-							start : pageNumber,
+							start : start,
 							limit : pageSize
 						},
 						onLoadSuccess : function(data) {
 							pg.pagination({
-								total : data.total
+								total : data.total,
+								pageNumber : pageNumber
 							});
+							
+							$(window).resize();
 						}
 					});
 				}
 			});
-
-			$(window).resize();
 		});
 	</script>
 </body>
