@@ -1,8 +1,11 @@
 package com.dahuangit.iots.pcserver.controller;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +25,7 @@ import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
+import com.dahuangit.iots.perception.entry.PerceptionType;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.PerceptionVediaService;
 import com.dahuangit.util.log.Log4jUtils;
@@ -100,6 +104,20 @@ public class PerceptionController extends BaseController {
 	}
 
 	/**
+	 * 跳转到查询设备界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/queryPerceptionPage", method = RequestMethod.GET)
+	public String queryPerceptionPage(ModelMap modelMap) {
+		// 设置设备类型列表
+		List<PerceptionType> perceptionTypes = this.perceptionService.getAllPerceptionTypes();
+		modelMap.put("perceptionTypeList", perceptionTypes);
+		
+		return "/pc/perception/queryPerception";
+	}
+
+	/**
 	 * 分页查询感知端
 	 * 
 	 * @param opRequest
@@ -108,6 +126,15 @@ public class PerceptionController extends BaseController {
 	@RequestMapping(value = "/findPerceptionByPage", method = RequestMethod.POST)
 	@ResponseBody
 	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(OpRequest opRequest) {
+
+		if (null != opRequest.getPage()) {
+			opRequest.setStart(opRequest.getPage());
+		}
+
+		if (null != opRequest.getLimit()) {
+			opRequest.setRows(opRequest.getLimit());
+		}
+
 		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(
 				opRequest.getStart(), opRequest.getLimit());
 		return result;
@@ -196,7 +223,7 @@ public class PerceptionController extends BaseController {
 	@ResponseBody
 	public String uploadCurStatusParam(UploadCurStatusParamRequest request) {
 		Response response = new Response();
-		
+
 		try {
 			if (null == request.getPerceptionAddr()) {
 				response.setSuccess(false);

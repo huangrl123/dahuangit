@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.chart.axis.Gauge",{override:"Ext.chart.axis.Gauge",constructor:function(){var A=this;A.callParent(arguments);if(A.chart.getInherited().rtl){A.reverse=true}}});

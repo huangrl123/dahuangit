@@ -35,7 +35,7 @@
 	
 	<div data-role="content">
 		<ul data-role="listview">
-			<c:forEach var="log" items="${queryResult.results }" varStatus="status">
+			<c:forEach var="log" items="${queryResult.rows }" varStatus="status">
 				<li> 
 					<span>${log.createDateTime }</span>
 					<span class="onlineStatus">${log.perceptionParamValueDesc }</span>

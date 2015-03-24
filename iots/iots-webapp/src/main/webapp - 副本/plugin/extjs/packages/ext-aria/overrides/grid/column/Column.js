@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.grid.column.Column",{override:"Ext.grid.column.Column",requires:["Ext.aria.grid.header.Container"],setSortState:function(F,D,B){var C=this,E=C.sortState,A={ASC:"ascending",DESC:"descending"};C.callParent(arguments);if(C.sortState!==E){C.ariaUpdate({"aria-sort":A[F]})}}});

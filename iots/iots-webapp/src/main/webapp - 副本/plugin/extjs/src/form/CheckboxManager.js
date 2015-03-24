@@ -1,1 +1,0 @@
-Ext.define("Ext.form.CheckboxManager",{extend:"Ext.util.MixedCollection",singleton:true,getByName:function(B,A){return this.filterBy(function(C){return C.name==B&&C.getFormId()==A})}});

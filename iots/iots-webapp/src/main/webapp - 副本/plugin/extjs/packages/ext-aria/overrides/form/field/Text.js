@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.form.field.Text",{override:"Ext.form.field.Text",requires:["Ext.aria.form.field.Base"],ariaGetRenderAttributes:function(){var B=this,A;A=B.callParent();if(B.allowBlank!==undefined){A["aria-required"]=!B.allowBlank}return A}});

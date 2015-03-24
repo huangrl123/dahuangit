@@ -1,1 +1,0 @@
-Ext.define("Ext.chart.Legend",{xtype:"legend",extend:"Ext.chart.LegendBase",config:{baseCls:"x-legend",padding:5,rect:null,disableSelection:true,toggleable:true},toggleItem:function(C){if(this.getToggleable()){var A=this.getStore(),B=A&&A.getAt(C);B.beginEdit();B.set("disabled",!B.get("disabled"));B.endEdit();B.commit()}}});

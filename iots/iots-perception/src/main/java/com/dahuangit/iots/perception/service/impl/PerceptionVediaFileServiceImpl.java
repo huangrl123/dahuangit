@@ -66,8 +66,8 @@ public class PerceptionVediaFileServiceImpl implements PerceptionVediaService {
 
 		Long totalCount = this.perceptionVediaFileDao.findPerceptionVediaFileCount(perceptionId);
 
-		pageQueryResult.setResults(rows);
-		pageQueryResult.setTotalCount(totalCount);
+		pageQueryResult.setRows(rows);
+		pageQueryResult.setTotal(totalCount);
 
 		return pageQueryResult;
 	}

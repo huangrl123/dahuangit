@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.form.field.Display",{override:"Ext.form.field.Display",requires:["Ext.aria.form.field.Base"],msgTarget:"none",ariaGetRenderAttributes:function(){var B=this,A;A=B.callParent();A["aria-readonly"]=true;return A},ariaGetFocusCls:function(){return this.ariaFocusCls}});

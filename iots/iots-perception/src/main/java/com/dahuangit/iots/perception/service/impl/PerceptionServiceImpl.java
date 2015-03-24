@@ -18,6 +18,7 @@ import com.dahuangit.iots.perception.dao.PerceptionDao;
 import com.dahuangit.iots.perception.dao.PerceptionParamDao;
 import com.dahuangit.iots.perception.dao.PerceptionParamValueDao;
 import com.dahuangit.iots.perception.dao.PerceptionRuntimeLogDao;
+import com.dahuangit.iots.perception.dao.PerceptionTypeDao;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.ParamInfo;
 import com.dahuangit.iots.perception.dto.request.ParamInfoList;
@@ -32,6 +33,7 @@ import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionParam;
 import com.dahuangit.iots.perception.entry.PerceptionParamValueInfo;
 import com.dahuangit.iots.perception.entry.PerceptionRuntimeLog;
+import com.dahuangit.iots.perception.entry.PerceptionType;
 import com.dahuangit.iots.perception.enums.ParamType;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
@@ -61,6 +63,9 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 	@Autowired
 	private PerceptionParamValueDao perceptionParamValueDao = null;
+
+	@Autowired
+	private PerceptionTypeDao perceptionTypeDao = null;
 
 	@Autowired
 	private PerceptionProcessor perceptionProcessor = null;
@@ -110,10 +115,19 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		Long totalCount = this.perceptionDao.findPerceptionCount();
 
-		pageQueryResult.setResults(rows);
-		pageQueryResult.setTotalCount(totalCount);
+		pageQueryResult.setRows(rows);
+		pageQueryResult.setTotal(totalCount);
 
 		return pageQueryResult;
+	}
+
+	/**
+	 * 获取到所有的设备类型
+	 * 
+	 * @return
+	 */
+	public List<PerceptionType> getAllPerceptionTypes() {
+		return this.perceptionTypeDao.getAll();
 	}
 
 	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionRuntimeLogByPage(
@@ -149,8 +163,8 @@ public class PerceptionServiceImpl implements PerceptionService {
 		Long totalCount = this.perceptionRuntimeLogDao.findRecordsCount(countHql.toString(),
 				values.toArray(new Object[values.size()]));
 
-		pageQueryResult.setResults(rows);
-		pageQueryResult.setTotalCount(totalCount);
+		pageQueryResult.setRows(rows);
+		pageQueryResult.setTotal(totalCount);
 
 		return pageQueryResult;
 	}
@@ -400,7 +414,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 				PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(
 						p.getPerceptionId(), param.getPerceptionParamId());
 
-				//如果数据库中没有日志，则去该参数的默认值
+				// 如果数据库中没有日志，则去该参数的默认值
 				if (null == log) {
 					paramValue = param.getDefaultValue();
 				} else {

@@ -185,13 +185,13 @@ public class AppMgrPerceptionController extends BaseController {
 		PageQueryResult<PerceptionRuntimeLogResponse> result = this.perceptionService
 				.findPerceptionRuntimeLogByPage(req);
 
-		double d = (double) result.getTotalCount() / (double) req.getLimit();
+		double d = (double) result.getTotal() / (double) req.getLimit();
 		Integer totalPage = (int) Math.ceil(d);
 
 		modelMap.put("perceptionId", perceptionId);
 		modelMap.put("curPage", reqPage);
 		modelMap.put("totalPage", totalPage);
-		modelMap.put("PerceptionRuntimeLogList", result.getResults());
+		modelMap.put("PerceptionRuntimeLogList", result.getRows());
 
 		return "mobile/appPerceptionLog";
 	}

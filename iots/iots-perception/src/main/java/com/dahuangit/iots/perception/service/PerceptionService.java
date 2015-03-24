@@ -1,5 +1,7 @@
 package com.dahuangit.iots.perception.service;
 
+import java.util.List;
+
 import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
@@ -12,6 +14,7 @@ import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResp
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
+import com.dahuangit.iots.perception.entry.PerceptionType;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
 
 public interface PerceptionService {
@@ -75,4 +78,11 @@ public interface PerceptionService {
 	 * @return
 	 */
 	public PerceptionParamStatusQueryResponse queryPerceptionStatus(PerceptionParamStatusRequest request);
+	
+	/**
+	 * 获取到所有的设备类型
+	 * 
+	 * @return
+	 */
+	public List<PerceptionType> getAllPerceptionTypes();
 }

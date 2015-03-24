@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.picker.Color",{override:"Ext.picker.Color",requires:["Ext.aria.Component"],initComponent:function(){var A=this;A.callParent(arguments)},ariaGetEl:function(){return this.innerEl},onColorSelect:function(B,C){var A=this;if(C&&C.dom){A.ariaUpdate(A.eventEl,{"aria-activedescendant":C.dom.id})}},getFocusEl:function(){return this.el}});

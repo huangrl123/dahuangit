@@ -1,1 +1,0 @@
-var helpers=require("./helpers.js");function verifyConfig(C,B){if(!helpers.isObject(C)){return null}var E={};for(var D in C){var A=B[D];if(A&&((typeof A==="function"&&A(C[D]))||(A instanceof RegExp&&typeof C[D]==="string"&&C[D].match(A))||(typeof C[D]===A))){E[D]=C[D]}}return E}module.exports={verifyConfig:verifyConfig};

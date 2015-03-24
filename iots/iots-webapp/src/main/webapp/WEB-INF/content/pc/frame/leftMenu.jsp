@@ -219,26 +219,18 @@ function showitem(key, name) {
 	return t;
 }
 function updateArea(name){
-	if(name=="证书申请"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务受理 &gt; "+name;
-	}else if(name=="证书更新"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务受理 &gt; "+name;
-	}else if(name=="证书注销"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务受理 &gt; "+name;
-	}else if(name=="证书启用"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务受理 &gt; "+name;
-	}else if(name=="证书停用"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务受理 &gt; "+name;
-	}else if(name=="待审核信息"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务待办 &gt; "+name;
-	}else if(name=="待制证信息"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务待办 &gt; "+name;
-	}else if(name=="审核拒绝办理"){
-		parent.document.getElementById("areaSpan").innerHTML="证书业务待办 &gt; "+name;
-	}else if(name=="审核策略"){
-		parent.document.getElementById("areaSpan").innerHTML="系统管理 &gt; "+name;
-	}else if(name=="权限管理"){
-		parent.document.getElementById("areaSpan").innerHTML="系统管理 &gt; "+name;
+	if(name=="设备查询"){
+		parent.document.getElementById("areaSpan").innerHTML="设备管理 &gt; "+name;
+	}else if(name=="设备添加"){
+		parent.document.getElementById("areaSpan").innerHTML="设备管理 &gt; "+name;
+		
+	}else if(name=="用户查询"){
+		parent.document.getElementById("areaSpan").innerHTML="用户管理 &gt; "+name;
+	}else if(name=="用户添加"){
+		parent.document.getElementById("areaSpan").innerHTML="用户管理 &gt; "+name;
+		
+	}else if(name=="APP下载"){
+		parent.document.getElementById("areaSpan").innerHTML="APP管理 &gt; "+name;
 	}
 }
 var outlookbar=new outlook();
@@ -247,15 +239,22 @@ outlooksmoothstat = 0;
 
 
 var t;
-t=outlookbar.addtitle('证书业务受理')
+t=outlookbar.addtitle('设备管理')
 
-   outlookbar.additem('证书申请',t,'../frame/rightContent')
+   outlookbar.additem('设备查询',t,'../perception/queryPerceptionPage')
 
-   outlookbar.additem('证书更新',t,'../frame/page2')
+   outlookbar.additem('设备添加',t,'../frame/page2')
 
-t=outlookbar.addtitle('系统管理')
+t=outlookbar.addtitle('用户管理')
 
-   outlookbar.additem('审核策略',t,'../page/page_9.html')
+   outlookbar.additem('用户查询',t,'../page/page_9.html')
+   
+   outlookbar.additem('用户添加',t,'../page/page_9.html')
+   
+t=outlookbar.addtitle('APP管理')
+
+   outlookbar.additem('APP下载',t,'../page/page_9.html')
+   
    
 //-->
 </script>
