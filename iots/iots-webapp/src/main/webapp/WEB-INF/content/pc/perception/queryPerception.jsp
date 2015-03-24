@@ -26,6 +26,10 @@
 						<c:forEach items="${perceptionTypeList }" var="perceptionType">
 							<option value="${perceptionType.perceptionTypeId }">${perceptionType.perceptionTypeName }</option>
 						</c:forEach>
+				</select> <a class="blue"><span class="blue">&nbsp;&nbsp;&nbsp;&nbsp; 在线状态：</span></a> <select id="onlineStatus" style="margin-top: 1px;">
+						<option value="">全部</option>
+						<option value="0">离线</option>
+						<option value="1">在线</option>
 				</select></td>
 				<td width=130 align="right" style="padding-right: 5px;"><label> <input id="queryBtn" type="button" class="inp_L1" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" value="查 询" /> <input
 						type="reset" class="inp_L1" onclick="" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" value="重 置" /> &nbsp; </td>

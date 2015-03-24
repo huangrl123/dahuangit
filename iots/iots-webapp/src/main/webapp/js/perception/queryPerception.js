@@ -73,7 +73,8 @@ $(function() {
 			var getConditionParams = function() {
 				var conditionParams = {};
 				conditionParams.perceptionAddr = $('#perceptionAddr').val();
-				conditionParams.perceptionTypeId = $('#').val();
+				conditionParams.perceptionTypeId = $('#perceptionType').val();
+				conditionParams.onlineStatus = $('#onlineStatus').val();
 				return conditionParams;
 			}
 

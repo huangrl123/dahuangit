@@ -1,10 +1,14 @@
 package com.dahuangit.iots.pcserver.controller;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.dahuangit.base.controller.BaseController;
+import com.dahuangit.util.date.DateUtils;
 
 /**
  * pc端首页面框架相关的处理器
@@ -43,7 +47,12 @@ public class FrameController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/body", method = RequestMethod.GET)
-	public String bodyPage() {
+	public String bodyPage(ModelMap map) {
+		Date d = new Date();
+		String dateStr = DateUtils.format(d, "yyyy年MM月dd日");
+		String wkStr = DateUtils.getWeekOfDate(d);
+		String s = dateStr + " " + wkStr;
+		map.put("today", s);
 		return "pc/frame/body";
 	}
 
@@ -66,7 +75,7 @@ public class FrameController extends BaseController {
 	public String rightContentPage() {
 		return "pc/rightContent";
 	}
-	
+
 	/**
 	 * 跳转到page2页面
 	 * 
