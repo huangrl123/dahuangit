@@ -56,6 +56,33 @@
 				} ] ]
 			});
 
+			var load = function(pageNumber, pageSize, pg) {
+				var start = 0;
+				if (0 != pageNumber) {
+					var willStart = pageNumber * pageSize;
+					if (willStart < pg.pagination('options').total) {
+						start = willStart;
+					}
+				}
+
+				grid.datagrid({
+					url : '../perception/findPerceptionByPage',
+					method : 'post',
+					queryParams : {
+						start : start,
+						limit : pageSize
+					},
+					onLoadSuccess : function(data) {
+						pg.pagination({
+							total : data.total,
+							pageNumber : pageNumber
+						});
+
+						$(window).resize();
+					}
+				});
+			}
+
 			var pg = $('#perception-pagination').pagination({
 				pageSize : 10,
 				total : 0,
@@ -64,32 +91,11 @@
 				afterPageText : '页    共 {pages} 页',
 				displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录',
 				onSelectPage : function(pageNumber, pageSize) {
-					var start = 0;
-					if (0 != pageNumber) {
-						var willStart = pageNumber * pageSize;
-						if (willStart < pg.pagination('options').total) {
-							start = willStart;
-						}
-					}
-
-					grid.datagrid({
-						url : '../perception/findPerceptionByPage',
-						method : 'post',
-						queryParams : {
-							start : start,
-							limit : pageSize
-						},
-						onLoadSuccess : function(data) {
-							pg.pagination({
-								total : data.total,
-								pageNumber : pageNumber
-							});
-							
-							$(window).resize();
-						}
-					});
+					load(pageNumber, pageSize, pg);
 				}
 			});
+
+			load(1, pg.pagination('options').pageSize, pg);
 		});
 	</script>
 </body>
