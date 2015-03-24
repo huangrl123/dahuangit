@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.scroll.Scroller",{override:"Ext.scroll.Scroller",convertX:function(A){if(A&&this.rtl){A=-A}return A},convertEasingConfig:function(B){var C=B.minMomentumValue,A=B.maxMomentumValue;if(this.rtl){B.minMomentumValue=A;B.maxMomentumValue=-C}}});

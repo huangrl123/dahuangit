@@ -1,0 +1,1 @@
+(function(){var A=jasmine.getEnv();A.addReporter(parent.Test.SandBox.reporter);A.execute()})();

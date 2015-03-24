@@ -1,0 +1,1 @@
+Ext.define("Ext.chart.overrides.AbstractChart",{override:"Ext.chart.AbstractChart",updateLegend:function(A,C){var B;this.callParent(arguments);if(A){B=A.docked;this.addDocked({dock:B,xtype:"panel",shrinkWrap:true,autoScroll:true,layout:{type:B==="top"||B==="bottom"?"hbox":"vbox",pack:"center"},items:A,cls:Ext.baseCSSPrefix+"legend-panel"})}}});

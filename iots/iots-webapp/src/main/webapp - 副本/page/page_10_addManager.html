@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="../css/css_style.css" rel="stylesheet" type="text/css" />
+<link href="../css/table_style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color:#FFFFFF;" onLoad="setup()">
+<form id="frm" name="frm">
+<table width="100%" height="100%" cellspacing="5" border=0>
+<tr>
+<td height="235" valign="top">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px #99BBE8 solid;">
+  <tr>
+  <td height="22" style="border-bottom:1px #99BBE8 solid; background-color:#DFE8F6; padding:3px 0px 0px 10px;">
+  修改管理员及设定权限</td>
+  </tr>
+  <tr>
+  <td valign="middle" style="padding:6px;">
+  
+  <fieldset style="color: #B7B7B7; border-style: groove;">
+    <legend style="font-size:10pt;"> 证书业务受理 </legend> 
+	<table border="0" cellpadding="5" cellspacing="1" style="margin-left:100px">
+  <tr>
+    <td><input type="checkbox" value="java" /> 证书申请 <input type="checkbox" value="java" /> 证书更新 <input type="checkbox" value="java" /> 证书注销</td>
+  </tr>
+    <tr>
+    <td><input type="checkbox" value="java" /> 证书启用 <input type="checkbox" value="java" /> 证书停用</td>
+  </tr>
+	</table>
+  </fieldset>
+  </td></tr>
+  <tr><td valign="middle" style="padding:6px;">
+  <fieldset style="color: #B7B7B7; border-style: groove;">
+    <legend style="font-size:10pt;"> 证书业务待办 </legend> 
+  <table border="0" cellpadding="5" cellspacing="1" style="margin-left:100px">
+  <tr>
+    <td><input type="checkbox" value="java" /> 待审核信息 <input type="checkbox" value="java" /> 待制证信息 <input type="checkbox" value="java" /> 审核拒绝办理</td>
+  </tr>
+	</table>
+ </fieldset>
+  </td></tr>
+  <tr><td valign="middle" style="padding:6px;">
+  <fieldset style="color: #B7B7B7; border-style: groove;">
+    <legend style="font-size:10pt;" id='legendUser'> 系统管理 </legend>
+	  <table border="0" cellpadding="5" cellspacing="1" style="margin-left:100px">
+  <tr>
+    <td><input type="checkbox" value="java" /> 审核策略 <input type="checkbox" value="java" /> 权限管理 </td>
+  </tr>
+</table>
+
+</fieldset>
+  </td>
+  </tr>
+
+ <tr>
+<td height="23" id="no6" name="no6" style="text-align:center;">
+<input id="makeCertButton"   type="button" class="inp_L1" value="确定" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'"
+onClick = "alert('此页面为演示页面，不能真正提交')"/>&nbsp;&nbsp;&nbsp;&nbsp;
+<input id="makeCertButton"   type="button" class="inp_L1" value="返回" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" 
+onClick = "history.back()"/>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>

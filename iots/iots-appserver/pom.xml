@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>iots-manager</artifactId>
+			<artifactId>iots-pcserver</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

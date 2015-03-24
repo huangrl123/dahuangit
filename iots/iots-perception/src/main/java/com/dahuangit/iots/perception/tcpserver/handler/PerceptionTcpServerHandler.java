@@ -55,6 +55,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 		byte[] content = (byte[]) message;
 
+		log.debug("收到客户端发过来的报文,报文内容为:");
+		log.debug(ByteUtils.byteArrToHexString(content));
+		
 		if (content.length != 72 && content.length != 69 && content.length != 75 && content.length != 100) {
 			log.debug("发生错误，报文长度不对, 正确的长度应为69或者72或者75或者100, 实际报文长度为:" + content.length);
 			session.close(true);

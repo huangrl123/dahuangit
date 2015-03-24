@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.menu.Menu",{override:"Ext.menu.Menu",ariaSkipContainerTitleCheck:true,ariaSkipPanelTitleCheck:true});

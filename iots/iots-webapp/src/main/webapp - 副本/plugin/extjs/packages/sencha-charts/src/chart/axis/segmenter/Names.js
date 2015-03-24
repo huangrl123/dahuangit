@@ -1,0 +1,1 @@
+Ext.define("Ext.chart.axis.segmenter.Names",{extend:"Ext.chart.axis.segmenter.Segmenter",alias:"segmenter.names",renderer:function(B,A){return B},diff:function(A,C,B){return Math.floor(C-A)},align:function(C,A,B){return Math.floor(C)},add:function(C,A,B){return C+A},preferredStep:function(A,C,B,D){return{unit:1,step:1}}});

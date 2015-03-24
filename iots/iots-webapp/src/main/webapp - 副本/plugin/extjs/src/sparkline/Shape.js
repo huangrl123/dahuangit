@@ -1,0 +1,1 @@
+Ext.define("Ext.sparkline.Shape",{constructor:function(C,D,A,B){this.target=C;this.id=D;this.type=A;this.args=B},append:function(){this.target.appendShape(this);return this}});

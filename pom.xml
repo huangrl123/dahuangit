@@ -109,8 +109,8 @@
 		<quartz.version>1.8.0</quartz.version>
 		<!--R -->
 		<!--S -->
-		<spring-security.version>3.0.2.RELEASE</spring-security.version>
-		<spring.version>3.0.2.RELEASE</spring.version>
+		<spring-security.version>3.0.4.RELEASE</spring-security.version>
+		<spring.version>3.0.4.RELEASE</spring.version>
 		<struts2.version>2.1.8.1</struts2.version>
 		<slf4j.version>1.6.0</slf4j.version>
 		<selenium.version>2.0a2</selenium.version>

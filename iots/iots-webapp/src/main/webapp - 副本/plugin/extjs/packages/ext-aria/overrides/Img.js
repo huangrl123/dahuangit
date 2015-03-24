@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.Img",{override:"Ext.Img",getElConfig:function(){var B=this,A;A=B.callParent();A.tabIndex=-1;return A},onRender:function(){var A=this;if(!A.alt){Ext.log.warn("For ARIA compliance, IMG elements SHOULD have an alt attribute")}A.callParent()}});

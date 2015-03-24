@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
-import com.dahuangit.iots.manager.dto.request.UserLoginRequest;
-import com.dahuangit.iots.manager.dto.request.UserLogoutRequest;
-import com.dahuangit.iots.manager.dto.response.UserLoginResponse;
-import com.dahuangit.iots.manager.service.UserService;
+import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
+import com.dahuangit.iots.pcserver.dto.request.UserLogoutRequest;
+import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
+import com.dahuangit.iots.pcserver.service.UserService;
 import com.dahuangit.util.CookieUtils;
 
 /**

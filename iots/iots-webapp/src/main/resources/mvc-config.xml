@@ -8,6 +8,13 @@
 
 	<bean class="com.dahuangit.util.spring.StringHttpMessageConverterAdjust" />
 
+	<mvc:resources location="/common/**" mapping="/common/"/>
+	<mvc:resources location="/css/**" mapping="/css/"/>
+	<mvc:resources location="/flash/**" mapping="/flash/"/>
+	<mvc:resources location="/plugin/**" mapping="/plugin/"/>
+	<mvc:resources location="/js/**" mapping="/js/"/>
+	<mvc:resources location="/image/**" mapping="/image/"/>
+	
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />

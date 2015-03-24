@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.scroll.Manager",{override:"Ext.scroll.Manager",rtlPositionMethods:{x:"rtlSetLocalX",y:"setLocalY"},constructor:function(B){var C=this,D=B.owner,A=D.getInherited().rtl;if(A){C.positionMethods=C.rtlPositionMethods;C.indicatorCls+=" "+D._rtlCls}C.callParent(arguments);if(A){C.scroller.rtl=true}}});

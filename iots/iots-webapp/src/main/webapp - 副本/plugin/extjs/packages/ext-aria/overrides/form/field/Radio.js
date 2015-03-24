@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.form.field.Radio",{override:"Ext.form.field.Radio",requires:"Ext.aria.form.field.Checkbox",onFocus:function(A){var B=this;if(!A.ctrlkey){B.setValue(true)}return B.callParent(arguments)}});

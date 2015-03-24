@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="iots-webapp">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="iots-manager-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-manager/iots-manager">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="iots-perception-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-perception/iots-perception">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -17,6 +15,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="iots-appserver-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/iots-appserver/iots-appserver">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/iots-pcserver/iots-pcserver">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="iots"/>

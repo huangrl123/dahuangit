@@ -1,0 +1,376 @@
+/* CSS Document */
+body{
+    background-color:E0E7F7;
+	margin:0px 0px 0px 0px;
+	overflow: auto;
+}
+body, td{
+  color:#666666;
+  font-size:9pt;
+}
+a{
+    color:#0366CB;
+	font-size:12px;
+	text-decoration: none;	
+}
+a:link{
+    color:#174070;
+	text-decoration: none;	
+}
+a:hover{
+    color:#666666;
+	text-decoration: underline;	
+}
+/****************************基本部局*****************************/
+.header_bg1{
+    width:100%;
+    height:70px;
+	float:left;
+	margin:0px 0px 0px 0px;
+    background-image:url(../image/header_01.gif);
+}
+.header_1{
+    width:350px;
+    height:70px;
+    background-image:url(../image/header_02.gif);
+	float:left;
+}
+/***********标识，文字部分********************************************************************/
+    html>body #head_logoShadow{
+	   margin:21px 0px 0px 0px;
+	   width:45%;
+	   height:30px;
+	   float:left;
+       FILTER: Glow(Color=#335B88, Strength=2);
+	}
+	* html #head_logoShadow{
+	   margin:25px 0px 0px 0px;
+	   width:45%;
+	   height:30px;
+	   float:left;
+       FILTER: Glow(Color=#ffffff, Strength=3);
+	}
+	
+	#head_logoTEXT{
+		float:left;
+		width:100%;
+		height:30px;
+		min-height:83px;
+
+	}
+	#head_logoTEXT a{
+	    color:#000000;
+		font-size:22px;
+		font-weight:bold;
+	}
+	/*not for ie 6.0*/
+	html>body #head_logoTEXT{
+		float:left;
+        font-size:18px;
+        padding:4px;
+        filter:
+        Dropshadow(offx=1,offy=0,color=white)
+        Dropshadow(offx=0,offy=1,color=white)
+        Dropshadow(offx=0,offy=-1,color=white)
+        Dropshadow(offx=-1,offy=0,color=white);
+	}
+	
+	#head_logoIMG{
+		float:left;
+		width:55px;
+		height:70px;
+		min-height:83px;
+	}
+	/*not for ie 6.0*/
+	html>body #head_logoIMG{
+		float:left;
+		background: url('../image/logo.png');
+		background-repeat:no-repeat;
+		margin:0px 0px 0px 22px;
+	}
+	/*for ie 6.0*/
+	* html #head_logoIMG {
+		float:left;
+		filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src="../image/logo.png");
+		background:none;
+		margin:0px 0px 0px 13px;
+	}
+/************************************************************************************************/
+
+.color0366CB{
+	color:#0366CB;
+}
+.title_bg{
+    background:url(../image/title_bg.gif) repeat-x;
+    height:26px;
+	border:1px #979FA2 solid;
+}
+.title_word{
+	color:#174070;
+	font-weight: bold;
+	font-size:12px;
+	padding:2px 0px 0px 0px;
+}
+.bottom{
+    height:10px;
+	background-color:#CCCCCC;
+	border-left:1px #000000 solid;
+	border-right:1px #000000 solid;
+	text-align:center
+}
+.left_menu{
+	width:198px;
+	height:100%;
+	border-top:1px #99BBE8 solid;
+	border-left:1px #99BBE8 solid;
+	border-right:1px #99BBE8 solid;
+	background-color:#FFFFFF;
+}
+.left_menu_title_1{
+	height:25px;
+	padding:0px 0px 0px 19px;
+	cursor:hand;
+	font-size:12px;
+	background: url(../image/left5.gif) no-repeat 0px;
+}
+.table_line{
+    border-left:1px #90B9EF solid; 
+	border-right:1px #90B9EF solid; 
+	border-bottom:1px #90B9EF solid;
+	background-color:#FFFFFF;
+}
+.menu_font{
+    font-size:12px;
+	color:#2255BC;
+	font-weight: bold;
+	padding:0px 0px 1px 0px;
+}
+.talbe_outline{
+    width:100%;
+    height:100%;
+	background-color:#FFFFFF;  
+	border-top:1px #58A8E5 solid;
+	border-bottom:1px #58A8E5 solid;
+	border-right:1px #58A8E5 solid;	
+}
+.Position {
+    height:23px;
+	width:100%;
+	background-color:#DFE8F6;
+	border-top:1px #90B9EF solid;
+	border-bottom:1px #90B9EF solid;
+	float:left;
+}
+
+.Position_1{
+	width:35%;
+	height:23px;
+	float:left;
+	padding:4px 0px 3px 26px;
+	background-image: url(../image/now.gif);
+	background-repeat: no-repeat;
+	background-position: 7px 6px;
+}
+.Position_1 a,.Position_2 a{
+    color:#0366CB;
+}
+.Position_2{
+    width:370px;
+    height:23px;
+    float:right;
+	padding:4px 0px 3px 0px;
+}
+.inquiry{
+    width:100%;
+    height:20px;
+	background-image:url(../image/Position1.gif);
+    border:1px #95B8E7 solid;
+	margin:5px 0px 0px 0px;
+}
+.inquiry1{
+    width:100%;
+    height:25px;
+    border:1px #BCBCBC solid;
+	margin:5px 0px 0px 0px;
+}
+/****************************显示页码样式*******************************/
+.page_num_1{
+	width:14px;
+	height:15px;
+	background:url(../image/num.gif);
+	border:1px #A9A9A9 solid;
+	display:block;
+	text-align:center;
+	float:left;
+	font-size:12px;
+	margin:0px 3px 0px 3px;
+	padding:2px 1px 0px 2px;
+	color:#000000;
+	cursor:hand;
+	text-decoration: none;
+}
+a.page_num_1:hover{
+    background-color:#FFFFFF;
+    color:#FE9600;
+}
+.page_num_2{
+    width:14px;
+    height:15px;
+	background-color:#ffffff;
+	border:1px #A9A9A9 solid;
+	display:block;
+	padding:2px 1px 0px 1px;
+	text-align:center;
+	font-size:12px;
+	color:#F65310;
+	margin:0px 3px 0px 3px;
+	float:left;
+	cursor:hand;
+	text-decoration: none;
+}
+.page_title{
+    margin:20px 0px 20px 0px;
+}
+.page_title1{
+    margin:10px 0px 10px 0px;
+}
+.page_table{
+    border-top:1px #E1E1E1 solid; 
+    float:left;
+}
+.page_table1{
+    float:left;
+}
+.front{
+    width:16px;
+    height:15px;
+	float:left;
+	margin:1px 3px 0px 2px;
+	cursor:hand;
+}
+.back{
+    width:46px;
+    height:15px;
+	float:left;
+	margin:1px 0px 0px 3px;
+	cursor:hand;
+}
+.button_margin{
+    width:86px; 
+    height:29px; 
+    float:left; 
+    margin:0px 5px 0px 0px;
+}
+
+/****************************按钮样式*******************************/
+.open{
+    width:15px;
+    height:15px;
+	float:right;
+	margin:0px 19px 0px 0px;
+}
+.text_box{
+    height:15px;
+    border:1px #B5B8C8 solid;
+	background-image:url(../image/text_box.gif);
+	font-size:12px;
+}
+.inp_L1 {
+	width:50px;
+	height:20px;
+	padding:0px 0px 0px 0px;
+	font-family:Arial;
+	border:none;
+	cursor:hand;
+	font-size:12px;
+	background-color: transparent;
+	background-image: url(../image/button_link.gif);
+	background-repeat: no-repeat;
+}
+.inp_L2 {
+   width:50px;
+   height:20px;
+   background:url(../image/button_hover.gif) no-repeat transparent;
+   padding:0px 0px 0px 0px;
+   font-family:Arial;
+   border:none;
+   cursor:hand;
+   font-size:12px;
+}
+/****************************弹出窗口样式*******************************/
+.window{
+    width:452px;
+	border:1px solid #9E9E9E;
+	display:none;
+	background:#FFFFFF url(../image/table_1.gif) top repeat-x;
+}
+/****************************退出*******************************/
+.exit{
+    width:388px;
+    height:24px;
+    background-image:url(../image/exit.gif);
+	border:2px #4D87CA solid;
+	padding:5px 0px 0px 0px;
+	text-align:center;
+	float:right;
+	margin:20px 10px 0px 0px;
+}
+/****************************more*******************************/
+.more{
+    width:110px;
+	padding:3px 0px 0px 0px;
+	float:right;
+}
+/******************************字体样式*****************************/
+.black_12{
+	color:#000000;
+	font-size:12px;
+}
+.black_13{
+	color:#343434;
+	font-size:14px;
+	font-weight: bold;
+}
+.blue{
+	color: #2255BC;
+}
+.yellow{
+    color:#FA8526;
+}
+.yellow2{
+    color:#FA8526;
+	font-weight: bold;
+}
+.red{
+	color:FF4800;
+	font-size:12px;
+}
+.white{
+    color:#FFFFFF;
+	font-weight: bold;
+	font-size:13px;
+}
+.white01{
+    color:#FFFFFF;
+	font-weight: bold;
+	font-size:12px;
+}
+.red2{
+    color:#FF4800;
+}
+.arial{
+    font-size:12px;
+    font-family:Arial;
+}
+.gray{
+    color:#616566;
+}
+.gray a:link{
+    color:#616566;
+}
+.gray a:hover{
+    color:#FE9600;
+}
+.gray a:visited{
+    color:#616566;
+}

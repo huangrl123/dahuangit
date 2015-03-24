@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.selection.TreeModel",{override:"Ext.selection.TreeModel",onKeyRight:function(A,B){if(this.view.getInherited().rtl){this.navCollapse(A,B)}else{this.callParent(arguments)}},onKeyLeft:function(A,B){if(this.view.getInherited().rtl){this.navExpand(A,B)}else{this.callParent(arguments)}}});

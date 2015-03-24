@@ -16,10 +16,9 @@
 
 	<modules>
 		<module>iots-appserver</module>
-		<module>iots-manager</module>
+		<module>iots-pcserver</module>
 		<module>iots-perception</module>
 		<module>iots-webapp</module>
-		<module>iots-media</module>
 	</modules>
 
 </project>

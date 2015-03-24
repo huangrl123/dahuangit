@@ -15,8 +15,8 @@
         <webClassPathEntry>/dahuangit-util/target/test-classes</webClassPathEntry>
         <webClassPathEntry>/iots-appserver/target/classes</webClassPathEntry>
         <webClassPathEntry>/iots-appserver/target/test-classes</webClassPathEntry>
-        <webClassPathEntry>/iots-manager/target/classes</webClassPathEntry>
-        <webClassPathEntry>/iots-manager/target/test-classes</webClassPathEntry>
+        <webClassPathEntry>/iots-pcserver/target/classes</webClassPathEntry>
+        <webClassPathEntry>/iots-pcserver/target/test-classes</webClassPathEntry>
         <webClassPathEntry>/iots-perception/target/classes</webClassPathEntry>
         <webClassPathEntry>/iots-perception/target/test-classes</webClassPathEntry>
         <webClassPathEntry>/iots-webapp/target/classes</webClassPathEntry>
@@ -194,26 +194,26 @@
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/slf4j/slf4j-log4j12/1.6.0/slf4j-log4j12-1.6.0.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/osgi/spring-osgi-core/1.2.1/spring-osgi-core-1.2.1.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/osgi/spring-osgi-io/1.2.1/spring-osgi-io-1.2.1.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-acl/3.0.2.RELEASE/spring-security-acl-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-config/3.0.2.RELEASE/spring-security-config-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-core/3.0.2.RELEASE/spring-security-core-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-taglibs/3.0.2.RELEASE/spring-security-taglibs-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-web/3.0.2.RELEASE/spring-security-web-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-aop/3.0.2.RELEASE/spring-aop-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-aspects/3.0.2.RELEASE/spring-aspects-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-jms/3.0.2.RELEASE/spring-jms-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-test/3.0.2.RELEASE/spring-test-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-tx/3.0.2.RELEASE/spring-tx-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-web/3.0.2.RELEASE/spring-web-3.0.2.RELEASE.jar</webClassPathEntry>
-        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-webmvc/3.0.2.RELEASE/spring-webmvc-3.0.2.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-acl/3.0.4.RELEASE/spring-security-acl-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-config/3.0.4.RELEASE/spring-security-config-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-core/3.0.4.RELEASE/spring-security-core-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-taglibs/3.0.4.RELEASE/spring-security-taglibs-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/security/spring-security-web/3.0.4.RELEASE/spring-security-web-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-aop/3.0.4.RELEASE/spring-aop-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-asm/3.0.4.RELEASE/spring-asm-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-aspects/3.0.4.RELEASE/spring-aspects-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-beans/3.0.4.RELEASE/spring-beans-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-context-support/3.0.4.RELEASE/spring-context-support-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-context/3.0.4.RELEASE/spring-context-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-core/3.0.4.RELEASE/spring-core-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-expression/3.0.4.RELEASE/spring-expression-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-jdbc/3.0.4.RELEASE/spring-jdbc-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-jms/3.0.4.RELEASE/spring-jms-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-orm/3.0.4.RELEASE/spring-orm-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-test/3.0.4.RELEASE/spring-test-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-tx/3.0.4.RELEASE/spring-tx-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-web/3.0.4.RELEASE/spring-web-3.0.4.RELEASE.jar</webClassPathEntry>
+        <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/springframework/spring-webmvc/3.0.4.RELEASE/spring-webmvc-3.0.4.RELEASE.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/swinglabs/pdf-renderer/1.0.5/pdf-renderer-1.0.5.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/tuckey/urlrewritefilter/3.1.0/urlrewritefilter-3.1.0.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.0.5/.m2/repository/org/w3c/css/sac/1.3/sac-1.3.jar</webClassPathEntry>
