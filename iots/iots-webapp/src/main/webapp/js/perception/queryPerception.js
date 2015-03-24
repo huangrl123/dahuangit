@@ -18,12 +18,23 @@ $(function() {
 									field : 'onlineStatus',
 									title : '在线状态',
 									width : 80,
-									formatter : function(value, data) {
+									formatter : function(value, row) {
 										if ('离线' == value) {
 											return '<font color="red">' + value + '</font>';
 										}
 									}
-								}]]
+								}, {
+									field : 'perceptionId',
+									title : '操作',
+									width : 80,
+									align : 'center',
+									formatter : function(value, row) {
+										return '<a href="#">查看详情</a>';
+									}
+								}]],
+						onClickRow : function(rowIndex, row) {
+							$(this).datagrid('unselectRow', rowIndex);
+						}
 					});
 
 			var load = function(pageNumber, pageSize, pg, conditionParams) {
