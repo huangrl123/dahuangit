@@ -35,7 +35,6 @@
 	<script type="text/javascript">
 		$(function() {
 			var grid = $('#perception-datagrid').datagrid({
-				rownumbers : true,
 				singleSelect : true,
 				fitColumns : true,
 				columns : [ [ {
@@ -68,7 +67,7 @@
 					var start = 0;
 					if (0 != pageNumber) {
 						var willStart = pageNumber * pageSize;
-						if (willStart < pg.total) {
+						if (willStart < pg.pagination('options').total) {
 							start = willStart;
 						}
 					}
