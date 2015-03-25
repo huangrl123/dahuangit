@@ -19,8 +19,10 @@ $(function() {
 									title : '在线状态',
 									width : 80,
 									formatter : function(value, row) {
-										if ('离线' == value) {
-											return '<font color="red">' + value + '</font>';
+										if (0 == value) {
+											return '<font color="red">离线</font>';
+										} else if (1 == value) {
+											return '<font color="blue">在线</font>';
 										}
 									}
 								}, {

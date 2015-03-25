@@ -52,6 +52,10 @@ public class Perception extends BaseModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 
+	/** 在线状态 */
+	@Column(name = "online_status")
+	private Integer onlineStatus = 0;
+
 	/** 最后通信时间 */
 	@Column(name = "last_comm_time")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -124,6 +128,14 @@ public class Perception extends BaseModel {
 
 	public void setPerceptionType(PerceptionType perceptionType) {
 		this.perceptionType = perceptionType;
+	}
+
+	public Integer getOnlineStatus() {
+		return onlineStatus;
+	}
+
+	public void setOnlineStatus(Integer onlineStatus) {
+		this.onlineStatus = onlineStatus;
 	}
 
 }

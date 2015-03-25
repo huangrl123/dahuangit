@@ -59,9 +59,15 @@ public class AppQueryPerceptionServiceImpl implements AppQueryPerceptionService 
 			info.setInstallSite(p.getInstallSite());
 			info.setLastCommTime(DateUtils.format(p.getLastCommTime()));
 
-			boolean isOnline = ClientConnectorPool.getInstance().containsClientConnector(info.getPerceptionAddr());
-            info.setIsOnline(isOnline);
-			
+			boolean isOnline = false;
+			if (0 == p.getOnlineStatus()) {
+				isOnline = false;
+			} else if (1 == p.getOnlineStatus()) {
+				isOnline = true;
+			}
+
+			info.setIsOnline(isOnline);
+
 			perceptionDtos.add(info);
 		}
 

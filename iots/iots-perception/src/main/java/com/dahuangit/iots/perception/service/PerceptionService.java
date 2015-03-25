@@ -5,6 +5,8 @@ import java.util.List;
 import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
@@ -13,19 +15,56 @@ import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
-import com.dahuangit.iots.perception.dto.response.RemoteQuery6j6MachineResponse;
+import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionType;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
 
 public interface PerceptionService {
+	/**
+	 * 添加设备
+	 * 
+	 * @param req
+	 */
+	public void addPerception(AddPerceptionReq req);
 
-	PageQueryResult<PerceptionOpResponse> findPerceptionByPage(Integer start, Integer limit);
+	/**
+	 * 通过地址查询设备
+	 * 
+	 * @param addr
+	 * @return
+	 */
+	public Perception findPerceptionByAddr(String addr);
 
+	/**
+	 * 查询设备
+	 * 
+	 * @param req
+	 * @return
+	 */
+	PageQueryResult<PerceptionOpResponse> findPerceptionByPage(FindPerceptionByPageReq req);
+
+	/**
+	 * 查询设备日志
+	 * 
+	 * @param req
+	 * @return
+	 */
 	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionRuntimeLogByPage(
 			FindPerceptionRuntimeLogByPageReq req);
 
+	/**
+	 * 获取设备状态属性下拉选的值
+	 * 
+	 * @param paramId
+	 * @return
+	 */
 	public ComboboxData getPerceptionParamValueListByParam(Integer paramId);
 
+	/**
+	 * 保存日志
+	 * 
+	 * @param perceptionTcpDto
+	 */
 	public void saveLog(PerceptionTcpDto perceptionTcpDto);
 
 	/**
@@ -78,7 +117,7 @@ public interface PerceptionService {
 	 * @return
 	 */
 	public PerceptionParamStatusQueryResponse queryPerceptionStatus(PerceptionParamStatusRequest request);
-	
+
 	/**
 	 * 获取到所有的设备类型
 	 * 

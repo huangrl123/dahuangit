@@ -34,7 +34,7 @@ public class PerceptionOpResponse extends OpResponse {
 	private Date createDateTime = null;
 
 	/** 在线状态 */
-	private String onlineStatus = null;
+	private Integer onlineStatus = null;
 
 	private Date lastCommTime = null;
 
@@ -106,11 +106,11 @@ public class PerceptionOpResponse extends OpResponse {
 		this.perceptionId = perceptionId;
 	}
 
-	public String getOnlineStatus() {
+	public Integer getOnlineStatus() {
 		return onlineStatus;
 	}
 
-	public void setOnlineStatus(String onlineStatus) {
+	public void setOnlineStatus(Integer onlineStatus) {
 		this.onlineStatus = onlineStatus;
 	}
 

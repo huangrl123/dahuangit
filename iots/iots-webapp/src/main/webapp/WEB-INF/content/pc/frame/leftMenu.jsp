@@ -243,7 +243,7 @@ t=outlookbar.addtitle('设备管理')
 
    outlookbar.additem('设备查询',t,'../perception/queryPerceptionPage')
 
-   outlookbar.additem('设备添加',t,'../frame/page2')
+   outlookbar.additem('设备添加',t,'../perception/addPerceptionPage')
 
 t=outlookbar.addtitle('用户管理')
 

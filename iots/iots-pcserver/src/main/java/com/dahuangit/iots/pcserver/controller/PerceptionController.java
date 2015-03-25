@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
-import com.dahuangit.base.dto.opm.request.OpRequest;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
 import com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest;
@@ -25,6 +26,7 @@ import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
+import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionType;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.PerceptionVediaService;
@@ -104,6 +106,50 @@ public class PerceptionController extends BaseController {
 	}
 
 	/**
+	 * 跳转到添加设备界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/addPerceptionPage", method = RequestMethod.GET)
+	public String addPerceptionPage(ModelMap modelMap) {
+		// 设置设备类型列表
+		List<PerceptionType> perceptionTypes = this.perceptionService.getAllPerceptionTypes();
+		modelMap.put("perceptionTypeList", perceptionTypes);
+
+		return "/pc/perception/addPerception";
+	}
+
+	/**
+	 * 添加设备
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/addPerception", method = RequestMethod.POST)
+	@ResponseBody
+	public OpResponse addPerception(AddPerceptionReq req) {
+		OpResponse response = new OpResponse();
+
+		try {
+			String perceptionAddr = req.getPercetionAddr();
+
+			Perception p = this.perceptionService.findPerceptionByAddr(perceptionAddr);
+			if (null != p) {
+				response.setSuccess(false);
+				response.setMsg("设备地址已本占用");
+				return response;
+			}
+
+			this.perceptionService.addPerception(req);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
 	 * 跳转到查询设备界面
 	 * 
 	 * @return
@@ -113,7 +159,7 @@ public class PerceptionController extends BaseController {
 		// 设置设备类型列表
 		List<PerceptionType> perceptionTypes = this.perceptionService.getAllPerceptionTypes();
 		modelMap.put("perceptionTypeList", perceptionTypes);
-		
+
 		return "/pc/perception/queryPerception";
 	}
 
@@ -125,10 +171,9 @@ public class PerceptionController extends BaseController {
 	 */
 	@RequestMapping(value = "/findPerceptionByPage", method = RequestMethod.POST)
 	@ResponseBody
-	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(OpRequest opRequest) {
+	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(FindPerceptionByPageReq opRequest) {
 
-		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(
-				opRequest.getStart(), opRequest.getLimit());
+		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(opRequest);
 		return result;
 	}
 

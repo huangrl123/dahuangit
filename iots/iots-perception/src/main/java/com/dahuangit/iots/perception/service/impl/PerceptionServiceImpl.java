@@ -19,6 +19,8 @@ import com.dahuangit.iots.perception.dao.PerceptionParamDao;
 import com.dahuangit.iots.perception.dao.PerceptionParamValueDao;
 import com.dahuangit.iots.perception.dao.PerceptionRuntimeLogDao;
 import com.dahuangit.iots.perception.dao.PerceptionTypeDao;
+import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.ParamInfo;
 import com.dahuangit.iots.perception.dto.request.ParamInfoList;
@@ -77,6 +79,30 @@ public class PerceptionServiceImpl implements PerceptionService {
 	protected CastorMarshaller xmlMarshaller = null;
 
 	/**
+	 * 添加设备
+	 * 
+	 * @param req
+	 */
+	public void addPerception(AddPerceptionReq req) {
+		Perception p = new Perception();
+		p.setPerceptionAddr(req.getPercetionAddr());
+		p.setPerceptionName(req.getPerceptionName());
+		p.setPerceptionTypeId(req.getPerceptionTypeId());
+		p.setCreateDateTime(new Date());
+		this.perceptionDao.addPerception(p);
+	}
+
+	/**
+	 * 通过地址查询设备
+	 * 
+	 * @param addr
+	 * @return
+	 */
+	public Perception findPerceptionByAddr(String addr) {
+		return this.perceptionDao.findPerceptionByAddr(addr);
+	}
+
+	/**
 	 * 获取单个感知端
 	 * 
 	 * @param perceptionId
@@ -85,35 +111,21 @@ public class PerceptionServiceImpl implements PerceptionService {
 	public PerceptionOpResponse getPerception(Integer perceptionId) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
-
-		if (this.clientConnectionPool.containsClientConnector(p.getPerceptionAddr())) {
-			por.setOnlineStatus("在线");
-		} else {
-			por.setOnlineStatus("离线");
-		}
-
 		return por;
 	}
 
-	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(Integer start, Integer limit) {
+	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(FindPerceptionByPageReq req) {
 		PageQueryResult<PerceptionOpResponse> pageQueryResult = new PageQueryResult<PerceptionOpResponse>();
 
 		List<PerceptionOpResponse> rows = new ArrayList<PerceptionOpResponse>();
-		List<Perception> list = this.perceptionDao.findPerceptionByPage(start, limit);
+		List<Perception> list = this.perceptionDao.findPerceptionByPage(req);
 
 		for (Perception p : list) {
 			PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
-
-			if (this.clientConnectionPool.containsClientConnector(p.getPerceptionAddr())) {
-				por.setOnlineStatus("在线");
-			} else {
-				por.setOnlineStatus("离线");
-			}
-
 			rows.add(por);
 		}
 
-		Long totalCount = this.perceptionDao.findPerceptionCount();
+		Long totalCount = this.perceptionDao.findPerceptionCount(req);
 
 		pageQueryResult.setRows(rows);
 		pageQueryResult.setTotal(totalCount);
