@@ -15,14 +15,17 @@ import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
 import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
+import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
@@ -147,6 +150,22 @@ public class PerceptionController extends BaseController {
 		}
 
 		return response;
+	}
+
+	/**
+	 * 跳转到设备状态界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/perceptionStatusPage", method = RequestMethod.GET)
+	public String perceptionStatusPage(ModelMap modelMap, PerceptionStatusPageReq perceptionStatusPageReq) {
+		PerceptionParamStatusRequest req = new PerceptionParamStatusRequest();
+		req.setPerceptionId(perceptionStatusPageReq.getPerceptionId());
+
+		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
+		modelMap.put("perceptionOpResponse", perceptionOpResponse);
+
+		return "/pc/perception/queryPerceptionStatus";
 	}
 
 	/**

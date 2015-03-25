@@ -31,6 +31,7 @@ $(function() {
 									},
 									success : function(result) {
 										if (result.success) {
+											parent.window['leftMenu'].updateArea('设备查询');
 											window.location.href = '../perception/queryPerceptionPage';
 										} else {
 											alert(result.msg);

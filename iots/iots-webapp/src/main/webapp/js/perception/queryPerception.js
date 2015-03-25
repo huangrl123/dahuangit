@@ -31,7 +31,7 @@ $(function() {
 									width : 80,
 									align : 'center',
 									formatter : function(value, row) {
-										return '<a href="#">查看详情</a>';
+										return '<a href="#" onclick="toPerceptionStatusPage(' + value + ')">查看详情</a>';
 									}
 								}]],
 						onClickRow : function(rowIndex, row) {
@@ -100,3 +100,7 @@ $(function() {
 			// 进入页面时，加载数据
 			load(1, pg.pagination('options').pageSize, pg, getConditionParams());
 		});
+
+var toPerceptionStatusPage = function(perceptionId) {
+	window.location.href = '../perception/perceptionStatusPage?perceptionId=' + perceptionId;
+}

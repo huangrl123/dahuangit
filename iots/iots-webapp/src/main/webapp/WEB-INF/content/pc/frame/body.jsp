@@ -59,7 +59,7 @@
 							<TABLE id="menuList" style="WIDTH: 198px; HEIGHT: 100%;" cellSpacing="0" cellPadding="0" align="left" border="0">
 								<TBODY>
 									<TR>
-										<td id="outLookBarShow" vAlign="middle" align="center" class="left_menu"><iframe scrolling="no" src="../frame/leftMenu" frameborder="0" width="100%" height="100%"></iframe></td>
+										<td id="outLookBarShow" vAlign="middle" align="center" class="left_menu"><iframe name="leftMenu" scrolling="no" src="../frame/leftMenu" frameborder="0" width="100%" height="100%"></iframe></td>
 										<td align="center" valign="middle" width="5"><img src="../image/1.gif" width="5" height="35" onClick="collapseMenu('outLookBarShow', 'menuList', this);" style="cursor: hand;" /></td>
 									</TR>
 								</TBODY>
