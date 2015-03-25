@@ -36,6 +36,9 @@ public class PerceptionParamStatusQueryResponse extends Response {
 	/** 设备类型id */
 	private Integer perceptionTypeId = null;
 
+	/** 设备类型名称 */
+	private String perceptionTypeName = null;
+
 	/** 告警参数状态列表 */
 	private List<ParamInfo> warningParamInfos = new ArrayList<ParamInfo>();
 
@@ -112,6 +115,14 @@ public class PerceptionParamStatusQueryResponse extends Response {
 
 	public void setPerceptionTypeId(Integer perceptionTypeId) {
 		this.perceptionTypeId = perceptionTypeId;
+	}
+
+	public String getPerceptionTypeName() {
+		return perceptionTypeName;
+	}
+
+	public void setPerceptionTypeName(String perceptionTypeName) {
+		this.perceptionTypeName = perceptionTypeName;
 	}
 
 }

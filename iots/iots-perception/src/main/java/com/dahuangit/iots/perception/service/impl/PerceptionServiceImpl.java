@@ -400,6 +400,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 		response.setPerceptionName(p.getPerceptionName());
 		response.setPerceptionId(p.getPerceptionId());
 		response.setPerceptionTypeId(p.getPerceptionTypeId());
+		response.setPerceptionTypeName(p.getPerceptionType().getPerceptionTypeName());
 
 		List<PerceptionParam> list = p.getPerceptionType().getParams();
 
@@ -407,7 +408,6 @@ public class PerceptionServiceImpl implements PerceptionService {
 		if (null != clientConnector) {
 			response.setOnline(true);
 			response.setOnlineStatusDesc("在线");
-			response.setLastCommTime(DateUtils.format(clientConnector.getLastCommTime()));
 		} else {
 			response.setOnline(false);
 			response.setOnlineStatusDesc("离线");
@@ -465,7 +465,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 			}
 		}
 
-		if (null == response.getLastCommTime()) {
+		if (null != p.getLastCommTime()) {
 			response.setLastCommTime(DateUtils.format(p.getLastCommTime()));
 		}
 
