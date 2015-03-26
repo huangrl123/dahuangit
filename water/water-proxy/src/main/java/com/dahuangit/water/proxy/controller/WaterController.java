@@ -70,17 +70,6 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(ModelMap modelMap) {
-		return "login";
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(ModelMap modelMap, LoginRequest request) {
 		return "functionList";
 	}
@@ -93,7 +82,7 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/submitLogin", method = RequestMethod.POST)
 	@ResponseBody
-	public Response submitLogin(ModelMap modelMap, HttpServletRequest httpServletRequest, LoginRequest request) {
+	public String submitLogin(ModelMap modelMap, HttpServletRequest httpServletRequest, LoginRequest request) {
 		LoginResponse response = new LoginResponse();
 
 		try {
@@ -106,7 +95,7 @@ public class WaterController extends BaseController {
 			e.printStackTrace();
 		}
 
-		return response;
+		return responseToXml(response);
 	}
 
 	/**
@@ -524,7 +513,7 @@ public class WaterController extends BaseController {
 		try {
 			String systemId = httpServletRequest.getSession().getAttribute("systemId").toString();
 			request.setSystemId(systemId);
-			
+
 			Response r = waterService.yongshui(request);
 
 			if (r.getSuccess()) {

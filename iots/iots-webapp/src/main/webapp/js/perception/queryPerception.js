@@ -31,7 +31,7 @@ $(function() {
 									width : 80,
 									align : 'center',
 									formatter : function(value, row) {
-										return '<a href="#" onclick="toPerceptionStatusPage(' + value + ')">查看详情</a>';
+										return '<a href="#" onclick="toPerceptionStatusPage(' + value + ')">状态查看</a>';
 									}
 								}]],
 						onClickRow : function(rowIndex, row) {

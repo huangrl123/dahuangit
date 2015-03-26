@@ -75,11 +75,11 @@
 													<tbody cellspacing="0">
 														<tr bgcolor=#ffffff>
 															<td class="color0366CB" width=100 align="right" height="23">${warningParamInfo.paramDesc }：</td>
-															<td id="${warningParamInfo.paramId }" align="left" width=200>${warningParamInfo.paramValueDesc }</td>
+															<td align="left" width=200><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="" style="color: blue; text-decoration: underline;">查看历史</a></td>
 												</c:when>
 												<c:otherwise>
 													<td class="color0366CB" width=100 height="23" align="right">${warningParamInfo.paramDesc }：</td>
-													<td id="${warningParamInfo.paramId }" align="left">${warningParamInfo.paramValueDesc }</td>
+													<td align="left"><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="" style="color: blue; text-decoration: underline;">查看历史</a></td>
 													</tr>
 													</tbody>
 												</c:otherwise>
@@ -140,6 +140,10 @@
 
 						<tr>
 							<td height="23" id="no6" name="no6" style="text-align: center; padding: 5px 0px 5px 0px;"><input id="backBtn" type="button" class="inp_L1" value="返回" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" />&nbsp;
+
+
+
+
 							
 						</tr>
 					</table>
