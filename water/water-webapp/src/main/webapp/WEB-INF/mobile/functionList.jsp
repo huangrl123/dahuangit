@@ -8,27 +8,32 @@
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
 #headDiv {
-	height: 60px;
+	height: 69px;
 	background-color: #2C3640;
 }
 
 #shuibiaoDiv {
-	height: 240px;
+	height: 130px;
 	background-image: url("../../images/shuibiao.png");
+}
+
+.gongneng {
+	margin: 10px;
+	height: 109px;
 }
 </style>
 </head>
 <body style="margin: 0px;">
 	<div id="headDiv"></div>
 	<div id="shuibiaoDiv"></div>
-	<div>
-		<span></span> <span></span>
+	<div class="gongneng">
+		<img alt="" src="../../images/shouzhi.png"> <img alt="" src="../../images/yujing.png">
 	</div>
-	<div>
-		<span></span> <span></span>
+	<div class="gongneng">
+		<img alt="" src="../../images/sunyi.png"> <img alt="" src="../../images/yongshui.png">
 	</div>
-	<div>
-		<span></span>
+	<div class="gongneng">
+		<img alt="" src="../../images/wajue.png">
 	</div>
 </body>
 </html>
