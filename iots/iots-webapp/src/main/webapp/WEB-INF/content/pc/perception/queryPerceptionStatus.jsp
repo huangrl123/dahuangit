@@ -75,11 +75,11 @@
 													<tbody cellspacing="0">
 														<tr bgcolor=#ffffff>
 															<td class="color0366CB" width=100 align="right" height="23">${warningParamInfo.paramDesc }：</td>
-															<td align="left" width=200><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="" style="color: blue; text-decoration: underline;">查看历史</a></td>
+															<td align="left" width=200><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}" style="color: blue; text-decoration: underline;">查看历史</a></td>
 												</c:when>
 												<c:otherwise>
 													<td class="color0366CB" width=100 height="23" align="right">${warningParamInfo.paramDesc }：</td>
-													<td align="left"><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="" style="color: blue; text-decoration: underline;">查看历史</a></td>
+													<td align="left"><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}" style="color: blue; text-decoration: underline;">查看历史</a></td>
 													</tr>
 													</tbody>
 												</c:otherwise>

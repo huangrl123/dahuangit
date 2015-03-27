@@ -14,6 +14,10 @@ public class FindPerceptionRuntimeLogByPageReq extends OpRequest {
 
 	private Integer paramId = null;
 
+	private Integer perceptionParamValue = null;
+	private String sartTime = null;
+	private String endTime = null;
+
 	public Integer getStart() {
 		return start;
 	}
@@ -44,6 +48,30 @@ public class FindPerceptionRuntimeLogByPageReq extends OpRequest {
 
 	public void setParamId(Integer paramId) {
 		this.paramId = paramId;
+	}
+
+	public Integer getPerceptionParamValue() {
+		return perceptionParamValue;
+	}
+
+	public void setPerceptionParamValue(Integer perceptionParamValue) {
+		this.perceptionParamValue = perceptionParamValue;
+	}
+
+	public String getSartTime() {
+		return sartTime;
+	}
+
+	public void setSartTime(String sartTime) {
+		this.sartTime = sartTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 }

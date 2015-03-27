@@ -148,15 +148,39 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		List<PerceptionRuntimeLogResponse> rows = new ArrayList<PerceptionRuntimeLogResponse>();
 
-		StringBuffer listHql = new StringBuffer("from PerceptionRuntimeLog p ");
-		StringBuffer countHql = new StringBuffer("select count(*) from PerceptionRuntimeLog p ");
+		StringBuffer listHql = new StringBuffer("from PerceptionRuntimeLog p where 1=1");
+		StringBuffer countHql = new StringBuffer("select count(*) from PerceptionRuntimeLog p where 1=1");
 
+		StringBuffer conditionStr = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
-		StringBuffer conditionStr = new StringBuffer("where p.perceptionId=? ");
-		values.add(req.getPerceptionId());
+
+		if (null != req.getPerceptionId()) {
+			conditionStr.append(" and p.perceptionId=?");
+			values.add(req.getPerceptionId());
+		}
+
 		if (null != req.getParamId()) {
 			conditionStr.append(" and p.perceptionParamId=? ");
 			values.add(req.getParamId());
+		}
+
+		if (null != req.getPerceptionParamValue()) {
+			conditionStr.append(" and p.perceptionParamValueInfo.perceptionParamValue=? ");
+			values.add(req.getPerceptionParamValue());
+		}
+
+		String startTimeStr = req.getSartTime();
+		String endTimeStr = req.getEndTime();
+		if (null != startTimeStr && !"".equals(startTimeStr) && null != endTimeStr && !"".equals(endTimeStr)) {
+			startTimeStr = startTimeStr.trim() + " 00:00:00";
+			Date startTime = DateUtils.parse(startTimeStr);
+			conditionStr.append(" and p.createDateTime>=? ");
+			values.add(startTime);
+			
+			endTimeStr = endTimeStr.trim() + " 23:59:59";
+			Date endTime = DateUtils.parse(endTimeStr);
+			conditionStr.append(" and p.createDateTime<=? ");
+			values.add(endTime);
 		}
 
 		listHql = listHql.append(conditionStr);

@@ -16,6 +16,7 @@ import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
+import com.dahuangit.iots.pcserver.dto.request.QueryPerceptionParamLogReq;
 import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
@@ -166,6 +167,45 @@ public class PerceptionController extends BaseController {
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
 
 		return "/pc/perception/queryPerceptionStatus";
+	}
+
+	/**
+	 * 跳转到设备状态参数日志查询界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/queryPerceptionParamLog", method = RequestMethod.GET)
+	public String queryPerceptionParamLog(ModelMap modelMap, QueryPerceptionParamLogReq req) {
+		modelMap.put("perceptionParamId", req.getPerceptionParamId());
+		modelMap.put("perceptionId", req.getPerceptionId());
+
+		ComboboxData data = new ComboboxData();
+		try {
+			data = this.perceptionService.getPerceptionParamValueListByParam(req.getPerceptionParamId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		modelMap.put("root", data.getRoot());
+
+		return "/pc/perception/queryPerceptionParamLog";
+	}
+
+	/**
+	 * 分页查询感知端设备的某个参数的运行日志
+	 * 
+	 * @param opRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/findPerceptionParamLogByPage", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<PerceptionRuntimeLogResponse> findPerceptionParamLogByPage(
+			FindPerceptionRuntimeLogByPageReq req) {
+
+		PageQueryResult<PerceptionRuntimeLogResponse> result = this.perceptionService
+				.findPerceptionRuntimeLogByPage(req);
+
+		return result;
 	}
 
 	/**

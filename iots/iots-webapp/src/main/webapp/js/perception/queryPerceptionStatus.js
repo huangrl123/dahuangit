@@ -1,4 +1,21 @@
-var query = function() {
+$(function() {
+			parent.window['leftMenu'].updateArea('设备状态查询');
+
+			$('#backBtn').click(function() {
+						parent.window['leftMenu'].updateArea('设备查询');
+						window.location.href = '../perception/queryPerceptionPage';
+					});
+
+			var refreshByInterval = function() {
+				var time = 3 * 1000;
+				window.setTimeout(time);
+				window.setInterval('query()', time);
+			}
+
+			refreshByInterval();
+		});
+
+function query() {
 	$.ajax({
 				url : '../appMgrPerceptionController/appPerceptionFunctionListAjax',
 				type : 'GET',
@@ -33,7 +50,7 @@ var query = function() {
 			});
 }
 
-var remoteCtrl = function(select) {
+function remoteCtrl(select) {
 	var id = select.attr('id');
 	var value = select.val();
 	$.ajax({
@@ -56,17 +73,3 @@ var remoteCtrl = function(select) {
 				}
 			});
 }
-
-$(function() {
-			$('#backBtn').click(function() {
-						history.back();
-					});
-
-			var refreshByInterval = function() {
-				var time = 3 * 1000;
-				window.setTimeout(time);
-				window.setInterval('query()', time);
-			}
-
-			refreshByInterval();
-		});
