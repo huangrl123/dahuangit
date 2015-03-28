@@ -9,7 +9,7 @@ $(function() {
 									hidden : true,
 									title : '日志主键id'
 								}, {
-									field : 'crateDatatime',
+									field : 'createDateTime',
 									title : '时间',
 									width : 100
 								}, {

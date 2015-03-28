@@ -122,6 +122,10 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		for (Perception p : list) {
 			PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
+			ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(p.getPerceptionAddr());
+			if (null != clientConnector) {
+				por.setOnlineStatus(1);
+			}
 			rows.add(por);
 		}
 

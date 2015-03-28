@@ -51,7 +51,7 @@ public class PerceptionClient {
 		// 等待连接创建完成
 		cf.awaitUninterruptibly();
 
-		String machineAddr = "wertyerdsd3";
+		String machineAddr = "DSFE432EWR";
 		IoSession session = cf.getSession();
 
 		byte[] content = new byte[100];

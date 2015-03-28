@@ -27,10 +27,11 @@ public class SavePerceptionStatusInfoTest {
 			sb.append("  </perception-param>");
 			sb.append("</request>");
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("perceptionAddr", "DSFE432EWR");
+			map.put("perceptionAddr", "huizhoueden");
 			map.put("perceptionStatusInfoXml", sb.toString());
 
-			String s = HttpKit.getHttpRequestContent("http://localhost:8080/iots/spring/perception/savePerceptionStatusInfo",
+			 String s =	 HttpKit.getHttpRequestContent("http://120.24.86.107:8080/iots/perception/savePerceptionStatusInfo",
+			//String s = HttpKit.getHttpRequestContent("http://localhost:8080/iots/perception/savePerceptionStatusInfo",
 					map, null);
 
 			log.debug("测试完毕，返回报文:" + XmlUtils.formatXMLStr(s));
