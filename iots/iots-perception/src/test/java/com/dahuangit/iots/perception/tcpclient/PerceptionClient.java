@@ -51,7 +51,7 @@ public class PerceptionClient {
 		// 等待连接创建完成
 		cf.awaitUninterruptibly();
 
-		String machineAddr = "DSFE432EWR";
+		String machineAddr = "huizhoueden";
 		IoSession session = cf.getSession();
 
 		byte[] content = new byte[100];
@@ -74,7 +74,8 @@ public class PerceptionClient {
 		// 设备类型
 		content[29] = (byte) 0xA5;
 		content[30] = 0x01;
-		byte bytePerceptionTypeId = 1;
+//		byte bytePerceptionTypeId = 1;
+		byte bytePerceptionTypeId = 2;
 		content[31] = bytePerceptionTypeId;
 		// 电机地址
 		content[32] = (byte) 0xB1;

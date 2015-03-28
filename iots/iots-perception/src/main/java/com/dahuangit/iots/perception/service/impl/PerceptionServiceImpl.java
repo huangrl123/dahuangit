@@ -125,6 +125,10 @@ public class PerceptionServiceImpl implements PerceptionService {
 			ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(p.getPerceptionAddr());
 			if (null != clientConnector) {
 				por.setOnlineStatus(1);
+				p.setOnlineStatus(1);
+			} else {
+				por.setOnlineStatus(0);
+				p.setOnlineStatus(0);
 			}
 			rows.add(por);
 		}
@@ -180,7 +184,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 			Date startTime = DateUtils.parse(startTimeStr);
 			conditionStr.append(" and p.createDateTime>=? ");
 			values.add(startTime);
-			
+
 			endTimeStr = endTimeStr.trim() + " 23:59:59";
 			Date endTime = DateUtils.parse(endTimeStr);
 			conditionStr.append(" and p.createDateTime<=? ");
@@ -437,9 +441,11 @@ public class PerceptionServiceImpl implements PerceptionService {
 		if (null != clientConnector) {
 			response.setOnline(true);
 			response.setOnlineStatusDesc("在线");
+			p.setOnlineStatus(1);
 		} else {
 			response.setOnline(false);
 			response.setOnlineStatusDesc("离线");
+			p.setOnlineStatus(0);
 		}
 
 		for (PerceptionParam param : list) {
@@ -597,10 +603,14 @@ public class PerceptionServiceImpl implements PerceptionService {
 		Response response = new Response();
 
 		String addr = request.getPerceptionAddr();
+		Perception p = this.perceptionDao.findPerceptionByAddr(addr);
 
 		ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(addr);
 		if (null == clientConnector) {
+			p.setOnlineStatus(0);
 			throw new RuntimeException("当前设备的tcp心跳未连接或失效");
+		} else {
+			p.setOnlineStatus(1);
 		}
 
 		Map<Integer, Integer> currentStatus = clientConnector.getCurrentStatus();
@@ -608,7 +618,6 @@ public class PerceptionServiceImpl implements PerceptionService {
 		ParamInfoList pList = XmlUtils
 				.xml2obj(xmlMarshaller, request.getPerceptionStatusInfoXml(), ParamInfoList.class);
 
-		Perception p = this.perceptionDao.findPerceptionByAddr(addr);
 		Integer perceptionId = p.getPerceptionId();
 
 		for (ParamInfo info : pList.getParamInfos()) {

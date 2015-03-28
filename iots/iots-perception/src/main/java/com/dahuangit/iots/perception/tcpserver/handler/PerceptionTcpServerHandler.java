@@ -47,9 +47,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 	@Override
 	public void exceptionCaught(IoSession session, Throwable throwable) {
-		// log.debug("服务器handler监听到发生异常,可能是因为客户端已经断开");
-
-		// throwable.printStackTrace();
 	}
 
 	/**
@@ -344,46 +341,23 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
-		// int currentSessionCount =
-		// session.getService().getManagedSessionCount();
-		// log.debug("当前被管理的session数量:" + currentSessionCount);
-		//
-		// this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
 		String machineAddr = (String) session.getAttribute("machineAddr");
 		PerceptionProcessorImpl.perceptionCurOptMap.remove(machineAddr);
+		clientConnectionPool.removeClientConnector(machineAddr);
 		// 判断该感知端是否已经在系统中有记录
-		Perception p = perceptionDao.findUniqueBy("perceptionAddr", machineAddr);
-		if(null != p) {
-			p.setOnlineStatus(0);
-		}
 		session.close(true);
 	}
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		// log.debug("session创建-sessionCreated，session.getId()=" +
-		// session.getId());
-		// int currentSessionCount =
-		// session.getService().getManagedSessionCount();
-		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		// log.debug("session空闲-sessionIdle，session.getId()=" +
-		// session.getId());
-		// int currentSessionCount =
-		// session.getService().getManagedSessionCount();
-		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		// log.debug("session打开-sessionOpened，session.getId()=" +
-		// session.getId());
-		// int currentSessionCount =
-		// session.getService().getManagedSessionCount();
-		// log.debug("当前被管理的session数量:" + currentSessionCount);
 	}
 
 }
