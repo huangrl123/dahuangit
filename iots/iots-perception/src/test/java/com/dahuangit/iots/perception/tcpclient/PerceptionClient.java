@@ -74,8 +74,7 @@ public class PerceptionClient {
 		// 设备类型
 		content[29] = (byte) 0xA5;
 		content[30] = 0x01;
-//		byte bytePerceptionTypeId = 1;
-		byte bytePerceptionTypeId = 2;
+		byte bytePerceptionTypeId = 1;
 		content[31] = bytePerceptionTypeId;
 		// 电机地址
 		content[32] = (byte) 0xB1;

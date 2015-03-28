@@ -273,7 +273,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 
 		final IoSession session = clientConnection.getIoSession();
 
-		byte[] content = new byte[69];
+		byte[] content = new byte[75];
 		// 帧序列号
 		content[0] = (byte) 0xA1;
 		content[1] = 0x08;
