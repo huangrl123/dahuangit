@@ -1,1 +1,0 @@
-Ext.define("Ext.app.domain.Global",{extend:"Ext.app.EventDomain",singleton:true,type:"global",listen:function(A,B){A.scope=A.scope||B;Ext.on(A)},match:Ext.returnTrue});

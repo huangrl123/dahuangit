@@ -10,6 +10,8 @@ import org.apache.mina.core.session.IoSession;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dahuangit.iots.perception.dao.PerceptionDao;
+import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
 import com.dahuangit.iots.perception.tcpserver.dto.request.Machine2j2SendStatusRequest;
@@ -38,6 +40,9 @@ public class PerceptionTcpServerHandler implements IoHandler {
 	private PerceptionService perceptionService = null;
 
 	@Autowired
+	private PerceptionDao perceptionDao = null;
+
+	@Autowired
 	private SessionFactory sessionFactory = null;
 
 	@Override
@@ -57,7 +62,7 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 		log.debug("收到客户端发过来的报文,报文内容为:");
 		log.debug(ByteUtils.byteArrToHexString(content));
-		
+
 		if (content.length != 72 && content.length != 69 && content.length != 75 && content.length != 100) {
 			log.debug("发生错误，报文长度不对, 正确的长度应为69或者72或者75或者100, 实际报文长度为:" + content.length);
 			session.close(true);
@@ -344,7 +349,13 @@ public class PerceptionTcpServerHandler implements IoHandler {
 		// log.debug("当前被管理的session数量:" + currentSessionCount);
 		//
 		// this.clientConnectionPool.removeClientConnectorBySessionId(session.getId());
-		PerceptionProcessorImpl.perceptionCurOptMap.remove(session.getAttribute("machineAddr"));
+		String machineAddr = (String) session.getAttribute("machineAddr");
+		PerceptionProcessorImpl.perceptionCurOptMap.remove(machineAddr);
+		// 判断该感知端是否已经在系统中有记录
+		Perception p = perceptionDao.findUniqueBy("perceptionAddr", machineAddr);
+		if(null != p) {
+			p.setOnlineStatus(0);
+		}
 		session.close(true);
 	}
 

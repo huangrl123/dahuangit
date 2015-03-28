@@ -227,6 +227,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 		Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
 		if (null != p) {
 			p.setLastCommTime(new Date());
+			p.setOnlineStatus(1);
 			perceptionDao.update(p);
 		} else {
 			p = new Perception();

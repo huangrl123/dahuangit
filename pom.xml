@@ -12,7 +12,6 @@
 
 	<modules>
 		<module>iots</module>
-		<module>seobi</module>
 		<module>dahuangit-util</module>
 		<module>dahuangit-base</module>
     <module>water</module>

@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.form.field.FileButton",{override:"Ext.form.field.FileButton",createFileInput:function(A){var B=this;B.fileInputEl=B.el.createChild({name:B.inputName,id:!A?B.id+"-fileInputEl":undefined,cls:B.inputCls+" "+(B.getInherited().rtl?Ext.baseCSSPrefix+"rtl":""),tag:"input",type:"file",size:1,role:"button"});B.fileInputEl.on("change",B.fireChange,B)}});

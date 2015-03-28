@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.grid.plugin.RowEditing",{override:"Ext.grid.plugin.RowEditing",initEditorConfig:function(){var A=this.callParent();A.rtl=this.grid.getInherited().rtl;return A}});

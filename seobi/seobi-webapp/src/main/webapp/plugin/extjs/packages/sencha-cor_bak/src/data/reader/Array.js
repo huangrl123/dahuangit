@@ -1,1 +1,0 @@
-Ext.define("Ext.data.reader.Array",{extend:"Ext.data.reader.Json",alternateClassName:"Ext.data.ArrayReader",alias:"reader.array",config:{totalProperty:undefined,successProperty:undefined},createFieldAccessor:function(D){var C=D.mapping,B=D.hasMapping()?C:D.ordinal,A;D.mapping=B;A=this.callParent(arguments);D.mapping=C;return A},getModelData:function(A){return{}}});

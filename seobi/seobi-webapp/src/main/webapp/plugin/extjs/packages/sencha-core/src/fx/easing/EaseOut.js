@@ -1,1 +1,0 @@
-Ext.define("Ext.fx.easing.EaseOut",{extend:"Ext.fx.easing.Linear",alias:"easing.ease-out",config:{exponent:4,duration:1500},getValue:function(){var A=Ext.Date.now()-this.getStartTime(),C=this.getDuration(),F=this.getStartValue(),B=this.getEndValue(),D=this.distance,H=A/C,E=1-H,I=1-Math.pow(E,this.getExponent()),G=F+(I*D);if(A>=C){this.isEnded=true;return B}return G}});

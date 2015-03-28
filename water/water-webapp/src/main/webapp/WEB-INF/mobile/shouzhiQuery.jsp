@@ -17,96 +17,107 @@
 </style>
 <script type="text/javascript">
 	window.onload = function() {
-		try{
+		try {
 			hideLoader();
-		}catch(e){
+		} catch (e) {
 		}
 	}
-	
-	 $(function(){
+
+	$(function() {
 		var startTimeOpt = {
-	        preset : 'date', 
-	        theme : 'default', 
-	        display : 'modal',  
-	        mode : 'mixed', 
-	        dateFormat : 'yy-mm-dd', 
-	        minDate: new Date(2000, 1, 1),
-            //maxDate: new Date(), 
-	        setText : '确定', 
-	        cancelText : '取消',
-	        dateOrder : 'yymmdd', 
-	        dayText : '日', monthText: '月', yearText: '年',
-	        
-	    };
-	    
-	    $("#startTime").mobiscroll(startTimeOpt);
-	    $("#endTime").mobiscroll(startTimeOpt);
+			preset : 'date',
+			theme : 'default',
+			display : 'modal',
+			mode : 'mixed',
+			dateFormat : 'yy-mm-dd',
+			minDate : new Date(2000, 1, 1),
+			//maxDate: new Date(), 
+			setText : '确定',
+			cancelText : '取消',
+			dateOrder : 'yymmdd',
+			dayText : '日',
+			monthText : '月',
+			yearText : '年',
+
+		};
+
+		$("#startTime").mobiscroll(startTimeOpt);
+		$("#endTime").mobiscroll(startTimeOpt);
 	});
-	 
+
 	function submit() {
 		var startTime = $('#startTime').val();
-		if(!startTime) {
+		if (!startTime) {
 			showAlertDialog('开始时间不能空');
 			return;
 		}
 		startTime = startTime + ' 00:00:00';
-		
+
 		var endTime = $('#endTime').val();
-		if(!endTime) {
+		if (!endTime) {
 			showAlertDialog('结束时间不能空');
 			return;
 		}
 		endTime = endTime + ' 00:00:00';
-		
-		if(Date.parse(startTime) > Date.parse(endTime) || Date.parse(startTime) == Date.parse(endTime)) {
+
+		if (Date.parse(startTime) > Date.parse(endTime) || Date.parse(startTime) == Date.parse(endTime)) {
 			showAlertDialog('结束时间必须大于开始时间');
 			return;
 		}
-		
+
 		showLoader('正在查询，请稍后...');
 		$('#shouzhiQueryForm').submit();
 	}
 </script>
+<style type="text/css">
+.headDiv {
+	height: 50px;
+	text-align: center;
+	background-color: #2C3640;
+	font-size: 25;
+	padding-top : 17px;
+	color: #FFFFFF;
+}
+</style>
 </head>
 <body>
 	<div data-role="page" data-ajax="false">
 
-		<div data-role="header" style="background-color: red;">
-			<a href="${ctx }/spring/mobile/functionList" data-icon="home" data-ajax="false">首页</a>
-			<h1>收支情况查询</h1>
+		<div class="headDiv">
+			<span href="${ctx }/spring/mobile/functionList" data-ajax="false" style="float: left; font-size: 20; padding-top: 5px;color: #FFFFFF;">&nbsp;首页</span>收支情况查询
 		</div>
 
 		<div data-role="content">
 
 			<form id="shouzhiQueryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
-                <ul data-role="listview" data-inset="true">
-                    <li data-role="list-divider">查询条件</li>
-                    <li>
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">查询条件</li>
+					<li>
 						<div data-role="fieldcontain">
 							<label for="name">开始时间:</label><input id="startTime" name="beginTime" type="text" data-role="datebox" placeholder="请选择">
 						</div>
-	                </li>
-	                
-	                <li>
+					</li>
+
+					<li>
 						<div data-role="fieldcontain">
 							<label for="name">结束时间:</label> <input id="endTime" name="endTime" type="text" data-role="datebox" placeholder="请选择">
 						</div>
-	                </li>
-	                
-	                <li>
+					</li>
+
+					<li>
 						<div data-role="fieldcontain">
 							<label for="name">项目:</label> <select placeholder="请选择" name="projectId">
-							<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
-								<option value="${project.projectId }">${project.projectName }</option>
-							</c:forEach>
+								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
+									<option value="${project.projectId }">${project.projectName }</option>
+								</c:forEach>
 							</select>
 						</div>
 					</li>
-                </ul>
+				</ul>
 
 			</form>
 
-	        <div data-role="fieldcontain">
+			<div data-role="fieldcontain">
 				<input type="button" value="查询" onclick="submit()">
 			</div>
 		</div>

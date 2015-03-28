@@ -1,1 +1,0 @@
-Ext.define("Ext.util.PaintMonitor",{requires:["Ext.util.paintmonitor.CssAnimation","Ext.util.paintmonitor.OverflowChange"],constructor:function(A){if(Ext.browser.is.Firefox||(Ext.browser.is.WebKit&&Ext.browser.engineVersion.gtEq("536")&&!Ext.os.is.Blackberry)){return new Ext.util.paintmonitor.OverflowChange(A)}else{return new Ext.util.paintmonitor.CssAnimation(A)}}});

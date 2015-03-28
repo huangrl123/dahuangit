@@ -70,7 +70,8 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String login(ModelMap modelMap, LoginRequest request) {
+	public String login(ModelMap modelMap, HttpServletRequest httpServletRequest, String systemId) {
+		httpServletRequest.getSession().setAttribute("systemId", systemId);
 		return "functionList";
 	}
 
@@ -87,8 +88,6 @@ public class WaterController extends BaseController {
 
 		try {
 			response = waterService.login(request);
-
-			httpServletRequest.getSession().setAttribute("systemId", response.getSystemId());
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

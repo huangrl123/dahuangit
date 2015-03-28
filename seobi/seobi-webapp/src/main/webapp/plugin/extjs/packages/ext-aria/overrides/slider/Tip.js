@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.slider.Tip",{override:"Ext.slider.Tip",init:function(C){var B=this,A=C.tipHideTimeout;B.onSlide=Ext.Function.createThrottled(B.onSlide,50,B);B.hide=Ext.Function.createBuffered(B.hide,A,B);B.callParent(arguments);C.on({scope:B,change:B.onSlide,move:B.onSlide,changecomplete:B.hide})}});

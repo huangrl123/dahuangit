@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.chart.axis.Axis",{override:"Ext.chart.axis.Axis",constructor:function(){var B=this,A;B.callParent(arguments);A=B.position;if(B.chart.getInherited().rtl&&(A=="top"||A=="bottom")){B.reverse=true}}});

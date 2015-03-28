@@ -1,1 +1,0 @@
-Ext.define("Ext.aria.panel.Header",{override:"Ext.panel.Header",requires:["Ext.aria.container.Container"],ariaGetFocusItems:function(B){var D=this,G=[],F,A,E,C;F=D.getTools();for(A=0,E=F.length;A<E;A++){C=F[A];if(C.isFocusable()){G.push(C)}}return G}});

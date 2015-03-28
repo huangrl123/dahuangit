@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.layout.container.Column",{override:"Ext.layout.container.Column",getRenderData:function(){var A=this.callParent();if(this.owner.getInherited().rtl){A.innerCtCls=(A.innerCtCls||"")+" "+Ext.baseCSSPrefix+"rtl"}return A}});

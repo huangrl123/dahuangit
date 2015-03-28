@@ -1,1 +1,0 @@
-Ext.define("Ext.rtl.form.field.Checkbox",{override:"Ext.form.field.Checkbox",getSubTplData:function(){var A=this.callParent();if(this.getInherited().rtl){A.childElCls=this._rtlCls}return A}});

@@ -1,1 +1,0 @@
-Ext.define("Ext.data.validator.Range",{extend:"Ext.data.validator.Bound",alias:"data.validator.range",type:"range",config:{minOnlyMessage:"Must be greater than {0}",maxOnlyMessage:"Must be less than {0}",bothMessage:"Must be between {0} and {1}"}});

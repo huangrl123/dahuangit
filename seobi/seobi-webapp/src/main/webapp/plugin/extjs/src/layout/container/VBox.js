@@ -1,1 +1,0 @@
-Ext.define("Ext.layout.container.VBox",{extend:"Ext.layout.container.Box",alias:"layout.vbox",alternateClassName:"Ext.layout.VBoxLayout",type:"vbox",vertical:true});
