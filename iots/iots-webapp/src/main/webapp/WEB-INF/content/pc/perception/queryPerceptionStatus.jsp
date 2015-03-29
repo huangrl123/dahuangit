@@ -53,7 +53,7 @@
 										</tbody>
 										<tbody cellspacing="0">
 											<tr bgcolor=#ffffff>
-												<td class="color0366CB" width=100 align="right" height="23">最后通信时间：</td>
+												<td class="color0366CB" width=100 align="right" height="23">最后动作时间：</td>
 												<td id="lastCommTime" align="left" width=200>${perceptionOpResponse.lastCommTime }</td>
 												<td class="color0366CB" width=100 height="23" align="right"></td>
 												<td align="left"></td>

@@ -231,24 +231,13 @@ public class PerceptionServiceImpl implements PerceptionService {
 	public void saveLog(PerceptionTcpDto perceptionTcpDto) {
 		String addr = perceptionTcpDto.getMachineAddr();
 
-		// 判断该感知端是否已经在系统中有记录
-		Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
-		if (null != p) {
-			p.setLastCommTime(new Date());
-			p.setOnlineStatus(1);
-			perceptionDao.update(p);
-		} else {
-			p = new Perception();
-			p.setCreateDateTime(new Date());
-			p.setInstallSite("测试环境");
-			p.setLastCommTime(new Date());
-			p.setPerceptionAddr(addr);
-			p.setPerceptionName("测试设备");
-			p.setPerceptionTypeId(perceptionTcpDto.getPerceptionType());// 2+2
-			perceptionDao.add(p);
+		if (perceptionTcpDto.getPerceptionType() != 1) {
+			return;
 		}
 
-		if (p.getPerceptionTypeId() != 1) {
+		// 判断该感知端是否已经在系统中有记录
+		Perception p = perceptionDao.findUniqueBy("perceptionAddr", addr);
+		if (null == p) {
 			return;
 		}
 
@@ -604,6 +593,8 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		String addr = request.getPerceptionAddr();
 		Perception p = this.perceptionDao.findPerceptionByAddr(addr);
+
+		p.setLastCommTime(new Date());
 
 		ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(addr);
 		if (null == clientConnector) {
