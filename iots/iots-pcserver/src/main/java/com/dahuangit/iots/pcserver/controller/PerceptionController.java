@@ -86,8 +86,12 @@ public class PerceptionController extends BaseController {
 			if (req.getPerceptionTypeId() == 1) {
 				perceptionService.remoteCtrlMachine2j2(req);
 			} else {
-				this.perceptionService.remoteOperateMachine(req.getPerceptionId(), req.getParamId(),
+				Response r = this.perceptionService.remoteOperateMachine(req.getPerceptionId(), req.getParamId(),
 						req.getParamValue());
+				if(!r.getSuccess()) {
+					response.setSuccess(false);
+					response.setMsg(r.getMsg());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

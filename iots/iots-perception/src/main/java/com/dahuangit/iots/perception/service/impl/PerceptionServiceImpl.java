@@ -657,7 +657,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		if (perceptionTcpResponse.getResult() != 1) {
 			response.setSuccess(false);
-			response.setMsg("设备内部发生错误");
+			response.setMsg("设备远程控制未成功");
 			return response;
 		}
 

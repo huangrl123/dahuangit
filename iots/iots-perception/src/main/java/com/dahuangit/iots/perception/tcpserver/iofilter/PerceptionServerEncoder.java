@@ -19,11 +19,7 @@ public class PerceptionServerEncoder extends ProtocolEncoderAdapter {
 	private static final Logger log = Log4jUtils.getLogger(PerceptionServerEncoder.class);
 
 	public void encode(IoSession session, Object object, ProtocolEncoderOutput output) throws Exception {
-		log.debug("服务器端编码器开始执行...");
-		
 		output.write(stringToIoBuffer((String) object));
-		
-		log.debug("编码完成,服务器端编码器执行完毕!");
 	}
 
 	/**

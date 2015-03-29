@@ -84,7 +84,7 @@
 	<div data-role="page" data-ajax="false">
 
 		<div class="headDiv">
-			<img alt="" src="${ctx }/images/a.jpg">收支情况查询
+			<span href="${ctx }/spring/mobile/functionList" data-ajax="false" style="float: left; font-size: 20; padding-top: 5px;color: #FFFFFF;">&nbsp;首页</span>收支情况查询
 		</div>
 
 		<div data-role="content">

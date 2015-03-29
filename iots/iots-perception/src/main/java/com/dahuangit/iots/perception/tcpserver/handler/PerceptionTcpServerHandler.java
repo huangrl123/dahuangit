@@ -1,5 +1,6 @@
 package com.dahuangit.iots.perception.tcpserver.handler;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -21,6 +22,7 @@ import com.dahuangit.iots.perception.tcpserver.pool.ClientConnectorPool;
 import com.dahuangit.iots.perception.tcpserver.processor.impl.PerceptionProcessorImpl;
 import com.dahuangit.util.IoBufferUtils;
 import com.dahuangit.util.coder.ByteUtils;
+import com.dahuangit.util.date.DateUtils;
 import com.dahuangit.util.log.Log4jUtils;
 
 /**
@@ -62,8 +64,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			session.close(true);
 			throw new RuntimeException("发生错误，报文长度不对");
 		}
-
-		log.debug("收到客户端发过来的报文,报文内容为:");
 
 		byte[] temArr = null;
 
@@ -167,6 +167,10 @@ public class PerceptionTcpServerHandler implements IoHandler {
 
 		switch (busType) {
 		case (byte) 0x01: // 客户端的请求
+			log.debug(DateUtils.format(new Date()));
+			log.debug("收到客户端发过来的请求报文,报文内容为:");
+			log.debug(ByteUtils.byteArrToHexString(content));
+
 			if (operateFlag == 1) {
 				// 如果是2+2设备则表示客户端上传电机状态，其他设备表示心跳
 				try {
@@ -301,6 +305,10 @@ public class PerceptionTcpServerHandler implements IoHandler {
 			break;
 
 		case (byte) 0x02:// 远程控制的响应
+			log.debug(DateUtils.format(new Date()));
+			log.debug("收到客户端发过来的响应报文,报文内容为:");
+			log.debug(ByteUtils.byteArrToHexString(content));
+
 			ServerCtrlMachineResponse response = new ServerCtrlMachineResponse();
 
 			log.debug("帧序号seq=" + seq);

@@ -21,13 +21,9 @@ public class PerceptionServerDecoder extends CumulativeProtocolDecoder {
 
 	/** 累积解码器 返回true表示接收包完毕，返回false mina会自动累数据 */
 	protected boolean doDecode(IoSession session, IoBuffer buffer, ProtocolDecoderOutput out) throws Exception {
-		log.debug("服务器端解码器开始执行...");
-		
 		byte[] content = IoBufferUtils.ioBufferToByte(buffer);
 
 		out.write(content);
-		
-		log.debug("编码验证正确,服务器端解码器解码完毕!");
 		
 		return true;
 	}

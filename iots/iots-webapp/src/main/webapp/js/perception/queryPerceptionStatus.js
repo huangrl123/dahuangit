@@ -51,6 +51,12 @@ function query() {
 }
 
 function remoteCtrl(select) {
+	var progress = $.messager.progress({
+				title : '提示',
+				text : '',
+				msg : '正在请求,请稍后...'
+			});
+
 	var id = select.attr('id');
 	var value = select.val();
 	$.ajax({
@@ -65,11 +71,17 @@ function remoteCtrl(select) {
 				},
 				cache : false,
 				success : function(result) {
+					$.messager.progress('close');
+
 					if (result.success == false) {
 						alert(result.msg);
+					} else {
+						alert('远程控制成功');
 					}
 				},
 				error : function(result) {
+					$.messager.progress('close');
+					alert(result.msg);
 				}
 			});
 }
