@@ -3,15 +3,15 @@ package com.dahuangit.water.proxy.dto.response;
 import com.dahuangit.base.dto.Response;
 
 public class SunyiAjaxDataResponse extends Response {
-	private ChartInfo semesterMonthChartInfo = null;
+	private ChartInfoZhutu semesterMonthChartInfo = null;
 
 	private ChartInfo recentYearSemesterMonthChartInfo = null;
 
-	public ChartInfo getSemesterMonthChartInfo() {
+	public ChartInfoZhutu getSemesterMonthChartInfo() {
 		return semesterMonthChartInfo;
 	}
 
-	public void setSemesterMonthChartInfo(ChartInfo semesterMonthChartInfo) {
+	public void setSemesterMonthChartInfo(ChartInfoZhutu semesterMonthChartInfo) {
 		this.semesterMonthChartInfo = semesterMonthChartInfo;
 	}
 

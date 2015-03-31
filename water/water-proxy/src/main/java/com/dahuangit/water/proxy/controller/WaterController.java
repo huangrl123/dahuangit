@@ -27,6 +27,8 @@ import com.dahuangit.water.proxy.dto.request.YongshuiRecordRequest;
 import com.dahuangit.water.proxy.dto.request.YongshuiRequest;
 import com.dahuangit.water.proxy.dto.request.YujingRequest;
 import com.dahuangit.water.proxy.dto.response.ChartInfo;
+import com.dahuangit.water.proxy.dto.response.ChartInfoZhutu;
+import com.dahuangit.water.proxy.dto.response.DataItem;
 import com.dahuangit.water.proxy.dto.response.GetLdListResponse;
 import com.dahuangit.water.proxy.dto.response.GetProjectListResponse;
 import com.dahuangit.water.proxy.dto.response.JiankongResponse;
@@ -403,10 +405,36 @@ public class WaterController extends BaseController {
 		try {
 			SemesterMonthResponse semesterMonthResponse = this.waterService.getSemesterMonth(systemId, projectId);
 
-			ChartInfo semesterMonthChartInfo = new ChartInfo();
-			for (SemesterMonthInfo semesterMonthInfo : semesterMonthResponse.getSemesterMonthInfos()) {
+			ChartInfoZhutu semesterMonthChartInfo = new ChartInfoZhutu();
+			for (int i = 0; i < semesterMonthResponse.getSemesterMonthInfos().size(); i++) {
+				SemesterMonthInfo semesterMonthInfo = semesterMonthResponse.getSemesterMonthInfos().get(i);
 				semesterMonthChartInfo.getCategories().add(semesterMonthInfo.getMonth());
-				semesterMonthChartInfo.getData().add(semesterMonthInfo.getSumSy());
+				DataItem dataItem = new DataItem();
+				Float y = semesterMonthInfo.getSumSy();
+				dataItem.setY(y);
+				
+				switch (i) {
+				case 0:
+					dataItem.setColor("#57B5E1");
+					break;
+				case 1:
+					dataItem.setColor("#E14688");
+					break;
+				case 2:
+					dataItem.setColor("#4CA807");
+					break;
+				case 3:
+					dataItem.setColor("#ED5459");
+					break;
+				case 4:
+					dataItem.setColor("#29B4AD");
+					break;
+				case 5:
+					dataItem.setColor("#F27243");
+					break;
+				}
+				
+				semesterMonthChartInfo.getData().add(dataItem);
 			}
 			response.setSemesterMonthChartInfo(semesterMonthChartInfo);
 
@@ -416,7 +444,12 @@ public class WaterController extends BaseController {
 			ChartInfo recentYearSemesterMonthChartInfo = new ChartInfo();
 			for (RecentYearSemesterMonthInfo info : recentYearSemesterMonthResponse.getRecentYearSemesterMonthInfos()) {
 				recentYearSemesterMonthChartInfo.getCategories().add(info.getMonth());
-				recentYearSemesterMonthChartInfo.getData().add(info.getSumSy());
+				
+				DataItem dataItem = new DataItem();
+				Float y  = info.getSumSy();
+				dataItem.setY(y);
+				
+				recentYearSemesterMonthChartInfo.getData().add(dataItem);
 			}
 			response.setRecentYearSemesterMonthChartInfo(recentYearSemesterMonthChartInfo);
 			modelMap.put("systemId", systemId);

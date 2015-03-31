@@ -37,7 +37,7 @@ function loadChart(result) {
 	//学期每月收入
 	$('#semesterMonthInfos').highcharts({
 		title : {
-			text : '学期每月收入',
+			text : '${projectName}',
 			style : {
 				color : '#3c3837',
 				fontSize: 16,
@@ -49,6 +49,10 @@ function loadChart(result) {
 			type : 'column'
 		},
 
+		legend : {
+			enabled : false
+		},
+		
 		xAxis : {
 			categories : result.semesterMonthChartInfo.categories
 		},
@@ -66,7 +70,6 @@ function loadChart(result) {
 
 		series : [ {
 			name : '${projectName}',
-			color: '#e74388',
 			data : result.semesterMonthChartInfo.data
 		} ]
 	});
@@ -74,7 +77,7 @@ function loadChart(result) {
 	//近三年收入
 	$('#recentYearSemesterMonthInfos').highcharts({
 		title : {
-			text : '近三年收入',
+			text : '${projectName}',
 			style : {
 				color : '#3c3837',
 				fontSize: 16,
@@ -83,6 +86,10 @@ function loadChart(result) {
 			x : -20
 		},
 
+		legend : {
+			enabled : false
+		},
+		
 		xAxis : {
 			labels : {
 				rotation : -45,
@@ -108,7 +115,7 @@ function loadChart(result) {
 
 		series : [ {
 			name : '${projectName}',
-			color: '#e95b69',
+			color : '#e95b69',
 			data : result.recentYearSemesterMonthChartInfo.data
 		} ]
 	});

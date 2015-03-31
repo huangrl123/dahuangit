@@ -3,7 +3,7 @@ package com.dahuangit.water.proxy.dto.response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChartInfo {
+public class ChartInfoZhutu {
 
 	private List<String> categories = new ArrayList<String>();
 
