@@ -604,41 +604,43 @@ public class PerceptionServiceImpl implements PerceptionService {
 			p.setOnlineStatus(1);
 		}
 
-		Map<Integer, Integer> currentStatus = clientConnector.getCurrentStatus();
-
 		ParamInfoList pList = XmlUtils
 				.xml2obj(xmlMarshaller, request.getPerceptionStatusInfoXml(), ParamInfoList.class);
 
 		Integer perceptionId = p.getPerceptionId();
 
 		for (ParamInfo info : pList.getParamInfos()) {
-			// 判断当前状态和数据库中上次当前状态的值是否一致. 如果是一致,则跳过; 如果不一致，则保存数据库
-			Integer paramId = info.getParamId();
-			Integer paramValue = info.getParamValue();
-
-			PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(perceptionId,
-					paramId);
-
-			if (null != log && log.getPerceptionParamValueInfo().getPerceptionParamValue() == paramValue) {
-				continue;
-			} else {
-				log = new PerceptionRuntimeLog();
-				log.setCreateDateTime(new Date());
-				log.setPerceptionId(perceptionId);
-				log.setPerceptionParamId(paramId);
-
-				Integer valueId = this.perceptionParamValueDao.getPerceptionParamValueInfoId(paramId, paramValue);
-				log.setPerceptionParamValueInfoId(valueId);
-
-				log.setPerceptionTypeId(p.getPerceptionTypeId());
-				this.perceptionRuntimeLogDao.add(log);
-
-				// 更新内存中的当状态
-				currentStatus.put(paramId, paramValue);
-			}
+			savePerceptionParamStatus(perceptionId, info.getParamId(), info.getParamValue());
 		}
 
 		return response;
+	}
+
+	private void savePerceptionParamStatus(Integer perceptionId, Integer paramId, Integer paramValue) {
+		// 判断当前状态和数据库中上次当前状态的值是否一致. 如果是一致,则跳过; 如果不一致，则保存数据库
+		PerceptionRuntimeLog log = this.perceptionRuntimeLogDao.getLastPerceptionRuntimeLogByParam(perceptionId,
+				paramId);
+
+		if (null != log && log.getPerceptionParamValueInfo().getPerceptionParamValue() == paramValue) {
+			return;
+		} else {
+			Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+			log = new PerceptionRuntimeLog();
+			log.setCreateDateTime(new Date());
+			log.setPerceptionId(perceptionId);
+			log.setPerceptionParamId(paramId);
+
+			Integer valueId = this.perceptionParamValueDao.getPerceptionParamValueInfoId(paramId, paramValue);
+			log.setPerceptionParamValueInfoId(valueId);
+
+			log.setPerceptionTypeId(p.getPerceptionTypeId());
+			this.perceptionRuntimeLogDao.add(log);
+
+			ClientConnector clientConnector = this.clientConnectionPool.getClientConnector(p.getPerceptionAddr());
+			Map<Integer, Integer> currentStatus = clientConnector.getCurrentStatus();
+			// 更新内存中的当状态
+			currentStatus.put(paramId, paramValue);
+		}
 	}
 
 	/**
@@ -652,6 +654,35 @@ public class PerceptionServiceImpl implements PerceptionService {
 	public Response remoteOperateMachine(Integer perceptionId, Integer paramId, Integer paramValue) {
 		Response response = new Response();
 
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+
+		// 如果是2+2
+		if (p.getPerceptionTypeId() == 1) {
+			RemoteCtrlPerceptionRequest req = new RemoteCtrlPerceptionRequest();
+			req.setPerceptionTypeId(1);
+			req.setPerceptionId(perceptionId);
+			req.setParamId(paramId);
+			req.setParamValue(paramValue);
+
+			// 如果不成功，还会发送三次
+			for (int i = 0; i < 4; i++) {
+				try {
+					this.remoteCtrlMachine2j2(req);
+					savePerceptionParamStatus(perceptionId, paramId, paramValue);
+					return response;
+				} catch (Exception e) {
+					e.printStackTrace();
+					response.setSuccess(false);
+					response.setMsg(e.getMessage());
+					if (i == 3) {
+						return response;
+					}
+				}
+
+			}
+
+		}
+
 		PerceptionTcpResponse perceptionTcpResponse = this.perceptionProcessor.remoteOperateMachine(perceptionId,
 				paramId, paramValue);
 
@@ -659,10 +690,10 @@ public class PerceptionServiceImpl implements PerceptionService {
 			response.setSuccess(false);
 			response.setMsg("设备远程控制未成功");
 			return response;
+		} else {
+			savePerceptionParamStatus(perceptionId, paramId, paramValue);
 		}
 
-		PerceptionRuntimeLog log = this.createPerceptionRuntimeLog(perceptionId, paramId, paramValue, null);
-		this.perceptionRuntimeLogDao.add(log);
 		return response;
 	}
 }

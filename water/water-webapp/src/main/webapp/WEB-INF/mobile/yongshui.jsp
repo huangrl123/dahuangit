@@ -88,7 +88,7 @@
 	//刷新用水记录
 	function refreshYongshuiRecord(yongshuiRecords) {
 		var contentDiv = $('div[data-role="content"]');
-		var html = '<li data-role="list-divider">楼栋用水历史信息</li>';
+		var html = '<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">楼栋用水历史信息</li>';
 		
 		for (var i = 0; i < yongshuiRecords.length; i++) {
 			var record = yongshuiRecords[i];
@@ -98,7 +98,7 @@
 			html = html + '</li>';
 		}
 		
-		html = '<ul id="yongshuiRecordUl" data-role="listview" data-inset="true">' + html + '</ul>';
+		html = '<ul id="yongshuiRecordUl" data-role="listview">' + html + '</ul>';
 		
 		removeYongshuiRecordUl();
 		
@@ -161,31 +161,40 @@
 	.listItemLeft {
 		float: left; 
 		margin-right: 10; 
-		color: #866E54
+		font-weight:bolder;
+		color: #3c3837;
 	}
 	.listItemRight {
 		float: right; 
-		color: #469E6F;
+		color: #1a875e;
+		font-weight:bolder;
 	}
+	.headDiv {
+		height: 40px;
+		text-align: center;
+		background-color: #2C3640;
+		font-size: 25;
+		padding-top: 10px;
+		color: #FFFFFF;
+   }
 </style>
 </head>
 <body>
 	<div data-role="page">
 
-		<div data-role="header" data-position="fixed">
-			<a href="${ctx}/spring/mobile/functionList" data-icon="home" data-ajax="false" onclick="showLoader()">首页</a>
-			<h1>楼栋水电成本登记</h1>
+	    <div class="headDiv" data-position="fixed">
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>楼栋水电成本登记<span style="float: right; padding-right:10px;padding-top:5px;"></span>
 		</div>
-
+		
 		<div data-role="content">
 
 			<form id="yongshuiForm" action="${ctx }/spring/mobile/submitYongshui" method="post" data-ajax="false">
-
-   				<ul id="yongshuiListview" data-role="listview" data-inset="true">
-	                <li data-role="list-divider">用水信息</li>
+                <input type="hidden" name="systemId" value="${systemId }">
+   				<ul id="yongshuiListview" data-role="listview">
+	                <li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 16;background-color: e8ebe8;">水电成本信息</li>
 	                <li>
 						<div data-role="fieldcontain">
-							<label for="name">项目:</label> 
+							<label for="name" style="font-weight: bolder;">项目:</label> 
 							<select id="projectSelect" name="projectId" onchange="projectOnchange($(this).val())">
 								<option value="-1">请选择</option>
 								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
@@ -196,27 +205,30 @@
                     </li>
 	                <li>
 						<div data-role="fieldcontain">
-							<label for="name">楼栋:</label> 
+							<label for="name" style="font-weight: bolder;">楼栋:</label> 
 							<select id="ldSelect" name="ldId" onchange="ldOnchange($(this).val())">
 							</select>
 						</div>
                     </li>
 	                <li>
 						<div data-role="fieldcontain">
-							<label for="name">用水总额:</label> 
-							<input type="number" id="yongshuiSum" name="yongshuiSum">
+							<label for="name" style="font-weight: bolder;">用水总额:</label> 
+							<input type="number" id="yongshuiSum" name="yongshuiSum" style="background-color: #e8e8e8;">
 						</div>
                     </li>
 	                <li>
 						<div data-role="fieldcontain">
-							<label for="name">用电总额:</label> 
-							<input type="number" id="yongdianSum" name="yongdianSum">
+							<label for="name" style="font-weight: bolder;">用电总额:</label> 
+							<input type="number" id="yongdianSum" name="yongdianSum" style="background-color: #e8e8e8;">
 						</div>
+                    </li>
+                    <li style="border-bottom: 0px;">
+	                    <div style="text-align: center;" data-role="fieldcontain">
+	                    	<img alt="" src="${ctx }/images/submit.png" height="50" width="300" onclick="submit()">
+	                    </div>
                     </li>
 				</ul>
 			</form>
-			
-			<input type="button" value="提交" onclick="submit()"/>
 		</div>
 
 	</div>

@@ -13,6 +13,9 @@
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 <script src="${ctx }/plugin/mobiscroll/js/mobiscroll.custom-2.5.0.min.js"></script>
 <script src="${ctx }/plugin/My97DatePicker/WdatePicker.js"></script>
+
+<script src="${ctx }/js/util.js"></script>
+
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -43,6 +46,9 @@
 
 		$("#startTime").mobiscroll(startTimeOpt);
 		$("#endTime").mobiscroll(startTimeOpt);
+		
+		$('#startTime').val(getLastMonthYestdy());
+		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
 	});
 
 	function submit() {
@@ -66,60 +72,64 @@
 		}
 
 		showLoader('正在查询，请稍后...');
-		$('#shouzhiQueryForm').submit();
+		$('#queryForm').submit();
 	}
 </script>
 <style type="text/css">
 .headDiv {
-	height: 50px;
+	height: 40px;
 	text-align: center;
 	background-color: #2C3640;
 	font-size: 25;
-	padding-top : 17px;
+	padding-top: 10px;
 	color: #FFFFFF;
 }
 </style>
 </head>
 <body>
-	<div data-role="page" data-ajax="false">
+	<div data-role="page" data-ajax="false" style="background-color: #FFFFFF;">
 
-		<div class="headDiv">
-			<img alt="" src="${ctx }/images/a.jpg">收支情况查询
+		<div class="headDiv" data-position="fixed">
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span><span style="margin-right:35px;">收支情况查询</span>
 		</div>
 
 		<div data-role="content">
 
-			<form id="shouzhiQueryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
-				<ul data-role="listview" data-inset="true">
-					<li data-role="list-divider">查询条件</li>
+			<form id="queryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
+				<input type="hidden" name="systemId" value="${systemId }">
+				<ul data-role="listview">
+					<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">查询条件</li>
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name">开始时间:</label><input id="startTime" name="beginTime" type="text" data-role="datebox" placeholder="请选择">
+							<label for="name" style="font-weight: bolder;">开始时间:</label><input id="startTime" name="beginTime" type="text" data-role="datebox" placeholder="请选择" style="background-color: #e8e8e8;">
 						</div>
 					</li>
 
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name">结束时间:</label> <input id="endTime" name="endTime" type="text" data-role="datebox" placeholder="请选择">
+							<label for="name" style="font-weight: bolder;">结束时间:</label> <input id="endTime" name="endTime" type="text" data-role="datebox" placeholder="请选择" style="background-color: #e8e8e8;">
 						</div>
 					</li>
 
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name">项目:</label> <select placeholder="请选择" name="projectId">
+							<label for="name" style="font-weight: bolder;">项目:</label> <select placeholder="请选择" name="projectId">
 								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
 									<option value="${project.projectId }">${project.projectName }</option>
 								</c:forEach>
 							</select>
 						</div>
 					</li>
+					<li style="border-bottom: 0px;">
+						<div style="text-align: center;" data-role="fieldcontain">
+				    		<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+						</div>
+					</li>
 				</ul>
 
 			</form>
 
-			<div data-role="fieldcontain">
-				<input type="button" value="查询" onclick="submit()">
-			</div>
+			
 		</div>
 
 	</div>

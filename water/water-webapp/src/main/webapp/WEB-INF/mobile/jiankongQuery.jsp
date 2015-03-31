@@ -78,6 +78,7 @@
 		<div data-role="content">
 
 			<form id="shouzhiQueryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
+                <input type="hidden" name="systemId" value="${systemId }">
                 <ul data-role="listview" data-inset="true">
                     <li data-role="list-divider">查询条件</li>
                     <li>

@@ -37,7 +37,12 @@ function loadChart(result) {
 	//学期每月收入
 	$('#semesterMonthInfos').highcharts({
 		title : {
-			text : '学期每月收入'
+			text : '学期每月收入',
+			style : {
+				color : '#3c3837',
+				fontSize: 16,
+				fontWeight: 'bolder'
+			}
 		},
 
 		chart : {
@@ -50,14 +55,19 @@ function loadChart(result) {
 		yAxis : {
 			min : 0,
 			title : {
-				text : '单位(元)'
+				text : '单位(元)',
+				style : {
+					color : '#7a7b7f',
+					fontSize: 10,
+					fontWeight: 'bolder'
+				}
 			}
 		},
 
 		series : [ {
 			name : '${projectName}',
+			color: '#e74388',
 			data : result.semesterMonthChartInfo.data
-
 		} ]
 	});
 
@@ -65,6 +75,11 @@ function loadChart(result) {
 	$('#recentYearSemesterMonthInfos').highcharts({
 		title : {
 			text : '近三年收入',
+			style : {
+				color : '#3c3837',
+				fontSize: 16,
+				fontWeight: 'bolder'
+			},
 			x : -20
 		},
 
@@ -77,7 +92,12 @@ function loadChart(result) {
 		},
 		yAxis : {
 			title : {
-				text : '单位(元)'
+				text : '单位(元)',
+				style : {
+					color : '#7a7b7f',
+					fontSize: 10,
+					fontWeight: 'bolder'
+				}
 			},
 			plotLines : [ {
 				value : 0,
@@ -88,6 +108,7 @@ function loadChart(result) {
 
 		series : [ {
 			name : '${projectName}',
+			color: '#e95b69',
 			data : result.recentYearSemesterMonthChartInfo.data
 		} ]
 	});
@@ -97,11 +118,18 @@ function loadChart(result) {
 .list-item-left {
 	float: left; 
 	margin-right: 10; 
-	color: #866E54;
+	font-weight:bolder;
+	color: #000000;
 }
 
 .list-item-right {
 	float: right; 
+	font-weight:bolder;
+	color: #7a7b7f;
+}
+.list-item-right-total {
+	float: right; 
+	font-weight:bolder;
 	color: #469E6F;
 }
 
@@ -114,21 +142,34 @@ function loadChart(result) {
 	width: 90%; 
 	height: 400px;
 }
+.list-divider{
+	font-weight: bolder;
+	color: #7a7b7f;
+	font-size: 16;
+	background-color: e8ebe8;
+}
+
+	.headDiv {
+		height: 40px;
+		text-align: center;
+		background-color: #2C3640;
+		font-size: 25;
+		padding-top: 10px;
+		color: #FFFFFF;
+    }
 </style>
 </head>
 <body>
 	<div data-role="page">
 
-		<div data-role="header" data-position="fixed">
-			<a href="${ctx }/spring/mobile/functionList" data-icon="home" data-ajax="false" onclick="showLoader()">首页</a>
-			<h1>损益统计表</h1>
-			<a href="${ctx }/spring/mobile/sunyiQuery" data-icon="search" data-ajax="false" onclick="showLoader()">查询</a>
+	    <div class="headDiv" data-position="fixed">
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>损益统计表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/sunyiQuery?sytemId=${systemId }'">&nbsp;</span>
 		</div>
-
+		
 		<div data-role="content">
 
 			<ul data-role="listview">
-				<li data-role="list-divider">学期概况</li>
+				<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 16;background-color: e8ebe8;">学期概况</li>
 				<li>
 					<span class="list-item-left">收支合计</span>
 					<span class="list-item-right">￥${semesterSumInfo.sumInout }</span>
@@ -147,15 +188,15 @@ function loadChart(result) {
 				</li>
 				<li>
 					<span class="list-item-left">项目收益</span>
-					<span class="list-item-right">￥${semesterSumInfo.sumSy }</span>
+					<span class="list-item-right-total">￥${semesterSumInfo.sumSy }</span>
 				</li>
 				
-				<li data-role="list-divider">学期月份收益</li>
+				<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 16;background-color: e8ebe8;">学期月份收益</li>
 				<li>
 					<span id="semesterMonthInfos"></span>
 				</li>
 
-				<li data-role="list-divider">最近三年收益</li>
+				<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 16;background-color: e8ebe8;">最近三年收益</li>
 				<li>
 					<span id="recentYearSemesterMonthInfos"></span>
 				</li>

@@ -180,6 +180,12 @@ public class PerceptionTcpServerHandler implements IoHandler {
 					// 2+2的设备
 					if (perceptionType == 1) {
 
+						responseContent = new byte[72];
+						System.arraycopy(content, 0, responseContent, 0, 69);
+						responseContent[69] = (byte) 0xB5;
+						responseContent[70] = 0x01;
+						responseContent[71] = 0x01;// 结果为成功
+						
 						// 长度等于69为2+2心跳操作
 						if (content.length != 69) {
 							if (content.length != 100) {
@@ -235,12 +241,6 @@ public class PerceptionTcpServerHandler implements IoHandler {
 							request.setI2cStatus(i2cStatus);
 							request.setHex(hex);
 							perceptionService.saveLog(request);
-
-							responseContent = new byte[72];
-							System.arraycopy(content, 0, responseContent, 0, 69);
-							responseContent[69] = (byte) 0xB5;
-							responseContent[70] = 0x01;
-							responseContent[71] = 0x01;// 结果为成功
 						}
 					}
 

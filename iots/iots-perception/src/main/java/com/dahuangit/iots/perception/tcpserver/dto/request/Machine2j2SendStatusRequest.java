@@ -2,19 +2,19 @@ package com.dahuangit.iots.perception.tcpserver.dto.request;
 
 public class Machine2j2SendStatusRequest extends PerceptionTcpRequest {
 	/** 电机1旋转状态 0xB3 BYTE */
-	private byte machine1RotateStatus = (byte) 0x00;
+	private byte machine1RotateStatus = (byte) 0x03;
 	/** 电机2旋转状态 0xB3 BYTE */
-	private byte machine2RotateStatus = (byte) 0x00;
+	private byte machine2RotateStatus = (byte) 0x03;
 	/** 电机1开关状态 0xB4 BYTE */
-	private byte machine1SwitchStatus = (byte) 0x00;
+	private byte machine1SwitchStatus = (byte) 0x02;
 	/** 电机2开关状态 0xB4 BYTE */
-	private byte machine2SwitchStatus = (byte) 0x00;
+	private byte machine2SwitchStatus = (byte) 0x02;
 	/** i2c状态 */
 	private byte[] i2cStatus = new byte[2];
 	/** 红外状态 */
-	private byte infraredStatus = 0;
+	private byte infraredStatus = 2;
 	/** 按键状态 */
-	private byte pressKeyStatus = 0;
+	private byte pressKeyStatus = 2;
 
 	public byte getMachine1RotateStatus() {
 		return machine1RotateStatus;

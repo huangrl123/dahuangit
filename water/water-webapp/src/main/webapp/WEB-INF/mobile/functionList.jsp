@@ -22,13 +22,13 @@
 </style>
 <script type="text/javascript">
 	function gotoFunction(url) {
-		window.location.href = url;
+		window.location.href = url + '?systemId=${systemId}';
 	}
 </script>
 </head>
 <body style="margin: 0px;">
 	<div id="headDiv">
-		首页<span style="padding-right: 20px; float: right; font-size: 20; padding-top: 5px;" onclick="window.app.exitSys()">退出</span>
+		<span style="padding-left:50px;">首页</span><span style="padding-right: 20px;float: right; font-size: 20; padding-top: 5px;" onclick="window.app.exitSys()">退出</span>
 	</div>
 	<div id="shuibiaoDiv">
 		<img alt="" src="../../images/shuibiao.png" height="120px" width="100%">
@@ -36,7 +36,7 @@
 	<table width="100%" border="0" cellspacing="10" cellpadding="0" bordercolor="#FFFFFF">
 		<tr>
 			<td><img alt="" src="../../images/shouzhi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/shouzhiQuery')"></td>
-			<td><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujing')"></td>
+			<td><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery')"></td>
 		</tr>
 		<tr>
 			<td><img alt="" src="../../images/sunyi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/sunyiQuery')"></td>

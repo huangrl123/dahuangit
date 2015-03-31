@@ -231,6 +231,7 @@ public class PerceptionProcessorImpl implements PerceptionProcessor {
 				response.setResult((byte) 0x02);
 				session.removeAttribute(seq);// 不会清掉其他session的值
 				perceptionCurOptMap.remove(machineAddr);
+
 				return response;
 			}
 

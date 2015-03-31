@@ -22,37 +22,46 @@
 	.listItemLeft {
 		float: left; 
 		margin-right: 10; 
-		color: #866E54
+		font-weight:bolder;
+		color: #000000;
 	}
 	.listItemCenter {
 		float: left; 
 		margin-left: 10; 
-		color: #CACACA
+		font-weight:bolder;
+		color: #7a7b7f;
 	}
 	.listItemRight {
 		float: right; 
+		font-weight:bolder;
 		color: #469E6F;
 	}
 	.pageDiv {
 		text-align: center;
 	}
+	.headDiv {
+		height: 40px;
+		text-align: center;
+		background-color: #2C3640;
+		font-size: 25;
+		padding-top: 10px;
+		color: #FFFFFF;
+   }
 </style>
 </head>
 <body>
 
 	<div data-role="page">
 
-		<div data-role="header" data-position="fixed">
-			<a href="${ctx}/spring/mobile/functionList" data-icon="home" data-ajax="false" onclick="showLoader()">首页</a>
-			<h1>设备预警表</h1>
-			<a href="${ctx }/spring/mobile/yujingQuery" data-icon="search" data-ajax="false" onclick="showLoader()">查询</a>
+	    <div class="headDiv" data-position="fixed">
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>设备预警表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/yujingQuery?sytemId=${systemId }'"></span>
 		</div>
-
+		
 		<div data-role="content">
 
 			<ul data-role="listview">
 			    <c:forEach items="${yujingMap }" var="item" varStatus="mapStatus">
-					<li data-role="list-divider">${item.key }</li>
+					<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 16;background-color: e8ebe8;">${item.key }<br><span style="color: #b0b0b0;font-size: 15;">${request.beginTime }至${request.endTime }</span></li>
 			        <c:forEach items="${item.value }" var="yujing">
 						<li>
 							<span class="listItemLeft">${yujing.buildName }</span>
