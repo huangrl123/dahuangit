@@ -156,6 +156,11 @@
 	</class>
 
 	<!-- yongshuiRecord -->
+	<class name="com.dahuangit.water.proxy.dto.response.YongshuiRecord" auto-complete="true">
+	    <field name="consumeWire">
+	        <bind-xml name="consumeWire"/>
+	    </field>
+	</class>
 	<class name="com.dahuangit.water.proxy.dto.response.YongshuiRecordResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
 		<field name="yongshuiRecords" type="com.dahuangit.water.proxy.dto.response.YongshuiRecord" collection="arraylist">

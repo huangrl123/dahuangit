@@ -12,9 +12,12 @@ public class SubmitYongshuiRequest extends Request {
 	/** 用水金额 */
 	private String yongshuiSum = null;
 
-	/**系统id*/
+	/** 用电总额 */
+	private String yongdianSum = null;
+
+	/** 系统id */
 	private String systemId = null;
-	
+
 	public String getSystemId() {
 		return systemId;
 	}
@@ -45,6 +48,14 @@ public class SubmitYongshuiRequest extends Request {
 
 	public void setYongshuiSum(String yongshuiSum) {
 		this.yongshuiSum = yongshuiSum;
+	}
+
+	public String getYongdianSum() {
+		return yongdianSum;
+	}
+
+	public void setYongdianSum(String yongdianSum) {
+		this.yongdianSum = yongdianSum;
 	}
 
 }

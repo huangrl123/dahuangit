@@ -5,21 +5,26 @@
 	<data>
 		<month>2015-01</month>
 		<consumedata>103.2</consumedata>
+		<consumeWire>231</consumeWire>
 	</data>
 	<data>
 		<month>2014-12</month>
 		<consumedata>107</consumedata>
+		<consumeWire>231</consumeWire>
 	</data>
 	<data>
 		<month>2014-11</month>
 		<consumedata>99</consumedata>
+		<consumeWire>231</consumeWire>
 	</data>
 	<data>
 		<month>2014-10</month>
 		<consumedata>117</consumedata>
+		<consumeWire>231</consumeWire>
 	</data>
 	<data>
 		<month>2014-09</month>
 		<consumedata>80</consumedata>
+		<consumeWire>231</consumeWire>
 	</data>
 </response>

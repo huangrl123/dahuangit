@@ -7,6 +7,9 @@ public class YongshuiRecord {
 	/** 消费数据 */
 	private String consumedata = null;
 
+	/** 是用电数据 */
+	private String consumeWire = null;
+
 	public String getMonth() {
 		return month;
 	}
@@ -21,6 +24,14 @@ public class YongshuiRecord {
 
 	public void setConsumedata(String consumedata) {
 		this.consumedata = consumedata;
+	}
+
+	public String getConsumeWire() {
+		return consumeWire;
+	}
+
+	public void setConsumeWire(String consumeWire) {
+		this.consumeWire = consumeWire;
 	}
 
 }

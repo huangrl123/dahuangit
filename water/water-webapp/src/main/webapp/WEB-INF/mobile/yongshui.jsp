@@ -94,7 +94,8 @@
 			var record = yongshuiRecords[i];
 			html = html + '<li>';
 			html = html + '<span class="listItemLeft">' + record.month + '</span>';
-			html = html + '<span class="listItemRight">￥' + record.consumedata + '</span>';
+			html = html + '<span class="listItemCenter"><img src="${ctx}/images/yongshui.png" width="12px" height="12px">￥' + record.consumedata + '</span>';
+			html = html + '<span class="listItemRight"><img src="${ctx}/images/yongdian.png" width="12px" height="12px">￥' + record.consumeWire + '</span>';
 			html = html + '</li>';
 		}
 		
@@ -163,6 +164,11 @@
 		margin-right: 10; 
 		font-weight:bolder;
 		color: #3c3837;
+	}
+	.listItemCenter {
+	    margin-left:40px;
+	    text-align:center;
+		color: #CACACA
 	}
 	.listItemRight {
 		float: right; 
