@@ -94,8 +94,8 @@
 			var record = yongshuiRecords[i];
 			html = html + '<li>';
 			html = html + '<span class="listItemLeft">' + record.month + '</span>';
-			html = html + '<span class="listItemCenter"><img src="${ctx}/images/yongshui.png" width="12px" height="12px">￥' + record.consumedata + '</span>';
-			html = html + '<span class="listItemRight"><img src="${ctx}/images/yongdian.png" width="12px" height="12px">￥' + record.consumeWire + '</span>';
+			html = html + '<span class="listItemCenter"><img src="${ctx}/images/yongshuiSum.png" width="12px" height="12px">￥' + record.consumedata + '</span>';
+			html = html + '<span class="listItemRight"><img src="${ctx}/images/yongdianSum.png" width="12px" height="12px">￥' + record.consumeWire + '</span>';
 			html = html + '</li>';
 		}
 		
