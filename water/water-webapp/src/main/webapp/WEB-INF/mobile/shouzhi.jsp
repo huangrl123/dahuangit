@@ -66,10 +66,10 @@
 							<span class="listItemLeft">${shouzhi.operatorName }</span>
 							<c:choose>
 								<c:when test="${shouzhi.sumMoney<=0 }">
-									<span class="listItemRightWarning">￥${shouzhi.sumMoney }</span>
+									<span class="listItemRightWarning"><font size="2">￥</font>${shouzhi.sumMoney }</span>
 								</c:when>
 								<c:otherwise>
-									<span class="listItemRight">￥${shouzhi.sumMoney }</span>
+									<span class="listItemRight"><font size="2">￥</font>${shouzhi.sumMoney }</span>
 								</c:otherwise>
 							</c:choose>
 						</li>

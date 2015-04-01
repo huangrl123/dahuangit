@@ -415,22 +415,22 @@ public class WaterController extends BaseController {
 				
 				switch (i) {
 				case 0:
-					dataItem.setColor("#57B5E1");
+					dataItem.setColor("#eb7643");
 					break;
 				case 1:
-					dataItem.setColor("#E14688");
+					dataItem.setColor("#e34588");
 					break;
 				case 2:
-					dataItem.setColor("#4CA807");
+					dataItem.setColor("#4da7db");
 					break;
 				case 3:
-					dataItem.setColor("#ED5459");
+					dataItem.setColor("#ee5159");
 					break;
 				case 4:
-					dataItem.setColor("#29B4AD");
+					dataItem.setColor("#29b4aa");
 					break;
 				case 5:
-					dataItem.setColor("#F27243");
+					dataItem.setColor("#ed7541");
 					break;
 				}
 				

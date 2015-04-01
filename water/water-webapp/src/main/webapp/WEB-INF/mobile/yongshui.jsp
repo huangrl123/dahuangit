@@ -88,14 +88,14 @@
 	//刷新用水记录
 	function refreshYongshuiRecord(yongshuiRecords) {
 		var contentDiv = $('div[data-role="content"]');
-		var html = '<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">楼栋用水历史信息</li>';
+		var html = '<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">楼栋水电成本历史信息</li>';
 		
 		for (var i = 0; i < yongshuiRecords.length; i++) {
 			var record = yongshuiRecords[i];
 			html = html + '<li>';
 			html = html + '<span class="listItemLeft">' + record.month + '</span>';
-			html = html + '<span class="listItemCenter"><img src="${ctx}/images/yongshuiSum.png" width="12px" height="12px">￥' + record.consumedata + '</span>';
-			html = html + '<span class="listItemRight"><img src="${ctx}/images/yongdianSum.png" width="12px" height="12px">￥' + record.consumeWire + '</span>';
+			html = html + '<span class="listItemCenter"><img src="${ctx}/images/yongshuiSum.png" width="12px" height="12px"><font size="2">￥</font>' + record.consumedata + '</span>';
+			html = html + '<span class="listItemRight"><img src="${ctx}/images/yongdianSum.png" width="12px" height="12px"><font size="2">￥</font>' + record.consumeWire + '</span>';
 			html = html + '</li>';
 		}
 		

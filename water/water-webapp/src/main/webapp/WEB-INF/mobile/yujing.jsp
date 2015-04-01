@@ -66,7 +66,7 @@
 						<li>
 							<span class="listItemLeft">${yujing.buildName }</span>
 							<span class="listItemCenter">${yujing.roomName }</span>
-							<span class="listItemRight">￥${yujing.sumMoney }</span>
+							<span class="listItemRight"><font size="2">￥</font>${yujing.sumMoney }</span>
 						</li>
 			        </c:forEach>
 			    </c:forEach>
