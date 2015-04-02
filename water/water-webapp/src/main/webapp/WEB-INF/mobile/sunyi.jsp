@@ -58,7 +58,6 @@ function loadChart(result) {
 			categories : result.semesterMonthChartInfo.categories
 		},
 		yAxis : {
-			min : 0,
 			title : {
 				text : '单位(元)',
 				style : {
