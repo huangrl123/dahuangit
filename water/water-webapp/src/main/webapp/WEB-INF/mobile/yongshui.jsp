@@ -32,7 +32,8 @@
 			url : '${ctx}/spring/mobile/getLdList',
 			type : 'POST',
 			data : {
-				projectId : projectId
+				projectId : projectId,
+				systemId : '${systemId}'
 			},
 			dataType : 'JSON',
 			cache : false,
@@ -70,6 +71,7 @@
 			dataType : 'JSON',
 			data : {
 				projectId : $('#projectSelect').val(),
+				systemId : '${systemId}',
 				ldId : ldId
 			},
 			cache : false,

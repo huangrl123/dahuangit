@@ -17,7 +17,8 @@ $(function() {
 		url : '${ctx}/spring/mobile/getSunyiAjaxData',
 		type : 'POST',
 		data : {
-			projectId : '${projectId}'
+			projectId : '${projectId}',
+			systemId : '${systemId }'
 		},
 		dataType : 'JSON',
 		cache : false,
