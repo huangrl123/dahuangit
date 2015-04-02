@@ -53,7 +53,7 @@
 	<div data-role="page">
 
 	    <div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>收支统计表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/shouzhiQuery?sytemId=${systemId }'"></span>
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>收支统计表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/shouzhiQuery?systemId=${systemId }'"></span>
 		</div>
 
 		<div data-role="content">

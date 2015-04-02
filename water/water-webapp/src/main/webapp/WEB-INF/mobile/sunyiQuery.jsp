@@ -48,7 +48,7 @@
 	<div data-role="page" data-ajax="false" style="background-color: #FFFFFF;">
 
 		<div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span><span style="margin-right:35px;">损益情况查询</span>
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span><span style="margin-right:35px;">损益情况查询</span>
 		</div>
 
 		<div data-role="content">

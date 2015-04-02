@@ -61,7 +61,8 @@ public class WaterController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/functionList", method = RequestMethod.GET)
-	public String functionList(ModelMap modelMap) {
+	public String functionList(ModelMap modelMap, String systemId) {
+		modelMap.put("systemId", systemId);
 		return "functionList";
 	}
 

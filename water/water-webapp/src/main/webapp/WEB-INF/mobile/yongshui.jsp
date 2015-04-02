@@ -189,7 +189,7 @@
 	<div data-role="page">
 
 	    <div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>楼栋水电成本登记<span style="float: right; padding-right:10px;padding-top:5px;"></span>
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>楼栋水电成本登记<span style="float: right; padding-right:10px;padding-top:5px;"></span>
 		</div>
 		
 		<div data-role="content">

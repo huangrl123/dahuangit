@@ -170,7 +170,7 @@ function loadChart(result) {
 	<div data-role="page">
 
 	    <div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>损益统计表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/sunyiQuery?sytemId=${systemId }'">&nbsp;</span>
+			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25">&nbsp;</span>损益统计表<span style="float: right; padding-right:10px;padding-top:5px;"><img alt="" src="${ctx }/images/search.png" height="25" width="25" onclick="window.location.href='${ctx }/spring/mobile/sunyiQuery?systemId=${systemId }'">&nbsp;</span>
 		</div>
 		
 		<div data-role="content">
