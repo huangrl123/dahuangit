@@ -18,7 +18,7 @@ public class YujingInfo {
 	private String roomName = null;
 
 	/** 消费金额 */
-	private String sumMoney = null;
+	private Float sumMoney = null;
 
 	public String getProjectName() {
 		return projectName;
@@ -44,11 +44,11 @@ public class YujingInfo {
 		this.roomName = roomName;
 	}
 
-	public String getSumMoney() {
+	public Float getSumMoney() {
 		return sumMoney;
 	}
 
-	public void setSumMoney(String sumMoney) {
+	public void setSumMoney(Float sumMoney) {
 		this.sumMoney = sumMoney;
 	}
 

@@ -147,7 +147,7 @@
 			data : yongshuiForm.serialize(),
 			cache : false,
 			success : function(result) {
-				if(result.success) {
+				if(result.success == true) {
 					refreshYongshuiRecord(result.yongshuiRecords);
 					yongshuiForm[0].reset();
 					showAlertDialog('用水记录登记成功!');

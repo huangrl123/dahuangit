@@ -51,7 +51,7 @@
 		<field name="operatorName">
 			<bind-xml name="dealname" />
 		</field>
-		<field name="sumMoney">
+		<field name="sumMoney" type="float">
 			<bind-xml name="summoney" />
 		</field>
 	</class>
@@ -73,7 +73,7 @@
 		<field name="roomName">
 			<bind-xml name="roomname" />
 		</field>
-		<field name="sumMoney">
+		<field name="sumMoney" type="float">
 			<bind-xml name="summoney" />
 		</field>
 	</class>

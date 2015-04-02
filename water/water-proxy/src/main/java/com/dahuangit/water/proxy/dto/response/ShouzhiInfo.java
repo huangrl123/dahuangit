@@ -15,7 +15,7 @@ public class ShouzhiInfo {
 	private String operatorName = null;
 
 	/** 收入合计 */
-	private String sumMoney = null;
+	private Float sumMoney = null;
 
 	public String getProjectName() {
 		return projectName;
@@ -33,11 +33,11 @@ public class ShouzhiInfo {
 		this.operatorName = operatorName;
 	}
 
-	public String getSumMoney() {
+	public Float getSumMoney() {
 		return sumMoney;
 	}
 
-	public void setSumMoney(String sumMoney) {
+	public void setSumMoney(Float sumMoney) {
 		this.sumMoney = sumMoney;
 	}
 
