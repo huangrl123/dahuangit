@@ -16,6 +16,8 @@
 
 <script src="${ctx }/js/util.js"></script>
 
+<link rel="stylesheet" href="${ctx }/css/water.css" />
+
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -46,7 +48,7 @@
 
 		$("#startTime").mobiscroll(startTimeOpt);
 		$("#endTime").mobiscroll(startTimeOpt);
-		
+
 		$('#startTime').val(getLastMonthYestdy());
 		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
 	});
@@ -71,34 +73,32 @@
 			return;
 		}
 
+		var text = $('#projectSelect option:selected').text();
+		$('#projectName').val(text);
+		
 		showLoader('正在查询，请稍后...');
 		$('#queryForm').submit();
 	}
 </script>
-<style type="text/css">
-.headDiv {
-	height: 40px;
-	text-align: center;
-	background-color: #2C3640;
-	font-size: 25;
-	padding-top: 10px;
-	color: #FFFFFF;
-}
-</style>
 </head>
 <body>
-	<div data-role="page" data-ajax="false" style="background-color: #FFFFFF;">
+	<div data-role="page" data-ajax="false" class="query-page-body">
 
-		<div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span><span style="margin-right:35px;">收支情况查询</span>
+		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
+			<div class="header-title1">
+				<span class="header-title1-left" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">收支情况查询</span>
+			</div>
+			<div class="header-title2-query-condition">
+				<div class="header-title2-top">查询条件</div>
+			</div>
 		</div>
 
 		<div data-role="content">
 
 			<form id="queryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
 				<input type="hidden" name="systemId" value="${systemId }">
+				<input id="projectName" type="hidden" name="projectName">
 				<ul data-role="listview">
-					<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">查询条件</li>
 					<li>
 						<div data-role="fieldcontain">
 							<label for="name" style="font-weight: bolder;">开始时间:</label><input id="startTime" name="beginTime" type="text" data-role="datebox" placeholder="请选择" style="background-color: #e8e8e8;">
@@ -113,7 +113,7 @@
 
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">项目:</label> <select placeholder="请选择" name="projectId">
+							<label for="name" style="font-weight: bolder;">项目:</label> <select placeholder="请选择" id="projectSelect" name="projectId">
 								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
 									<option value="${project.projectId }">${project.projectName }</option>
 								</c:forEach>
@@ -122,14 +122,14 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-				    		<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
 						</div>
 					</li>
 				</ul>
 
 			</form>
 
-			
+
 		</div>
 
 	</div>

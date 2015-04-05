@@ -1,0 +1,87 @@
+.header-div {
+	margin-top: -1;
+}
+
+.header-title1 {
+	height: 30px;
+	padding-bottom: 10px;
+	background-color: #2C3640;
+	color: #000000;
+	text-align: center;
+}
+
+.header-title1-left {
+	float: left;
+	width: 10%;
+	padding-left: 10px;
+	margin-top: 8px;
+}
+
+.header-title1-center {
+	display: inline-block;
+	text-align: center;
+	color: #ffffff;
+	font-size: 18px;
+	margin-top: 7px;
+	font-weight: lighter;
+}
+
+.header-title1-right {
+	float: right;
+	width: 10%;
+	padding-right: 10px;
+	margin-top: 8px;
+}
+
+.header-title2 {
+	height: 36px;
+	background-color: #e8ebe8;
+	margin-bottom: -2;
+	padding: 5px;
+}
+
+.header-title2-query-condition {
+	height: 20px;
+	background-color: #e8ebe8;
+	margin-bottom: -2;
+	padding: 5px;
+}
+
+.header-title2-top {
+	font-weight: bolder;
+	color: #7a7b7f;
+	font-size: 16;
+	background-color: e8ebe8;
+}
+
+.header-title2-bottom {
+	color: #b0b0b0;
+	font-size: 15;
+}
+
+.two-col-listItemLeft {
+	float: left;
+	margin-right: 10;
+	font-weight: bolder;
+	color: #000000
+}
+
+.two-col-listItemRight {
+	float: right;
+	font-weight: bolder;
+	color: #469E6F;
+}
+
+.two-col-listItemRightWarning {
+	float: right;
+	font-weight: bolder;
+	color: #d03e3e;
+}
+
+.query-page-body {
+	background-color: #FFFFFF;
+}
+
+.query-field {
+	background-color: #e8e8e8;
+}

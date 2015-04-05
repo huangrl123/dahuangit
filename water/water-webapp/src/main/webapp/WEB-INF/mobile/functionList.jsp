@@ -8,12 +8,12 @@
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
 #headDiv {
-	height: 60px;
+	height: 40px;
 	text-align: center;
 	background-color: #2C3640;
-	font-size: 30;
+	font-size: 25;
 	color: #FFFFFF;
-	padding-top: 22px;
+	padding-top: 10px;
 }
 
 #shuibiaoDiv {
@@ -28,7 +28,7 @@
 </head>
 <body style="margin: 0px;">
 	<div id="headDiv">
-		<span style="padding-left:50px;">首页</span><span style="padding-right: 20px;float: right; font-size: 20; padding-top: 5px;" onclick="window.app.exitSys()">退出</span>
+		<span style="padding-left:50px;">首页</span><span style="padding-right: 20px;float: right; font-size: 20; padding-top: 2px;" onclick="window.app.exitSys()">退出</span>
 	</div>
 	<div id="shuibiaoDiv">
 		<img alt="" src="../../images/shuibiao.png" height="120px" width="100%">

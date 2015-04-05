@@ -152,7 +152,7 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/shouzhi", method = RequestMethod.GET)
 	public String shouzhi(ModelMap modelMap, HttpServletRequest httpServletRequest, ShouzhiRequest request,
-			String systemId) {
+			String systemId, String projectName) {
 		ShouzhiResponse response = new ShouzhiResponse();
 
 		try {
@@ -174,7 +174,9 @@ public class WaterController extends BaseController {
 					proShouzhi.put(key, list);
 				}
 			}
-
+			projectName = new String(projectName.getBytes("ISO8859-1"), "UTF-8");
+			modelMap.put("projectName", projectName);
+			
 			modelMap.put("shouzhiMap", proShouzhi);
 			modelMap.put("request", request);
 			modelMap.put("systemId", systemId);
@@ -229,7 +231,7 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/yujing", method = RequestMethod.GET)
 	public String yujing(ModelMap modelMap, HttpServletRequest httpServletRequest, YujingRequest request,
-			String systemId) {
+			String systemId,String projectName) {
 		YujingResponse response = new YujingResponse();
 
 		try {
@@ -252,6 +254,9 @@ public class WaterController extends BaseController {
 				}
 			}
 
+			projectName = new String(projectName.getBytes("ISO8859-1"), "UTF-8");
+			modelMap.put("projectName", projectName);
+			
 			modelMap.put("yujingMap", yujingMap);
 			modelMap.put("request", request);
 			modelMap.put("systemId", systemId);
@@ -413,7 +418,7 @@ public class WaterController extends BaseController {
 				DataItem dataItem = new DataItem();
 				Float y = semesterMonthInfo.getSumSy();
 				dataItem.setY(y);
-				
+
 				switch (i) {
 				case 0:
 					dataItem.setColor("#eb7643");
@@ -434,7 +439,7 @@ public class WaterController extends BaseController {
 					dataItem.setColor("#ed7541");
 					break;
 				}
-				
+
 				semesterMonthChartInfo.getData().add(dataItem);
 			}
 			response.setSemesterMonthChartInfo(semesterMonthChartInfo);
@@ -445,11 +450,11 @@ public class WaterController extends BaseController {
 			ChartInfo recentYearSemesterMonthChartInfo = new ChartInfo();
 			for (RecentYearSemesterMonthInfo info : recentYearSemesterMonthResponse.getRecentYearSemesterMonthInfos()) {
 				recentYearSemesterMonthChartInfo.getCategories().add(info.getMonth());
-				
+
 				DataItem dataItem = new DataItem();
-				Float y  = info.getSumSy();
+				Float y = info.getSumSy();
 				dataItem.setY(y);
-				
+
 				recentYearSemesterMonthChartInfo.getData().add(dataItem);
 			}
 			response.setRecentYearSemesterMonthChartInfo(recentYearSemesterMonthChartInfo);

@@ -14,6 +14,8 @@
 <script src="${ctx }/plugin/mobiscroll/js/mobiscroll.custom-2.5.0.min.js"></script>
 <script src="${ctx }/plugin/My97DatePicker/WdatePicker.js"></script>
 
+<link rel="stylesheet" href="${ctx }/css/water.css" />
+
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -45,10 +47,15 @@
 </style>
 </head>
 <body>
-	<div data-role="page" data-ajax="false" style="background-color: #FFFFFF;">
+	<div data-role="page" data-ajax="false" class="query-page-body">
 
-		<div class="headDiv" data-position="fixed">
-			<span style="float: left; padding-left:10px;padding-top:5px;" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span><span style="margin-right:35px;">损益情况查询</span>
+		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
+			<div class="header-title1">
+				<span class="header-title1-left" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">损益情况查询</span>
+			</div>
+			<div class="header-title2-query-condition">
+				<div class="header-title2-top">查询条件</div>
+			</div>
 		</div>
 
 		<div data-role="content">
@@ -57,8 +64,6 @@
 			    <input id="projectName" type="hidden" name="projectName">
 				<input type="hidden" name="systemId" value="${systemId }">
 				<ul data-role="listview">
-					<li data-role="list-divider" style="font-weight: bolder;color: #7a7b7f;font-size: 15;background-color: e8ebe8;">查询条件</li>
-
 					<li>
 						<div data-role="fieldcontain">
 							<label for="name" style="font-weight: bolder;">项目:</label> <select id="projectSelect" placeholder="请选择" name="projectId">
