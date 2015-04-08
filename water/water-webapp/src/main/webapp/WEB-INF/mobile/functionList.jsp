@@ -25,11 +25,7 @@
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
-<script type="text/javascript">
-	$(function() {
-		$(window).resize();
-	});
-</script>
+
 </head>
 <body style="margin: 0px;">
 	<div id="headDiv">
@@ -52,6 +48,9 @@
 			<td></td>
 		</tr>
 	</table>
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 
