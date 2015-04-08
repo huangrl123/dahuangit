@@ -48,7 +48,7 @@
 
 		$("#startTime").mobiscroll(startTimeOpt);
 		$("#endTime").mobiscroll(startTimeOpt);
-		
+
 		$('#startTime').val(getLastMonthYestdy());
 		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
 	});
@@ -75,7 +75,7 @@
 
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
-		
+
 		showLoader('正在查询，请稍后...');
 		$('#queryForm').submit();
 	}
@@ -86,18 +86,18 @@
 
 		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
 			<div class="header-title1">
-				<span class="header-title1-left" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">设备预警情况查询</span>
+				<span class="header-title1-left" onclick="gotoFunction('${ctx }/spring/mobile/functionList?systemId=${systemId }')"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">设备预警情况查询</span>
+				<span class="header-title1-right"></span>
 			</div>
 			<div class="header-title2-query-condition">
 				<div class="header-title2-top">查询条件</div>
 			</div>
 		</div>
-		
+
 		<div data-role="content">
 
 			<form id="queryForm" action="${ctx }/spring/mobile/yujing" method="get" data-ajax="false">
-				<input type="hidden" name="systemId" value="${systemId }">
-				<input id="projectName" type="hidden" name="projectName">
+				<input type="hidden" name="systemId" value="${systemId }"> <input id="projectName" type="hidden" name="projectName">
 				<ul data-role="listview">
 					<li>
 						<div data-role="fieldcontain">
@@ -122,14 +122,14 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-				    		<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
 						</div>
 					</li>
 				</ul>
 
 			</form>
 
-			
+
 		</div>
 
 	</div>

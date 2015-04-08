@@ -28,10 +28,10 @@
 
 	function submit() {
 		showLoader('正在查询，请稍后...');
-		
+
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
-		
+
 		$('#queryForm').submit();
 	}
 </script>
@@ -51,7 +51,8 @@
 
 		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
 			<div class="header-title1">
-				<span class="header-title1-left" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">损益情况查询</span>
+				<span class="header-title1-left" onclick="gotoFunction('${ctx }/spring/mobile/functionList?systemId=${systemId }')"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">损益情况查询</span>
+				<span class="header-title1-right"></span>
 			</div>
 			<div class="header-title2-query-condition">
 				<div class="header-title2-top">查询条件</div>
@@ -61,8 +62,7 @@
 		<div data-role="content">
 
 			<form id="queryForm" action="${ctx }/spring/mobile/sunyi" method="get" data-ajax="false">
-			    <input id="projectName" type="hidden" name="projectName">
-				<input type="hidden" name="systemId" value="${systemId }">
+				<input id="projectName" type="hidden" name="projectName"> <input type="hidden" name="systemId" value="${systemId }">
 				<ul data-role="listview">
 					<li>
 						<div data-role="fieldcontain">
@@ -75,14 +75,14 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-				    		<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
 						</div>
 					</li>
 				</ul>
 
 			</form>
 
-			
+
 		</div>
 
 	</div>

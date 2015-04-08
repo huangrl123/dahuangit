@@ -86,7 +86,8 @@
 
 		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
 			<div class="header-title1">
-				<span class="header-title1-left" onclick="window.location.href='${ctx }/spring/mobile/functionList?systemId=${systemId }'"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">收支情况查询</span>
+				<span class="header-title1-left" onclick="gotoFunction('${ctx }/spring/mobile/functionList?systemId=${systemId }')"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">收支情况查询</span>
+				<span class="header-title1-right"></span>
 			</div>
 			<div class="header-title2-query-condition">
 				<div class="header-title2-top">查询条件</div>

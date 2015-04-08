@@ -8,43 +8,48 @@
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
 #headDiv {
-	height: 40px;
+	height: 30px;
 	text-align: center;
 	background-color: #2C3640;
-	font-size: 25;
+	text-shadow: none;
+	font-size: 18;
 	color: #FFFFFF;
-	padding-top: 10px;
+	padding-top: 7px;
 }
 
 #shuibiaoDiv {
 	height: 120px;
 }
 </style>
+<link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
+<script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
+<script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
+<script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript">
-	function gotoFunction(url) {
-		window.location.href = url + '?systemId=${systemId}';
-	}
+	$(function() {
+		$(window).resize();
+	});
 </script>
 </head>
 <body style="margin: 0px;">
 	<div id="headDiv">
-		<span style="padding-left:50px;">首页</span><span style="padding-right: 20px;float: right; font-size: 20; padding-top: 2px;" onclick="window.app.exitSys()">退出</span>
+		<span style="padding-left: 50px;">首页</span><span style="padding-right: 20px; float: right; font-size: 16; padding-top: 2px;" onclick="window.app.exitSys()">退出</span>
 	</div>
 	<div id="shuibiaoDiv">
 		<img alt="" src="../../images/shuibiao.png" height="120px" width="100%">
 	</div>
 	<table width="100%" border="0" cellspacing="10" cellpadding="0" bordercolor="#FFFFFF">
 		<tr>
-			<td><img alt="" src="../../images/shouzhi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/shouzhiQuery')"></td>
-			<td><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery')"></td>
+			<td><img alt="" src="../../images/shouzhi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/shouzhiQuery?systemId=${systemId}')"></td>
+			<td><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery?systemId=${systemId}')"></td>
 		</tr>
 		<tr>
-			<td><img alt="" src="../../images/sunyi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/sunyiQuery')"></td>
-			<td><img alt="" src="../../images/yongshui.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yongshui')"></td>
+			<td><img alt="" src="../../images/sunyi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/sunyiQuery?systemId=${systemId}')"></td>
+			<td><img alt="" src="../../images/yongshui.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yongshui?systemId=${systemId}')"></td>
 		</tr>
 		<tr>
 			<td><img alt="" src="../../images/wajue.png" width="100%"></td>
-			<td><img alt="" src="../../images/blank.png" width="100%"></td>
+			<td></td>
 		</tr>
 	</table>
 </body>
