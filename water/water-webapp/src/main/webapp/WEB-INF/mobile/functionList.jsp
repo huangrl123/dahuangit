@@ -29,7 +29,7 @@
 <body style="margin: 0px;">
 
 	<div class="header-title1">
-		<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="window.app.exitSys()" id="exit-link">退出</span>
+		<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
 	</div>
 
 	<div id="shuibiaoDiv">
@@ -50,6 +50,17 @@
 		</tr>
 	</table>
 	<script type="text/javascript">
+		function exitToLogin() {
+			var userAgent = navigator.userAgent;
+
+			if (userAgent.indexOf("Android") > -1) {
+				window.app.exitSys();
+				return;
+			}
+
+			window.location.href = '${ctx }/spring/mobile/exitSys';
+		}
+		
 		$(window).resize();
 	</script>
 </body>
