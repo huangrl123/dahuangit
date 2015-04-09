@@ -33,7 +33,7 @@
 			</div>
 			<div class="header-title2">
 				<div class="header-title2-top">${projectName }</div>
-				<div class="header-title2-bottom ">${request.beginTime }至${request.endTime }</div>
+				<div class="header-title2-bottom">${request.beginTime }至${request.endTime }</div>
 			</div>
 		</div>
 		<div data-role="content">

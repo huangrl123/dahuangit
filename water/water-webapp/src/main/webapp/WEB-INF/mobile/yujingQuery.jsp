@@ -53,7 +53,7 @@
 		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
 	});
 
-	function submit() {
+	function submitQuery() {
 		var startTime = $('#startTime').val();
 		if (!startTime) {
 			showAlertDialog('开始时间不能空');
@@ -122,7 +122,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>

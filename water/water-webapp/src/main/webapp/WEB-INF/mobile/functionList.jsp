@@ -27,7 +27,7 @@
 	float: right;
 	font-size: 16;
 	font-weight: normal;
-	padding-top: 2px;
+	padding-top: 4px;
 }
 </style>
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />

@@ -120,7 +120,7 @@
 		}
 	}
 
-	function submit() {
+	function submitFormData() {
 		var projectId = $('#projectSelect').val();
 		if (!projectId || '-1' == projectId) {
 			showAlertDialog('请选择项目');
@@ -152,7 +152,8 @@
 			success : function(result) {
 				if (result.success == true) {
 					refreshYongshuiRecord(result.yongshuiRecords);
-					yongshuiForm[0].reset();
+					$('#yongshuiSum').val('');
+					$('#yongdianSum').val('');
 					showAlertDialog('用水记录登记成功!');
 				} else {
 					showAlertDialog(result.msg);
@@ -237,7 +238,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/submit.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/submit.png" height="50" width="300" onclick="submitFormData()">
 						</div>
 					</li>
 				</ul>

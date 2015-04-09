@@ -6,6 +6,7 @@
 <title>预警</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
+<meta name="format-detection" content="telephone=no" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
@@ -30,7 +31,6 @@
 }
 
 .listItemCenter {
-	float: left;
 	margin-left: 10;
 	font-weight: bolder;
 	color: #7a7b7f;
@@ -64,7 +64,7 @@
 					<c:when test="${!empty yujingMap }">
 						<c:forEach items="${yujingMap }" var="item" varStatus="mapStatus">
 							<c:forEach items="${item.value }" var="yujing">
-								<li><span class="listItemLeft">${yujing.buildName }</span> <span class="listItemCenter">${yujing.roomName }</span> <span class="listItemRight"><font size="2">￥</font>${yujing.sumMoney }</span></li>
+								<li><span class="listItemLeft">${yujing.buildName }</span> <span class="listItemCenter">&nbsp;${yujing.roomName }</span> <span class="listItemRight"><font size="2">￥</font>${yujing.sumMoney }</span></li>
 							</c:forEach>
 						</c:forEach>
 					</c:when>

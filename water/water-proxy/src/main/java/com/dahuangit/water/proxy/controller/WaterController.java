@@ -176,7 +176,6 @@ public class WaterController extends BaseController {
 			}
 			projectName = new String(projectName.getBytes("ISO8859-1"), "UTF-8");
 			modelMap.put("projectName", projectName);
-			
 			modelMap.put("shouzhiMap", proShouzhi);
 			modelMap.put("request", request);
 			modelMap.put("systemId", systemId);

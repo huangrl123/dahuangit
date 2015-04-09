@@ -53,7 +53,7 @@
 		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
 	});
 
-	function submit() {
+	function submitQuery() {
 		var startTime = $('#startTime').val();
 		if (!startTime) {
 			showAlertDialog('开始时间不能空');
@@ -75,7 +75,7 @@
 
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
-		
+
 		showLoader('正在查询，请稍后...');
 		$('#queryForm').submit();
 	}
@@ -97,8 +97,7 @@
 		<div data-role="content">
 
 			<form id="queryForm" action="${ctx }/spring/mobile/shouzhi" method="get" data-ajax="false">
-				<input type="hidden" name="systemId" value="${systemId }">
-				<input id="projectName" type="hidden" name="projectName">
+				<input type="hidden" name="systemId" value="${systemId }"> <input id="projectName" name="projectName" type="hidden">
 				<ul data-role="listview">
 					<li>
 						<div data-role="fieldcontain">
@@ -123,7 +122,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>

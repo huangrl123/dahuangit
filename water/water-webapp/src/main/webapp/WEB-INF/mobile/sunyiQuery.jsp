@@ -26,7 +26,7 @@
 		}
 	}
 
-	function submit() {
+	function submitQuery() {
 		showLoader('正在查询，请稍后...');
 
 		var text = $('#projectSelect option:selected').text();
@@ -75,7 +75,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submit()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>
