@@ -7,27 +7,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
-#headDiv {
-	height: 40px;
-	text-align: center;
-	background-color: #2C3640;
-	text-shadow: none;
-	font-size: 22px;
-	font-weight: 900;
-	color: #FFFFFF;
-	padding-top: 11px;
-}
-
 #shuibiaoDiv {
 	height: 120px;
 }
 
 #exit-link {
-	padding-right: 20px;
-	float: right;
-	font-size: 16;
-	font-weight: normal;
-	padding-top: 4px;
+	font-size: 16px;
+	color: #ffffff;
+	text-shadow: none;
+	padding-top: 3px;
 }
 </style>
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
@@ -35,11 +23,15 @@
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
 <script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
 
+<link rel="stylesheet" href="${ctx }/css/water.css" />
+
 </head>
 <body style="margin: 0px;">
-	<div id="headDiv">
-		<span style="padding-left: 50px;">首页</span><span id="exit-link" onclick="window.app.exitSys()">退出</span>
+
+	<div class="header-title1">
+		<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="window.app.exitSys()" id="exit-link">退出</span>
 	</div>
+
 	<div id="shuibiaoDiv">
 		<img alt="" src="../../images/shuibiao.png" height="120px" width="100%">
 	</div>
