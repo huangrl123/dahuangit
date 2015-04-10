@@ -120,6 +120,7 @@
 		}
 	}
 
+
 	function submitFormData() {
 		var projectId = $('#projectSelect').val();
 		if (!projectId || '-1' == projectId) {
@@ -134,8 +135,16 @@
 		}
 
 		var yongshuiSum = $('#yongshuiSum').val();
-		if (!yongshuiSum || 0 > yongshuiSum) {
-			showAlertDialog('用水总额输入非法');
+		yongshuiSum = parseFloat(yongshuiSum).toFixed(2); 
+		if (0.00 > yongshuiSum ||  yongshuiSum > 999999.99) {
+			showAlertDialog('用水总额输入必须在0.00与999999.99之间');
+			return;
+		}
+		
+		var yongdianSum = $('#yongdianSum').val();
+		yongdianSum = parseFloat(yongdianSum).toFixed(2); 
+		if (0.00 > yongdianSum && yongdianSum > 999999.99) {
+			showAlertDialog('用电总额输入必须在0.00与999999.99之间');
 			return;
 		}
 

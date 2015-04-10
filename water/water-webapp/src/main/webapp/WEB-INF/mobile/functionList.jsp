@@ -49,20 +49,20 @@
 			<td></td>
 		</tr>
 	</table>
-	<script type="text/javascript">
-		function exitToLogin() {
-			var userAgent = navigator.userAgent;
-
-			if (userAgent.indexOf("Android") > -1) {
-				window.app.exitSys();
-				return;
-			}
-
-			window.location.href = '${ctx }/spring/mobile/exitSys';
-		}
-		
-		$(window).resize();
-	</script>
 </body>
+<script type="text/javascript">
+	function exitToLogin() {
+		var userAgent = navigator.userAgent;
+
+		if (userAgent.indexOf("Android") > -1) {
+			window.app.exitSys();
+			return;
+		}
+
+		window.location.href = '${ctx }/spring/mobile/exitSys';
+	}
+
+	$(window).resize();
+</script>
 </html>
 
