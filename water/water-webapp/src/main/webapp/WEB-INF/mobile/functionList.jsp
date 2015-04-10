@@ -37,16 +37,16 @@
 	</div>
 	<table width="100%" border="0" cellspacing="10" cellpadding="0" bordercolor="#FFFFFF">
 		<tr>
-			<td><img alt="" src="../../images/shouzhi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/shouzhiQuery?systemId=${systemId}')"></td>
-			<td><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery?systemId=${systemId}')"></td>
+			<td width="50%" height="50%"><img alt="" src="../../images/shouzhi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/shouzhiQuery?systemId=${systemId}')"></td>
+			<td width="50%" height="50%"><img alt="" src="../../images/yujing.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery?systemId=${systemId}')"></td>
 		</tr>
 		<tr>
-			<td><img alt="" src="../../images/sunyi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/sunyiQuery?systemId=${systemId}')"></td>
-			<td><img alt="" src="../../images/yongshui.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yongshui?systemId=${systemId}')"></td>
+			<td width="50%" height="50%"><img alt="" src="../../images/sunyi.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/sunyiQuery?systemId=${systemId}')"></td>
+			<td width="50%" height="50%"><img alt="" src="../../images/yongshui.png" width="100%" onclick="gotoFunction('${ctx }/spring/mobile/yongshui?systemId=${systemId}')"></td>
 		</tr>
 		<tr>
-			<td><img alt="" src="../../images/wajue.png" width="100%"></td>
-			<td></td>
+			<td width="50%" height="50%"><img alt="" src="../../images/wajue.png" width="100%"></td>
+			<td width="50%" height="50%"></td>
 		</tr>
 	</table>
 </body>

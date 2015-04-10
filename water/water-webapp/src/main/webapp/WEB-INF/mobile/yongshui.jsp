@@ -47,7 +47,7 @@
 
 					for ( var i = 0; i < result.ldInfos.length; i++) {
 						var info = result.ldInfos[i];
-						$('#ldSelect').append('<option value="' + info.ldId + '">' + info.ldName + '</option>');
+						$('#ldSelect').append('<option value="' + info.ldId + '">' + info.areaName + '-' + info.ldName + '</option>');
 					}
 
 					$('#ldSelect').selectmenu('refresh');
@@ -153,7 +153,7 @@
 			return;
 		}
 		
-		if (0.00 > yongdianSum && yongdianSum > 1000000.00) {
+		if (0.00 > yongdianSum || yongdianSum > 1000000.00) {
 			showAlertDialog('用电总额输入必须在0.00与1000000.00之间');
 			return;
 		}

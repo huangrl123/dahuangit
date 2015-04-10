@@ -35,6 +35,9 @@
 		<field name="ldName">
 			<bind-xml name="buildname" />
 		</field>
+		<field name="areaName">
+			<bind-xml name="areaname" />
+		</field>
 	</class>
 	<class name="com.dahuangit.water.proxy.dto.response.GetLdListResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
