@@ -136,15 +136,25 @@
 
 		var yongshuiSum = $('#yongshuiSum').val();
 		yongshuiSum = parseFloat(yongshuiSum).toFixed(2); 
-		if (0.00 > yongshuiSum ||  yongshuiSum > 999999.99) {
-			showAlertDialog('用水总额输入必须在0.00与999999.99之间');
+		if('NaN' == yongshuiSum) {
+			showAlertDialog('用电总额输入非法');
+			return;
+		}
+		
+		if (0.00 > yongshuiSum ||  yongshuiSum >= 1000000.00) {
+			showAlertDialog('用水总额输入必须在0.00与1000000.00之间');
 			return;
 		}
 		
 		var yongdianSum = $('#yongdianSum').val();
 		yongdianSum = parseFloat(yongdianSum).toFixed(2); 
-		if (0.00 > yongdianSum && yongdianSum > 999999.99) {
-			showAlertDialog('用电总额输入必须在0.00与999999.99之间');
+		if('NaN' == yongdianSum) {
+			showAlertDialog('用电总额输入非法');
+			return;
+		}
+		
+		if (0.00 > yongdianSum && yongdianSum > 1000000.00) {
+			showAlertDialog('用电总额输入必须在0.00与1000000.00之间');
 			return;
 		}
 
