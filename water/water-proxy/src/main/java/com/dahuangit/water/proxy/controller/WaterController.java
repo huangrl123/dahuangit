@@ -236,6 +236,9 @@ public class WaterController extends BaseController {
 		try {
 			request.setSystemId(systemId);
 
+			request.setBeginTime("2015-04-15 14:06:56");
+			request.setEndTime("2015-04-15 14:06:56");
+			
 			response = waterService.yujing(request);
 			Map<String, List<YujingInfo>> yujingMap = new HashMap<String, List<YujingInfo>>();
 			List<YujingInfo> yujingInfos = response.getYujingInfos();
