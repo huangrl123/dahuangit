@@ -25,7 +25,7 @@
 						</tr>
 						<tr>
 							<td align="center" valign="middle" style="padding: 5px 5px 0px 5px;">
-								<fieldset style="color: #B7B7B7; border-style: groove;">
+								<fieldset style="border-width: 1px;border-color:blue;">
 									<legend style="font-size: 10pt;"> 设备信息 </legend>
 
 									<table width="98%" border="0" cellpadding="4" cellspacing="1" bgcolor=#ffffff>

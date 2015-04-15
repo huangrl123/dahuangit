@@ -28,50 +28,7 @@
 		}
 	}
 
-	$(function() {
-		var startTimeOpt = {
-			preset : 'date',
-			theme : 'default',
-			display : 'modal',
-			mode : 'mixed',
-			dateFormat : 'yy-mm-dd',
-			minDate : new Date(2000, 1, 1),
-			//maxDate: new Date(), 
-			setText : '确定',
-			cancelText : '取消',
-			dateOrder : 'yymmdd',
-			dayText : '日',
-			monthText : '月',
-			yearText : '年',
-
-		};
-
-		$("#startTime").mobiscroll(startTimeOpt);
-		$("#endTime").mobiscroll(startTimeOpt);
-
-		$('#startTime').val(getLastMonthYestdy());
-		$('#endTime').val(new Date().Format("yyyy-MM-dd"));
-	});
-
 	function submitQuery() {
-		var startTime = $('#startTime').val();
-		if (!startTime) {
-			showAlertDialog('开始时间不能空');
-			return;
-		}
-		startTime = startTime + ' 00:00:00';
-
-		var endTime = $('#endTime').val();
-		if (!endTime) {
-			showAlertDialog('结束时间不能空');
-			return;
-		}
-		endTime = endTime + ' 00:00:00';
-
-		if (Date.parse(startTime) > Date.parse(endTime) || Date.parse(startTime) == Date.parse(endTime)) {
-			showAlertDialog('结束时间必须大于开始时间');
-			return;
-		}
 
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
@@ -99,17 +56,6 @@
 			<form id="queryForm" action="${ctx }/spring/mobile/yujing" method="get" data-ajax="false">
 				<input type="hidden" name="systemId" value="${systemId }"> <input id="projectName" type="hidden" name="projectName">
 				<ul data-role="listview">
-					<li>
-						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">开始时间:</label><input id="startTime" name="beginTime" type="text" data-role="datebox" placeholder="请选择" style="background-color: #e8e8e8;">
-						</div>
-					</li>
-
-					<li>
-						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">结束时间:</label> <input id="endTime" name="endTime" type="text" data-role="datebox" placeholder="请选择" style="background-color: #e8e8e8;">
-						</div>
-					</li>
 
 					<li>
 						<div data-role="fieldcontain">

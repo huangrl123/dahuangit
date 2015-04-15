@@ -21,9 +21,9 @@ public class SavePerceptionStatusInfoTest {
 			StringBuffer sb = new StringBuffer();
 			sb.append("<request>");
 			sb.append("  <perception-param>");
-			sb.append("    <param-id>202</param-id>");
-			sb.append("    <param-value>1</param-value>");
-			sb.append("    <param-desc>232告警</param-desc>");
+			sb.append("    <param-id>207</param-id>");
+			sb.append("    <param-value>2</param-value>");
+			sb.append("    <param-desc>输出1</param-desc>");
 			sb.append("  </perception-param>");
 			sb.append("</request>");
 			Map<String, String> map = new HashMap<String, String>();

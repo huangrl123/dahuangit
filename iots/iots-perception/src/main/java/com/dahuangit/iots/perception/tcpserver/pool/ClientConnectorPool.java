@@ -23,7 +23,32 @@ public class ClientConnectorPool {
 	private ConcurrentMap<String, ClientConnector> clientConnectorMap = new ConcurrentHashMap<String, ClientConnector>();
 
 	private ClientConnectorPool() {
-		new ClientConnectorPoolMaintenance();
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					while (true) {
+						Thread.sleep(3 * 60 * 1000);
+
+						for (Map.Entry<String, ClientConnector> entry : clientConnectorMap.entrySet()) {
+							String connectionKey = entry.getKey();
+							ClientConnector connection = entry.getValue();
+
+							long lastCommTime = connection.getLastCommTime().getTime();
+							long now = System.currentTimeMillis();
+
+							long timeout = 2 * 3 * 60 * 1000;
+
+							if ((now - lastCommTime) > timeout) {
+								removeClientConnector(connectionKey);
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 
 	private static class ClientConnectorPoolHolder {
@@ -106,36 +131,5 @@ public class ClientConnectorPool {
 		}
 
 		return true;
-	}
-
-	/** 连接池维护线程 定时清除掉连接池中超时的连接 */
-	private class ClientConnectorPoolMaintenance implements Runnable {
-
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					// 每隔60分钟清理一次
-					TimeUnit.SECONDS.sleep(60 * 60);
-
-					for (Map.Entry<String, ClientConnector> entry : clientConnectorMap.entrySet()) {
-						String connectionKey = entry.getKey();
-						ClientConnector connection = entry.getValue();
-
-						long lastCommTime = connection.getLastCommTime().getTime();
-						long now = System.currentTimeMillis();
-
-						// 超时时间，默认3小时
-						long timeout = 3 * 60 * 60 * 60;
-
-						if ((now - lastCommTime) > timeout) {
-							removeClientConnector(connectionKey);
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }

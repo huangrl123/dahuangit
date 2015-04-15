@@ -51,9 +51,8 @@
 				<span class="header-title1-left" onclick="gotoFunction('${ctx }/spring/mobile/functionList?systemId=${systemId }')"><img alt="" src="${ctx }/images/home.png" height="25" width="25"></span> <span class="header-title1-center">设备预警表</span>
 				<span class="header-title1-right" onclick="gotoFunction('${ctx }/spring/mobile/yujingQuery?systemId=${systemId }')"><img alt="" src="${ctx }/images/search.png" height="25" width="25"></span>
 			</div>
-			<div class="header-title2">
+			<div class="header-title2-query-condition">
 				<div class="header-title2-top">${projectName }</div>
-				<div class="header-title2-bottom ">${request.beginTime }至${request.endTime }</div>
 			</div>
 		</div>
 
