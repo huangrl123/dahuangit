@@ -257,7 +257,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/submit.png" height="50" width="300" onclick="submitFormData()">
+							<img alt="" src="${ctx }/images/submit.png" height="50" width="290" onclick="submitFormData()">
 						</div>
 					</li>
 				</ul>

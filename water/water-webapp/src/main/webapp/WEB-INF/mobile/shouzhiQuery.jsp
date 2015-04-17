@@ -122,7 +122,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="300" onclick="submitQuery()">
+							<img alt="" src="${ctx }/images/query.png" height="50" width="290" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>

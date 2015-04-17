@@ -7,8 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
+
 #shuibiaoDiv {
 	height: 120px;
+	margin-top: -1;
 }
 
 #exit-link {
@@ -17,6 +19,7 @@
 	text-shadow: none;
 	padding-top: 3px;
 }
+
 </style>
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
@@ -27,9 +30,10 @@
 
 </head>
 <body style="margin: 0px;">
-
-	<div class="header-title1">
-		<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
+	<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div" style="border-color:#2C3640;">
+		<div class="header-title1">
+			<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
+		</div>
 	</div>
 
 	<div id="shuibiaoDiv">
