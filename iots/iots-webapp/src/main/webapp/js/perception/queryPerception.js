@@ -4,6 +4,7 @@ $(function() {
 			var grid = $('#perception-datagrid').datagrid({
 						singleSelect : true,
 						fitColumns : true,
+						rownumbers : true,
 						columns : [[{
 									field : 'perceptionAddr',
 									title : '设备地址',
@@ -38,7 +39,14 @@ $(function() {
 								}]],
 						onClickRow : function(rowIndex, row) {
 							$(this).datagrid('unselectRow', rowIndex);
-						}
+						},
+						toolbar : [{
+							        text : '添加',
+									iconCls : 'icon-add',
+									plain : 'true',
+									handler : function() {
+									}
+								}]
 					});
 
 			var load = function(pageNumber, pageSize, pg, conditionParams) {

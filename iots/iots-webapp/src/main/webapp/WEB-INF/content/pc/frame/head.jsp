@@ -10,15 +10,17 @@
 	font-size: 30px;
 	font-weight: bold;
 	color: #2255bc;
+	padding-left:10px;
 	text-shadow: 0px 0px 5px #ffffff;
 }
+
 </style>
 </head>
 
 <body>
 	<body>
 		<div class="header_bg1">
-			<span><img src="" alt="" /></span> <span id="system-title">工业自动化设备管理系统</span>
+			<span id="system-title">工业自动化设备管理系统</span>
 		</div>
 	</body>
 </html>

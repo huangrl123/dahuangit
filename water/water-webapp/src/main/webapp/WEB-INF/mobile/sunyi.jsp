@@ -6,6 +6,7 @@
 <title>损益统计表</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
+<meta name="format-detection" content="telephone=no" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
