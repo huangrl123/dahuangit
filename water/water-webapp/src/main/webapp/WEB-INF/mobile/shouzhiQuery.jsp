@@ -69,6 +69,12 @@
 		}
 		endTime = endTime + ' 00:00:00';
 
+		var userAgent = navigator.userAgent;
+		if (!userAgent.indexOf("Android") > -1) {
+			startTime = startTime.replaceAll('-', '/');
+			endTime = endTime.replaceAll('-', '/');
+		}
+
 		if (Date.parse(startTime) > Date.parse(endTime) || Date.parse(startTime) == Date.parse(endTime)) {
 			showAlertDialog('结束时间必须大于开始时间');
 			return;

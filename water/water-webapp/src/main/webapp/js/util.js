@@ -42,3 +42,7 @@ function getLastMonthYestdy() {
 	datastr = strYear + "-" + strMonth + "-" + strDay;
 	return datastr;
 }
+
+String.prototype.replaceAll = function(replaced, replaceWith) {
+	return this.replace(new RegExp(replaced, "gm"), replaceWith);
+}
