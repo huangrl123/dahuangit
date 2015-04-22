@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../../common/base.jsp"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
 <title>收支查询界面</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1">  
 <meta http-equiv="content-language" content="zh-CN" />
 <meta name="format-detection" content="telephone=no" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />

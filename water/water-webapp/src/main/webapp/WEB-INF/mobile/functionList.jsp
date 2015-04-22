@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../../common/base.jsp"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
 <title>功能列表</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1">
 <meta http-equiv="content-language" content="zh-CN" />
 <style type="text/css">
 
