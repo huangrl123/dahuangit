@@ -5,22 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../css/css_style.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-#system-title {
-	font-size: 30px;
-	font-weight: bold;
-	color: #2255bc;
-	padding-left:10px;
-	text-shadow: 0px 0px 5px #ffffff;
-}
-
-</style>
 </head>
 
 <body>
 	<body>
 		<div class="header_bg1">
-			<span id="system-title">工业自动化设备管理系统</span>
+			<div class="header_1"></div>
 		</div>
 	</body>
 </html>

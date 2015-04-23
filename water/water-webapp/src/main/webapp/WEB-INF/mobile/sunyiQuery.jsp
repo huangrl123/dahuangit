@@ -67,7 +67,7 @@
 				<ul data-role="listview">
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">项目:</label> <select id="projectSelect" placeholder="请选择" name="projectId">
+							<label for="name" style="font-weight: bolder;">项目:</label> <select id="projectSelect" placeholder="请选择" name="projectId" data-role="none" style="width:250px;">
 								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
 									<option value="${project.projectId }">${project.projectName }</option>
 								</c:forEach>

@@ -30,7 +30,7 @@
 			return;
 		}
 
-		showLoader('查询楼栋信息，请稍后...');
+		//showLoader('查询楼栋信息，请稍后...');
 
 		$.ajax({
 			url : '${ctx}/spring/mobile/getLdList',
@@ -56,7 +56,7 @@
 					showAlertDialog(result.msg);
 				}
 
-				hideLoader();
+				//hideLoader();
 			}
 		});
 	}
@@ -67,7 +67,7 @@
 			return;
 		}
 
-		showLoader('正在查询楼栋最近用水记录，请稍后...');
+		//showLoader('正在查询楼栋最近用水记录，请稍后...');
 
 		$.ajax({
 			url : '${ctx}/spring/mobile/getYongshuiRecord',
@@ -86,7 +86,7 @@
 					showAlertDialog(result.msg);
 				}
 
-				hideLoader();
+				//hideLoader();
 			}
 		});
 	}
@@ -232,7 +232,7 @@
 				<ul id="yongshuiListview" data-role="listview">
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">项目:</label> <select id="projectSelect" name="projectId" onchange="projectOnchange($(this).val())">
+							<label for="name" style="font-weight: bolder;">项目:</label> <select id="projectSelect" name="projectId" onchange="projectOnchange($(this).val())" data-role="none" style="width:250px;">
 								<option value="-1">请选择</option>
 								<c:forEach items="${projectInfos }" var="project" varStatus="varIndex">
 									<option value="${project.projectId }">${project.projectName }</option>
@@ -242,7 +242,7 @@
 					</li>
 					<li>
 						<div data-role="fieldcontain">
-							<label for="name" style="font-weight: bolder;">楼栋:</label> <select id="ldSelect" name="ldId" onchange="ldOnchange($(this).val())">
+							<label for="name" style="font-weight: bolder;">楼栋:</label> <select id="ldSelect" name="ldId" onchange="ldOnchange($(this).val())" data-role="none" style="width:250px;">
 							</select>
 						</div>
 					</li>

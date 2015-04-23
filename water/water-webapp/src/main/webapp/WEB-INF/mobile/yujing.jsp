@@ -14,14 +14,6 @@
 
 <link rel="stylesheet" href="${ctx }/css/water.css" />
 
-<script type="text/javascript">
-	window.onload = function() {
-		try {
-			hideLoader();
-		} catch (e) {
-		}
-	}
-</script>
 <style type="text/css">
 .listItemLeft {
 	float: left;
@@ -77,7 +69,9 @@
 		</div>
 
 	</div>
-
+	<script type="text/javascript">
+		hideLoader();
+	</script>
 </body>
 </html>
 
