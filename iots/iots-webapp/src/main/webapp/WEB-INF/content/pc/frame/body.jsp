@@ -70,12 +70,9 @@
 								<tr>
 									<td width="100%" valign="top">
 										<div class="Position">
-											<div class="Position_1">
-												<a>当前位置：</a><a><span class="gray" id="areaSpan"></span></a>
-											</div>
-											<div class="Position_2">
-												<a>欢迎您：</a><a><span class="gray">admin</span></a>&nbsp; <a>今天是 ${today } </a>&nbsp;&nbsp;&nbsp;&nbsp; <span class="gray"><a href="#">退出系统</a></span>
-											</div>
+											<span class="Position_1"><a>当前位置：</a><a><span class="gray" id="areaSpan"></span></a>
+											</span> <span class="Position_2"> <a>欢迎您：</a><a><span class="gray" style="padding-right: 50px;">admin</span></a><a style="padding-right: 20px;">今天是 ${today }</a><span class="gray"><a href="#">退出系统</a></span>
+											</span>
 										</div>
 									</td>
 								</tr>

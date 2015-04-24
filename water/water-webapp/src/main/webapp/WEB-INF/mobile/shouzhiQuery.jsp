@@ -4,7 +4,7 @@
 <html lang="zh-cn">
 <head>
 <title>收支查询界面</title>
-<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1">  
+<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1">
 <meta http-equiv="content-language" content="zh-CN" />
 <meta name="format-detection" content="telephone=no" />
 <link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
@@ -22,13 +22,6 @@
 <style type="text/css">
 </style>
 <script type="text/javascript">
-	window.onload = function() {
-		try {
-			hideLoader();
-		} catch (e) {
-		}
-	}
-
 	$(function() {
 		var startTimeOpt = {
 			preset : 'date',
@@ -83,7 +76,6 @@
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
 
-		showLoader('正在查询，请稍后...');
 		$('#queryForm').submit();
 	}
 </script>
@@ -129,7 +121,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="290" onclick="submitQuery()">
+							<label for="name" style="font-weight: bolder;">&nbsp;</label> <img alt="" src="${ctx }/images/query.png" height="50" width="290" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>
@@ -140,6 +132,9 @@
 		</div>
 
 	</div>
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 

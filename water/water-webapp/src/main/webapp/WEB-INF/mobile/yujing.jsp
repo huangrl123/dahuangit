@@ -70,7 +70,7 @@
 
 	</div>
 	<script type="text/javascript">
-		hideLoader();
+		$(window).resize();
 	</script>
 </body>
 </html>

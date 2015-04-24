@@ -30,7 +30,7 @@
 
 </head>
 <body style="margin: 0px;">
-	<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div" style="border-color:#2C3640;">
+	<div data-role="header" data-position="fixed" data-tap-toggle="true" class="header-div" style="border-color:#2C3640;">
 		<div class="header-title1">
 			<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
 		</div>

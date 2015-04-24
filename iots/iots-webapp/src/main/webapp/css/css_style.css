@@ -164,20 +164,19 @@ a:hover{
 .Position_1{
 	width:35%;
 	height:23px;
+	line-height:23px;
 	float:left;
-	padding:4px 0px 3px 26px;
-	background-image: url(../image/now.gif);
+	padding:0px 0px 0px 5px;
 	background-repeat: no-repeat;
-	background-position: 7px 6px;
 }
 .Position_1 a,.Position_2 a{
     color:#0366CB;
 }
 .Position_2{
-    width:370px;
     height:23px;
+    line-height:23px;
+    padding:0px 5px 0px 0px;
     float:right;
-	padding:4px 0px 3px 0px;
 }
 .inquiry{
     width:100%;

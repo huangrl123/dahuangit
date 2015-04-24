@@ -34,7 +34,6 @@
 		var text = $('#projectSelect option:selected').text();
 		$('#projectName').val(text);
 
-		showLoader('正在查询，请稍后...');
 		$('#queryForm').submit();
 	}
 </script>
@@ -69,7 +68,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/query.png" height="50" width="290" onclick="submitQuery()">
+							<label for="name" style="font-weight: bolder;">&nbsp;</label> <img alt="" src="${ctx }/images/query.png" height="50" width="290" onclick="submitQuery()">
 						</div>
 					</li>
 				</ul>
@@ -80,6 +79,9 @@
 		</div>
 
 	</div>
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 

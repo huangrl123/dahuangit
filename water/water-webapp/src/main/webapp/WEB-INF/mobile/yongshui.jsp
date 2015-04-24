@@ -15,13 +15,6 @@
 <link rel="stylesheet" href="${ctx }/css/water.css" />
 
 <script type="text/javascript">
-	window.onload = function() {
-		try {
-			hideLoader();
-		} catch (e) {
-		}
-	}
-
 	function projectOnchange(projectId) {
 		if ('-1' == projectId) {
 			removeYongshuiRecordUl();
@@ -56,7 +49,6 @@
 					showAlertDialog(result.msg);
 				}
 
-				//hideLoader();
 			}
 		});
 	}
@@ -66,8 +58,6 @@
 			removeYongshuiRecordUl();
 			return;
 		}
-
-		//showLoader('正在查询楼栋最近用水记录，请稍后...');
 
 		$.ajax({
 			url : '${ctx}/spring/mobile/getYongshuiRecord',
@@ -86,7 +76,6 @@
 					showAlertDialog(result.msg);
 				}
 
-				//hideLoader();
 			}
 		});
 	}
@@ -121,7 +110,6 @@
 		}
 	}
 
-
 	function submitFormData() {
 		var projectId = $('#projectSelect').val();
 		if (!projectId || '-1' == projectId) {
@@ -136,24 +124,24 @@
 		}
 
 		var yongshuiSum = $('#yongshuiSum').val();
-		yongshuiSum = parseFloat(yongshuiSum).toFixed(2); 
-		if('NaN' == yongshuiSum) {
+		yongshuiSum = parseFloat(yongshuiSum).toFixed(2);
+		if ('NaN' == yongshuiSum) {
 			showAlertDialog('用水总额输入非法');
 			return;
 		}
-		
-		if (0.00 > yongshuiSum ||  yongshuiSum >= 1000000.00) {
+
+		if (0.00 > yongshuiSum || yongshuiSum >= 1000000.00) {
 			showAlertDialog('用水总额输入必须在0.00与1000000.00之间');
 			return;
 		}
-		
+
 		var yongdianSum = $('#yongdianSum').val();
-		yongdianSum = parseFloat(yongdianSum).toFixed(2); 
-		if('NaN' == yongdianSum) {
+		yongdianSum = parseFloat(yongdianSum).toFixed(2);
+		if ('NaN' == yongdianSum) {
 			showAlertDialog('用电总额输入非法');
 			return;
 		}
-		
+
 		if (0.00 > yongdianSum || yongdianSum > 1000000.00) {
 			showAlertDialog('用电总额输入必须在0.00与1000000.00之间');
 			return;
@@ -258,7 +246,7 @@
 					</li>
 					<li style="border-bottom: 0px;">
 						<div style="text-align: center;" data-role="fieldcontain">
-							<img alt="" src="${ctx }/images/submit.png" height="50" width="290" onclick="submitFormData()">
+							<label for="name" style="font-weight: bolder;">&nbsp;</label> <img alt="" src="${ctx }/images/submit.png" height="50" width="290" onclick="submitFormData()">
 						</div>
 					</li>
 				</ul>
@@ -266,6 +254,9 @@
 		</div>
 
 	</div>
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 

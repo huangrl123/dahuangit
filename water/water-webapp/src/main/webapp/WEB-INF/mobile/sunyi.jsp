@@ -33,7 +33,6 @@
 					showAlertDialog(result.msg);
 				}
 
-				hideLoader();
 			},
 		});
 	});
@@ -205,6 +204,9 @@
 		</div>
 
 	</div>
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 

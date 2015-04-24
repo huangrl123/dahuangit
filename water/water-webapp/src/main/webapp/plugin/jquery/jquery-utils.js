@@ -26,7 +26,6 @@ function hideLoader() {
 }
 
 function gotoFunction(url) {
-	showLoader('加载中...');
 	window.location.href = url;
 }
 

@@ -14,14 +14,6 @@
 
 <link rel="stylesheet" href="${ctx }/css/water.css" />
 
-<script type="text/javascript">
-	window.onload = function() {
-		try {
-			hideLoader();
-		} catch (e) {
-		}
-	}
-</script>
 </head>
 <body>
 
@@ -63,7 +55,9 @@
 		</div>
 
 	</div>
-
+	<script type="text/javascript">
+		$(window).resize();
+	</script>
 </body>
 </html>
 
