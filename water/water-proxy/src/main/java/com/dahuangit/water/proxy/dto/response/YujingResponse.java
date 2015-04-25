@@ -14,7 +14,9 @@ import com.dahuangit.base.dto.Response;
  */
 public class YujingResponse extends Response {
 
-	private Integer nextPageId = 1;
+	private PageBean pageBean = null;
+
+	private Integer totalPageCount = null;
 
 	private List<YujingInfo> yujingInfos = new ArrayList<YujingInfo>();
 
@@ -26,12 +28,20 @@ public class YujingResponse extends Response {
 		this.yujingInfos = yujingInfos;
 	}
 
-	public Integer getNextPageId() {
-		return nextPageId;
+	public PageBean getPageBean() {
+		return pageBean;
 	}
 
-	public void setNextPageId(Integer nextPageId) {
-		this.nextPageId = nextPageId;
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+
+	public Integer getTotalPageCount() {
+		return totalPageCount;
+	}
+
+	public void setTotalPageCount(Integer totalPageCount) {
+		this.totalPageCount = totalPageCount;
 	}
 
 }

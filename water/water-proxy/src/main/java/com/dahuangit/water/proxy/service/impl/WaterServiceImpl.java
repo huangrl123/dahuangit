@@ -19,6 +19,7 @@ import com.dahuangit.water.proxy.dto.response.GetLdListResponse;
 import com.dahuangit.water.proxy.dto.response.GetProjectListResponse;
 import com.dahuangit.water.proxy.dto.response.JiankongResponse;
 import com.dahuangit.water.proxy.dto.response.LoginResponse;
+import com.dahuangit.water.proxy.dto.response.PageBean;
 import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthResponse;
 import com.dahuangit.water.proxy.dto.response.SemesterMonthResponse;
 import com.dahuangit.water.proxy.dto.response.SemesterSumResponse;
@@ -139,11 +140,14 @@ public class WaterServiceImpl implements WaterService {
 	 */
 	public YujingResponse yujing(YujingRequest request) throws Exception {
 		String url = MessageFormat.format(yujing_url, request.getSystemId(), request.getProjectId(),
-				request.getBeginTime(), request.getEndTime(),request.getNextPageId());
+				request.getBeginTime(), request.getEndTime(), request.getReqPage());
 
 		YujingResponse response = (YujingResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
 				YujingResponse.class);
 
+		PageBean pageBean = new PageBean(request.getReqPage(), response.getTotalPageCount());
+		response.setPageBean(pageBean);
+		
 		return response;
 	}
 
@@ -223,8 +227,8 @@ public class WaterServiceImpl implements WaterService {
 	 */
 	public Response yongshui(SubmitYongshuiRequest request) throws Exception {
 
-		String url = MessageFormat.format(yongshui_url, request.getSystemId(), request.getProjectId(), request.getLdId(),
-				request.getYongshuiSum(),request.getYongdianSum());
+		String url = MessageFormat.format(yongshui_url, request.getSystemId(), request.getProjectId(),
+				request.getLdId(), request.getYongshuiSum(), request.getYongdianSum());
 
 		Response response = (Response) ConnectWaterSysUtils.connect(url, xmlMarshaller, Response.class);
 

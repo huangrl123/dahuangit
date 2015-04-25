@@ -33,6 +33,7 @@ import com.dahuangit.water.proxy.dto.response.GetLdListResponse;
 import com.dahuangit.water.proxy.dto.response.GetProjectListResponse;
 import com.dahuangit.water.proxy.dto.response.JiankongResponse;
 import com.dahuangit.water.proxy.dto.response.LoginResponse;
+import com.dahuangit.water.proxy.dto.response.PageBean;
 import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthInfo;
 import com.dahuangit.water.proxy.dto.response.RecentYearSemesterMonthResponse;
 import com.dahuangit.water.proxy.dto.response.SemesterMonthInfo;
@@ -264,6 +265,7 @@ public class WaterController extends BaseController {
 			modelMap.put("systemId", systemId);
 			modelMap.put("projectId", request.getProjectId());
 			modelMap.put("request", request);
+			modelMap.put("pageBean", response.getPageBean());
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -292,8 +294,6 @@ public class WaterController extends BaseController {
 			request.setEndTime("2015-04-15");
 
 			response = waterService.yujing(request);
-
-			response.setNextPageId(request.getNextPageId() + 1);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

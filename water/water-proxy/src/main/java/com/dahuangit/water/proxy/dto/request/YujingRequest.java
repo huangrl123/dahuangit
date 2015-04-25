@@ -24,7 +24,7 @@ public class YujingRequest extends Request {
 	private String systemId = null;
 
 	/** 要请求的页数 */
-	private Integer nextPageId = 1;
+	private Integer reqPage = 1;
 
 	public String getSystemId() {
 		return systemId;
@@ -58,12 +58,12 @@ public class YujingRequest extends Request {
 		this.projectId = projectId;
 	}
 
-	public Integer getNextPageId() {
-		return nextPageId;
+	public Integer getReqPage() {
+		return reqPage;
 	}
 
-	public void setNextPageId(Integer nextPageId) {
-		this.nextPageId = nextPageId;
+	public void setReqPage(Integer reqPage) {
+		this.reqPage = reqPage;
 	}
 
 }

@@ -35,15 +35,8 @@
 }
 </style>
 <script type="text/javascript">
-	var isLoad = false;
-	var nextPageId = 2;//从第二页开始起使用ajax形式加载数据
-	function queryNextPageDataAjax() {
-		if (isLoad == true) {
-			return;
-		}
-
-		isLoad = true;
-		$('#nextPageLink').text('加载中...');
+	function queryByPageDataAjax(reqPage) {
+		showLoader('正在查询...');
 
 		$.ajax({
 			url : '${ctx}/spring/mobile/getYujingAjaxData',
@@ -51,7 +44,7 @@
 			data : {
 				projectId : '${projectId}',
 				systemId : '${systemId }',
-				nextPageId : nextPageId
+				reqPage : reqPage
 			},
 			dataType : 'JSON',
 			cache : false,
@@ -59,6 +52,7 @@
 				if (result.success) {
 					//将查询出来的值追加到最后
 					var yujingListview = $('#yujingListview');
+					yujingListview.empty();
 					for ( var i = 0; i < result.yujingInfos.length; i++) {
 						var yujing = result.yujingInfos[i];
 						yujingListview.append('<li><span class="listItemLeft">' + yujing.buildName + '</span> <span class="listItemCenter">&nbsp;' + yujing.roomName
@@ -66,18 +60,25 @@
 					}
 
 					$('#nextPageLink').remove();
-					yujingListview.append('<li id="nextPageLink" style="text-align: center;" onclick="queryNextPageDataAjax()">下一页</li>');
+					var pageBean = result.pageBean;
+
+					if (pageBean.curPage == 1) {
+						yujingListview.append('<li id="pageBarLink" style="text-align: center;"><span>1/' + pageBean.totalPage + '</span><span style="float: right;" onclick="queryByPageDataAjax('
+								+ pageBean.nextPage + ')">下一页</span></li>');
+					} else if (pageBean.curPage == pageBean.totalPage) {
+						yujingListview.append('<li id="pageBarLink" style="text-align: center;"><span style="float: left;" onclick="queryByPageDataAjax(' + pageBean.prevPage + ')">上一页</span><span>'
+								+ pageBean.curPage + '/' + pageBean.totalPage + '</span></li>');
+					} else {
+						yujingListview.append('<li id="pageBarLink" style="text-align: center;"><span style="float: left;" onclick="queryByPageDataAjax(' + pageBean.prevPage + ')">上一页</span><span>'
+								+ pageBean.curPage + '/' + pageBean.totalPage + '</span><span style="float: right;" onclick="queryByPageDataAjax(' + pageBean.nextPage + ')">下一页</span></li>');
+					}
 
 					//刷新listview
 					$("div[data-role=content] ul").listview('refresh');
-
-					//设置下一页数
-					nextPageId = result.nextPageId;
 				}
 
-				isLoad = false;
-				$('#nextPageLink').text('下一页');
-
+				$('body,html').scrollTop(0); 
+				hideLoader();
 				$(window).resize();
 			}
 		});
@@ -106,8 +107,8 @@
 							<c:forEach items="${item.value }" var="yujing">
 								<li><span class="listItemLeft">${yujing.buildName }</span> <span class="listItemCenter">&nbsp;${yujing.roomName }</span> <span class="listItemRight"><font size="2">￥</font>${yujing.sumMoney }</span></li>
 							</c:forEach>
-							<c:if test="${fn:length(item.value)>=20}">
-								<li id="nextPageLink" style="text-align: center;" onclick="queryNextPageDataAjax()">下一页</li>
+							<c:if test="${pageBean.totalPage>=2}">
+								<li id="pageBarLink" style="text-align: center;"><span>${pageBean.curPage }/${pageBean.totalPage }</span><span style="float: right;" onclick="queryByPageDataAjax(2)">下一页</span></li>
 							</c:if>
 						</c:forEach>
 					</c:when>

@@ -8,6 +8,7 @@
 
 	//调转到普通pc浏览器版本
 	else {
+		
 		response.sendRedirect(request.getContextPath() + "/frame/main");
 	}
 %>

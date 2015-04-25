@@ -45,7 +45,6 @@ public class UserController extends BaseController {
 
 		try {
 			response = userService.login(request);
-			response = userService.login(request);
 			CookieUtils.addCookie(httpServletResponse, "curUserId", response.getUserId().toString(), -1);
 		} catch (Exception e) {
 			response.setSuccess(false);
