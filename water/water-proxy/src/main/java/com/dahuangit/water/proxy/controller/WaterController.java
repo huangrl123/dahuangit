@@ -230,7 +230,7 @@ public class WaterController extends BaseController {
 	 */
 	@RequestMapping(value = "/yujing", method = RequestMethod.GET)
 	public String yujing(ModelMap modelMap, HttpServletRequest httpServletRequest, YujingRequest request,
-			String systemId,String projectName) {
+			String systemId, String projectName) {
 		YujingResponse response = new YujingResponse();
 
 		try {
@@ -238,7 +238,7 @@ public class WaterController extends BaseController {
 
 			request.setBeginTime("2015-04-15");
 			request.setEndTime("2015-04-15");
-			
+
 			response = waterService.yujing(request);
 			Map<String, List<YujingInfo>> yujingMap = new HashMap<String, List<YujingInfo>>();
 			List<YujingInfo> yujingInfos = response.getYujingInfos();
@@ -258,10 +258,11 @@ public class WaterController extends BaseController {
 
 			projectName = new String(projectName.getBytes("ISO8859-1"), "UTF-8");
 			modelMap.put("projectName", projectName);
-			
+
 			modelMap.put("yujingMap", yujingMap);
 			modelMap.put("request", request);
 			modelMap.put("systemId", systemId);
+			modelMap.put("projectId", request.getProjectId());
 			modelMap.put("request", request);
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -270,6 +271,36 @@ public class WaterController extends BaseController {
 		}
 
 		return "yujing";
+	}
+
+	/**
+	 * 设备预警统计表
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getYujingAjaxData", method = RequestMethod.POST)
+	@ResponseBody
+	public YujingResponse getYujingAjaxData(ModelMap modelMap, HttpServletRequest httpServletRequest,
+			YujingRequest request, String systemId, String projectName) {
+		YujingResponse response = new YujingResponse();
+
+		try {
+			request.setSystemId(systemId);
+
+			request.setBeginTime("2015-04-15");
+			request.setEndTime("2015-04-15");
+
+			response = waterService.yujing(request);
+
+			response.setNextPageId(request.getNextPageId() + 1);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
 	}
 
 	/**

@@ -13,7 +13,9 @@ import com.dahuangit.base.dto.Response;
  *         创建时间 2014年12月25日 下午4:21:40
  */
 public class YujingResponse extends Response {
-	
+
+	private Integer nextPageId = 1;
+
 	private List<YujingInfo> yujingInfos = new ArrayList<YujingInfo>();
 
 	public List<YujingInfo> getYujingInfos() {
@@ -22,6 +24,14 @@ public class YujingResponse extends Response {
 
 	public void setYujingInfos(List<YujingInfo> yujingInfos) {
 		this.yujingInfos = yujingInfos;
+	}
+
+	public Integer getNextPageId() {
+		return nextPageId;
+	}
+
+	public void setNextPageId(Integer nextPageId) {
+		this.nextPageId = nextPageId;
 	}
 
 }

@@ -139,7 +139,7 @@ public class WaterServiceImpl implements WaterService {
 	 */
 	public YujingResponse yujing(YujingRequest request) throws Exception {
 		String url = MessageFormat.format(yujing_url, request.getSystemId(), request.getProjectId(),
-				request.getBeginTime(), request.getEndTime());
+				request.getBeginTime(), request.getEndTime(),request.getNextPageId());
 
 		YujingResponse response = (YujingResponse) ConnectWaterSysUtils.connect(url, xmlMarshaller,
 				YujingResponse.class);
