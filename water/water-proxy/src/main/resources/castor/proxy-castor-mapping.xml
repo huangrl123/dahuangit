@@ -83,7 +83,7 @@
 	<class name="com.dahuangit.water.proxy.dto.response.YujingResponse" extends="com.dahuangit.base.dto.Response">
 		<map-to xml="response" />
 		<field name="totalPageCount">
-		    <bind-xml name="totalPageCount"/>
+		    <bind-xml name="totalpagecount"/>
 		</field>
 		<field name="yujingInfos" type="com.dahuangit.water.proxy.dto.response.YujingInfo" collection="arraylist">
 			<bind-xml name="data" />
