@@ -1,3 +1,5 @@
+var load;
+
 $(function() {
 			parent.window['leftMenu'].updateArea('用户查询');
 
@@ -34,7 +36,9 @@ $(function() {
 									width : 80,
 									align : 'center',
 									formatter : function(value, row) {
-										return '<a href="#" onclick="toPerceptionStatusPage(' + value + ')">状态查看</a>';
+										var s = JSON.stringify(row);
+										s = s.replaceAll('"', '&quot;');
+										return '<a href="#" onclick="showSaveUserWin(\'' + s + '\')" style="padding-right:10px;">修改</a><a href="#" onclick="deleteUser(' + row.userId + ')">删除</a>';
 									}
 								}]],
 						onClickRow : function(rowIndex, row) {
@@ -45,11 +49,12 @@ $(function() {
 									iconCls : 'icon-add',
 									plain : 'true',
 									handler : function() {
+										showSaveUserWin();
 									}
 								}]
 					});
 
-			var load = function(pageNumber, pageSize, pg, conditionParams) {
+			var loadByPage = function(pageNumber, pageSize, pg, conditionParams) {
 				var start = 0;
 				if (pageNumber > 0) {
 					var willStart = (pageNumber - 1) * pageSize;
@@ -84,7 +89,7 @@ $(function() {
 
 			var getConditionParams = function() {
 				var conditionParams = {};
-				conditionParams.userName = $('#userName').val();
+				conditionParams.userName = $('#queryUserName').val();
 				conditionParams.isOnline = $('#onlineStatus').val();
 				return conditionParams;
 			}
@@ -97,19 +102,44 @@ $(function() {
 						afterPageText : '页    共 {pages} 页',
 						displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录',
 						onSelectPage : function(pageNumber, pageSize) {
-							load(pageNumber, pageSize, pg, getConditionParams());
+							loadByPage(pageNumber, pageSize, pg, getConditionParams());
 						}
 					});
 
+			load = function() {
+				loadByPage(1, pg.pagination('options').pageSize, pg, getConditionParams());
+			}
 			// 查询按钮的点击事件
 			$('#queryBtn').click(function() {
-						load(1, pg.pagination('options').pageSize, pg, getConditionParams());
+						load();
 					});
 
 			// 进入页面时，加载数据
-			load(1, pg.pagination('options').pageSize, pg, getConditionParams());
+			load();
 		});
 
-var toPerceptionStatusPage = function(perceptionId) {
-	window.location.href = '../perception/perceptionStatusPage?perceptionId=' + perceptionId;
+function deleteUser(userId) {
+	showLoading();
+
+	$.ajax({
+				url : '../userController/deleteUser',
+				cache : false,
+				type : 'POST',
+				dataType : 'JSON',
+				data : {
+					userId : userId
+				},
+				success : function(result) {
+					if (result.success == true) {
+						load();
+					} else {
+						showAlert(result.msg);
+					}
+					hideLoading();
+				},
+				error : function(result) {
+					showAlert(result.msg);
+					hideLoading();
+				}
+			});
 }

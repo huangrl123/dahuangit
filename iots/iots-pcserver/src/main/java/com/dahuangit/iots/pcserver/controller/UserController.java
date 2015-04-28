@@ -13,6 +13,7 @@ import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
+import com.dahuangit.iots.pcserver.dto.request.SaveUserRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
 import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
@@ -96,6 +97,69 @@ public class UserController extends BaseController {
 			if (userId != null) {
 				response = this.userService.heart((Integer) userId);
 			}
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 添加用户
+	 */
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	@ResponseBody
+	public Response addUser(SaveUserRequest request) {
+		Response response = new Response();
+
+		try {
+			this.userService.addUser(request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 修改用户
+	 */
+	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@ResponseBody
+	public Response updateUser(SaveUserRequest request) {
+		Response response = new Response();
+
+		try {
+			this.userService.updateUser(request);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 删除用户
+	 */
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+	@ResponseBody
+	public Response deleteUser(HttpServletRequest httpServletRequest, Integer userId) {
+		Response response = new Response();
+
+		try {
+			Integer curUserId = (Integer) httpServletRequest.getSession().getAttribute("userId");
+
+			if (userId.equals(curUserId)) {
+				throw new RuntimeException("不能删除当前登录的用户");
+			}
+			
+			this.userService.deleteUser(userId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

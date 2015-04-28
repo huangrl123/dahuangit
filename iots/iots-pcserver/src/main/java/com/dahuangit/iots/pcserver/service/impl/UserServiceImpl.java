@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dao.MgrLogDao;
 import com.dahuangit.iots.pcserver.dao.UserDao;
+import com.dahuangit.iots.pcserver.dto.request.SaveUserRequest;
 import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
@@ -103,6 +104,41 @@ public class UserServiceImpl implements UserService, InitializingBean {
 		User user = this.userDao.get(User.class, userId);
 		user.setIsOnline(false);
 		onlineUserMap.remove(userId);
+	}
+
+	/**
+	 * 添加用户
+	 * 
+	 * @param request
+	 */
+	public void addUser(SaveUserRequest request) {
+		User u = new User();
+		u.setUserName(request.getUserName());
+		u.setUserAbbr(request.getUserAbbr());
+		u.setPassword("111111");
+		this.userDao.add(u);
+	}
+
+	/**
+	 * 修改用户
+	 * 
+	 * @param request
+	 */
+	public void updateUser(SaveUserRequest request) {
+		User u = this.userDao.get(User.class, request.getUserId());
+		u.setUserName(request.getUserName());
+		u.setUserAbbr(request.getUserAbbr());
+		this.userDao.update(u);
+	}
+
+	/**
+	 * 删除用户
+	 * 
+	 * @param userId
+	 */
+	public void deleteUser(Integer userId) {
+		User u = this.userDao.get(User.class, userId);
+		this.userDao.delete(u);
 	}
 
 	/**
@@ -206,7 +242,11 @@ public class UserServiceImpl implements UserService, InitializingBean {
 		List<QueryUserByPageResponse> rows = new ArrayList<QueryUserByPageResponse>();
 		for (User u : list) {
 			QueryUserByPageResponse pageResponse = DtoBuilder.buildDto(QueryUserByPageResponse.class, u);
-			pageResponse.setLastLoginTime(DateUtils.format(u.getLastLoginTime()));
+
+			if (null != u.getLastLoginTime()) {
+				pageResponse.setLastLoginTime(DateUtils.format(u.getLastLoginTime()));
+			}
+
 			rows.add(pageResponse);
 		}
 

@@ -26,3 +26,6 @@ function showConfirm(msg, yesFn, noFn) {
 			});
 }
 
+String.prototype.replaceAll = function(replaced, replaceWith) {
+	return this.replace(new RegExp(replaced, "gm"), replaceWith);
+}

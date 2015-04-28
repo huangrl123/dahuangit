@@ -14,15 +14,19 @@
 <link rel="stylesheet" type="text/css" href="../plugin/jquery-easyui/themes/icon.css">
 <script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../plugin/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui-util.js"></script>
+
+<script type="text/javascript" src="../plugin/json2.js"></script>
 
 <script type="text/javascript" src="../js/user/queryUser.js"></script>
+<script type="text/javascript" src="../js/user/saveUser.js"></script>
 </head>
 
 <body style="background-color: #FFFFFF; padding: 5px;">
 	<form id="queryForm">
 		<table width='100%' border="0" cellspacing="0" cellpadding="0" class="inquiry" style="margin: 0px 0px 5px 0px;">
 			<tr>
-				<td align="left" style="padding: 0px 0px 2px 0px;"><a>&nbsp;<span class="blue">用户名称：</span></a> <label> <input id="userName" type="text" class="text_box" size="33" />
+				<td align="left" style="padding: 0px 0px 2px 0px;"><a>&nbsp;<span class="blue">用户名称：</span></a> <label> <input id="queryUserName" type="text" class="text_box" size="33" />
 				</label> <a class="blue"><span class="blue">&nbsp;&nbsp;&nbsp;&nbsp; 在线状态：</span></a> <select id="onlineStatus" style="margin-top: 1px;">
 						<option value="">全部</option>
 						<option value="false">离线</option>
@@ -36,5 +40,28 @@
 
 	<div id="user-datagrid" style="width: 100%"></div>
 	<div id="user-pagination" style="border: 1px solid #95B8E7; margin-top: 5px;"></div>
+	<div style="display: none;">
+		<div id="saveUserWin">
+			<div style="padding: 5px 5px 5px 5px">
+				<form id="saveUserForm" method="post">
+					<input type="hidden" id="userId" name="userId">
+					<table>
+						<tr>
+							<td>用户名:</td>
+							<td><input type="text" id="userName" name="userName"></input></td>
+						</tr>
+						<tr>
+							<td>昵称:</td>
+							<td><input type="text" id="userAbbr" name="userAbbr"></input></td>
+						</tr>
+					</table>
+
+					<div style="text-align: center; padding-top: 25px;">
+						<a id="saveUserBtn" href="#" class="easyui-linkbutton" style="margin-right: 5px; width: 90px;">确定</a> <a id="saveUserCloseBtn" href="#" class="easyui-linkbutton" style="margin-left: 5px; width: 90px;" onclick="">关闭</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

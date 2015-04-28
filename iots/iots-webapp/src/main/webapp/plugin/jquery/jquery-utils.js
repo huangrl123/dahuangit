@@ -54,3 +54,4 @@ function showAlertDialog(text) {
 
 	popupDialogObj.popup('open');
 }
+
