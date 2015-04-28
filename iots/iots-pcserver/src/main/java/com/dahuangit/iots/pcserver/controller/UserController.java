@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
+import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
+import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
 
@@ -65,10 +68,10 @@ public class UserController extends BaseController {
 
 		try {
 			Object userId = httpServletRequest.getSession().getAttribute("userId");
-			if(userId != null) {
-				this.userService.logout((Integer)userId);
+			if (userId != null) {
+				this.userService.logout((Integer) userId);
 			}
-			
+
 			httpServletRequest.getSession().setAttribute("userName", null);
 			httpServletRequest.getSession().setAttribute("userId", null);
 		} catch (Exception e) {
@@ -90,8 +93,8 @@ public class UserController extends BaseController {
 
 		try {
 			Object userId = httpServletRequest.getSession().getAttribute("userId");
-			if(userId != null) {
-				response = this.userService.heart((Integer)userId);
+			if (userId != null) {
+				response = this.userService.heart((Integer) userId);
 			}
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -100,5 +103,35 @@ public class UserController extends BaseController {
 		}
 
 		return response;
+	}
+
+	/**
+	 * 跳转到用户查询界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/toQueryUserPage", method = RequestMethod.GET)
+	public String toQueryUserPage() {
+		return "/pc/user/queryUser";
+	}
+
+	/**
+	 * 通过分页查询用户
+	 * 
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/queryUserByPage", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<QueryUserByPageResponse> queryUserByPage(QueryUserByPageRequest req) {
+		PageQueryResult<QueryUserByPageResponse> queryResult = new PageQueryResult<QueryUserByPageResponse>();
+
+		try {
+			queryResult = this.userService.queryUserByPage(req);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return queryResult;
 	}
 }

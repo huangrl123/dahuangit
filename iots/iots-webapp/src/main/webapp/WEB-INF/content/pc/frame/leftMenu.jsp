@@ -227,7 +227,7 @@
 		
 		t = outlookbar.addtitle('用户管理')
 
-		outlookbar.additem('用户查询', t, '../perception/queryPerceptionPage')
+		outlookbar.additem('用户查询', t, '../userController/toQueryUserPage')
 
 		outlookbar.additem('用户添加', t, '../perception/addPerceptionPage')
 		

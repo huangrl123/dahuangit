@@ -15,16 +15,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dao.MgrLogDao;
 import com.dahuangit.iots.pcserver.dao.UserDao;
+import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
+import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
 import com.dahuangit.iots.perception.dto.response.NoticeInfo;
+import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.entry.MgrLog;
 import com.dahuangit.iots.perception.entry.User;
 import com.dahuangit.iots.perception.service.PerceptionService;
+import com.dahuangit.util.bean.dto.DtoBuilder;
+import com.dahuangit.util.date.DateUtils;
 
 /**
  * 用户服务类
@@ -116,17 +122,7 @@ public class UserServiceImpl implements UserService, InitializingBean {
 		}
 
 		HeartResponse response = new HeartResponse();
-		// List<NoticeInfo> list = perceptionService.getNoticeInfos(userId);
-		List<NoticeInfo> list = new ArrayList<NoticeInfo>();
-		for (int i = 0; i < 10; i++) {
-			NoticeInfo info = new NoticeInfo();
-			info.setPerceptionId(i);
-			info.setPerceptionAddr("13ffdslf" + i + "rrrrr");
-			info.setWhen("2015年04月28日11:35:38");
-			info.setParamDesc("红外");
-			info.setParamValueDesc("离开");
-			list.add(info);
-		}
+		List<NoticeInfo> list = perceptionService.getNoticeInfos(userId);
 		response.setNoticeInfos(list);
 		return response;
 	}
@@ -176,5 +172,47 @@ public class UserServiceImpl implements UserService, InitializingBean {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 通过分页查询用户
+	 * 
+	 * @param req
+	 * @return
+	 */
+	public PageQueryResult<QueryUserByPageResponse> queryUserByPage(QueryUserByPageRequest req) {
+		PageQueryResult<QueryUserByPageResponse> pageQueryResult = new PageQueryResult<QueryUserByPageResponse>();
+		StringBuffer hql = new StringBuffer("from User u where 1=1 ");
+		StringBuffer counthql = new StringBuffer("select count(*) from User u where 1=1 ");
+		StringBuffer condition = new StringBuffer();
+
+		List<Object> values = new ArrayList<Object>();
+		if (null != req.getIsOnline() && !"".equals(req.getIsOnline())) {
+			condition.append(" and u.isOnline=?");
+			values.add(req.getIsOnline());
+		}
+
+		if (null != req.getUserName() && !"".equals(req.getUserName())) {
+			condition.append(" and u.userName like?");
+			values.add("%" + req.getUserName() + "%");
+		}
+
+		Long count = this.userDao.findRecordsCount(counthql.append(condition).toString(),
+				values.toArray(new Object[values.size()]));
+
+		List<User> list = this.userDao.findByPage(hql.append(condition).toString(), req.getStart(), req.getLimit(),
+				values.toArray(new Object[values.size()]));
+
+		List<QueryUserByPageResponse> rows = new ArrayList<QueryUserByPageResponse>();
+		for (User u : list) {
+			QueryUserByPageResponse pageResponse = DtoBuilder.buildDto(QueryUserByPageResponse.class, u);
+			pageResponse.setLastLoginTime(DateUtils.format(u.getLastLoginTime()));
+			rows.add(pageResponse);
+		}
+
+		pageQueryResult.setTotal(count);
+		pageQueryResult.setRows(rows);
+
+		return pageQueryResult;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.dahuangit.base.dao.BaseDao;
+import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.perception.entry.User;
 
 /**

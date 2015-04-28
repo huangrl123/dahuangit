@@ -49,10 +49,12 @@ public class User extends BaseModel {
 	@Column(name = "remark")
 	private String remark = null;
 
+	/** 是否在线 */
 	@Column(name = "is_online")
 	@org.hibernate.annotations.Type(type = "yes_no")
 	private Boolean isOnline = false;
 
+	/** 最后登录时间 */
 	@Column(name = "last_login_time")
 	private Date lastLoginTime = null;
 
