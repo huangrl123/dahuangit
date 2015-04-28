@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
-import com.dahuangit.iots.pcserver.dto.request.UserLogoutRequest;
+import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
-import com.dahuangit.util.CookieUtils;
 
 /**
  * 用户controller
@@ -45,7 +44,8 @@ public class UserController extends BaseController {
 
 		try {
 			response = userService.login(request);
-			CookieUtils.addCookie(httpServletResponse, "curUserId", response.getUserId().toString(), -1);
+			httpServletRequest.getSession().setAttribute("userName", request.getUserName());
+			httpServletRequest.getSession().setAttribute("userId", response.getUserId());
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -60,11 +60,39 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	@ResponseBody
-	public Response logout(UserLogoutRequest request) {
+	public Response logout(HttpServletRequest httpServletRequest) {
 		Response response = new Response();
 
 		try {
-			this.userService.logout(request);
+			Object userId = httpServletRequest.getSession().getAttribute("userId");
+			if(userId != null) {
+				this.userService.logout((Integer)userId);
+			}
+			
+			httpServletRequest.getSession().setAttribute("userName", null);
+			httpServletRequest.getSession().setAttribute("userId", null);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 退出登录
+	 */
+	@RequestMapping(value = "/heart", method = RequestMethod.POST)
+	@ResponseBody
+	public HeartResponse heart(HttpServletRequest httpServletRequest) {
+		HeartResponse response = new HeartResponse();
+
+		try {
+			Object userId = httpServletRequest.getSession().getAttribute("userId");
+			if(userId != null) {
+				response = this.userService.heart((Integer)userId);
+			}
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

@@ -14,5 +14,9 @@ import com.dahuangit.iots.perception.entry.PerceptionParam;
  */
 @Component
 public class PerceptionParamDao extends BaseDao<PerceptionParam, Integer> {
-
+	
+	public String getPerceptionParamDesc(Integer paramId) {
+		PerceptionParam p = this.get(PerceptionParam.class, paramId);
+		return p.getPerceptionParamDesc();
+	}
 }

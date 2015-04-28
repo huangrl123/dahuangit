@@ -2,6 +2,9 @@ package com.dahuangit.iots.pcserver.controller;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +30,11 @@ public class FrameController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String mainPage() {
+	public String mainPage(HttpSession session, HttpServletResponse response) {
+		if (session.getAttribute("userName") == null) {
+			return "pc/frame/login";
+		}
+
 		return "pc/frame/main";
 	}
 
@@ -39,6 +46,16 @@ public class FrameController extends BaseController {
 	@RequestMapping(value = "/head", method = RequestMethod.GET)
 	public String headPage() {
 		return "pc/frame/head";
+	}
+
+	/**
+	 * 跳转到login页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String loginPage() {
+		return "pc/frame/login";
 	}
 
 	/**

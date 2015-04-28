@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dahuangit.base.controller.BaseController;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
-import com.dahuangit.iots.pcserver.dto.request.UserLogoutRequest;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
 import com.dahuangit.util.CookieUtils;
@@ -60,11 +59,30 @@ public class AppUserController extends BaseController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	@ResponseBody
-	public String logout(UserLogoutRequest request) {
+	public String logout(Integer userId) {
 		Response response = new Response();
 
 		try {
-			this.userService.logout(request);
+			this.userService.logout(userId);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return this.responseToXml(response);
+	}
+
+	/**
+	 * 心跳
+	 */
+	@RequestMapping(value = "/heart", method = RequestMethod.POST)
+	@ResponseBody
+	public String heart(Integer userId) {
+		Response response = new Response();
+
+		try {
+			this.userService.heart(userId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

@@ -37,5 +37,6 @@ public class PerceptionParamValueDao extends BaseDao<PerceptionParamValueInfo, I
 		String desc = this.findUnique(hql, perceptionParamId, perceptionParamValue);
 		return desc;
 	}
+	
 
 }

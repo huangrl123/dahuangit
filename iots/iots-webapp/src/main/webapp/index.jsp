@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="common/base.jsp"%>
 <%
 	String agent = request.getHeader("user-agent");
 
@@ -8,7 +10,12 @@
 
 	//调转到普通pc浏览器版本
 	else {
-		
-		response.sendRedirect(request.getContextPath() + "/frame/main");
+		Object obj = request.getSession().getAttribute("userName");
+		if (null == obj) {
+			response.sendRedirect(request.getContextPath() + "/frame/login");
+		} else {
+			response.sendRedirect(request.getContextPath() + "/frame/main");
+		}
+
 	}
 %>

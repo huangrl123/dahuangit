@@ -1,12 +1,17 @@
 package com.dahuangit.iots.perception.entry;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -65,6 +70,11 @@ public class Perception extends BaseModel {
 	@ManyToOne
 	@JoinColumn(name = "pt_id", insertable = false, updatable = false)
 	private PerceptionType perceptionType = null;
+
+	/** 该设备受哪些用户的管理 */
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinTable(name = "t_user_perception", joinColumns = { @JoinColumn(name = "perception_id", referencedColumnName = "p_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") })
+	private List<User> managers = null;
 
 	public Integer getPerceptionId() {
 		return perceptionId;
@@ -136,6 +146,14 @@ public class Perception extends BaseModel {
 
 	public void setOnlineStatus(Integer onlineStatus) {
 		this.onlineStatus = onlineStatus;
+	}
+
+	public List<User> getManagers() {
+		return managers;
+	}
+
+	public void setManagers(List<User> managers) {
+		this.managers = managers;
 	}
 
 }

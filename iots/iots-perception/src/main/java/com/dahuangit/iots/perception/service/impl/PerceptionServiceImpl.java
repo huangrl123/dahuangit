@@ -2,6 +2,7 @@ package com.dahuangit.iots.perception.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import com.dahuangit.iots.perception.dto.request.ParamInfoList;
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
+import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
@@ -36,6 +38,7 @@ import com.dahuangit.iots.perception.entry.PerceptionParam;
 import com.dahuangit.iots.perception.entry.PerceptionParamValueInfo;
 import com.dahuangit.iots.perception.entry.PerceptionRuntimeLog;
 import com.dahuangit.iots.perception.entry.PerceptionType;
+import com.dahuangit.iots.perception.entry.User;
 import com.dahuangit.iots.perception.enums.ParamType;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.tcpserver.dto.PerceptionTcpDto;
@@ -77,6 +80,10 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 	@Autowired
 	protected CastorMarshaller xmlMarshaller = null;
+
+	private Map<Integer, List<NoticeInfo>> noticeMap = new HashMap<Integer, List<NoticeInfo>>();
+
+	private boolean threadStarted = false;
 
 	/**
 	 * 添加设备
@@ -609,11 +616,89 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 		Integer perceptionId = p.getPerceptionId();
 
+		Date now = new Date();
+
+		List<NoticeInfo> noticeInfos = new ArrayList<NoticeInfo>();
 		for (ParamInfo info : pList.getParamInfos()) {
+			NoticeInfo noticeInfo = new NoticeInfo();
+
+			noticeInfo.setWhenL(now.getTime());
+			noticeInfo.setWhen(DateUtils.format(now));
+
+			noticeInfo.setPerceptionAddr(addr);
+			noticeInfo.setParamId(info.getParamId());
+			String paramDesc = perceptionParamDao.getPerceptionParamDesc(info.getParamId());
+			noticeInfo.setParamDesc(paramDesc);
+			noticeInfo.setParamValue(info.getParamValue());
+			String paramValueDesc = perceptionParamValueDao.getPerceptionParamValueDesc(info.getParamId(),
+					info.getParamValue());
+			noticeInfo.setParamValueDesc(paramValueDesc);
+
+			noticeInfos.add(noticeInfo);
 			savePerceptionParamStatus(perceptionId, info.getParamId(), info.getParamValue());
 		}
 
+		List<User> managers = p.getManagers();
+		for (User u : managers) {
+			List<NoticeInfo> list = noticeMap.get(u.getUserId());
+			if (null == list) {
+				list = new ArrayList<NoticeInfo>();
+				list.addAll(noticeInfos);
+				noticeMap.put(u.getUserId(), list);
+			} else {
+				list.addAll(noticeInfos);
+			}
+		}
+
+		if (!threadStarted) {
+			new Thread() {
+				public void run() {
+					while (true) {
+						try {
+							Thread.sleep(5 * 60 * 1000);
+
+							long timeout = 10 * 60 * 1000;
+
+							List<NoticeInfo> delList = new ArrayList<NoticeInfo>();
+							
+							for (Map.Entry<Integer, List<NoticeInfo>> entry : noticeMap.entrySet()) {
+								
+								for (NoticeInfo dto : entry.getValue()) {
+
+									long when = dto.getWhenL();
+									long now = new Date().getTime();
+
+									if (now - when > timeout) {
+										delList.add(dto);
+									}
+								}
+							}
+							
+							noticeMap.values().removeAll(delList);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+		}
+
+		threadStarted = true;
+
 		return response;
+	}
+
+	/**
+	 * 根据用户id获取通知
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<NoticeInfo> getNoticeInfos(Integer userId) {
+		List<NoticeInfo> list = new ArrayList<NoticeInfo>();
+		list = this.noticeMap.get(userId);
+		this.noticeMap.remove(userId);
+		return list;
 	}
 
 	private void savePerceptionParamStatus(Integer perceptionId, Integer paramId, Integer paramValue) {

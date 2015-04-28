@@ -1,7 +1,7 @@
 package com.dahuangit.iots.pcserver.service;
 
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
-import com.dahuangit.iots.pcserver.dto.request.UserLogoutRequest;
+import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 
 public interface UserService {
@@ -16,5 +16,12 @@ public interface UserService {
 	/**
 	 * 退出登录
 	 */
-	public void logout(UserLogoutRequest request);
+	public void logout(Integer userId);
+
+	/**
+	 * 心跳
+	 * 
+	 * @param userName
+	 */
+	public HeartResponse heart(Integer userId);
 }

@@ -11,6 +11,7 @@ import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageR
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
 import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
+import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
@@ -124,4 +125,12 @@ public interface PerceptionService {
 	 * @return
 	 */
 	public List<PerceptionType> getAllPerceptionTypes();
+
+	/**
+	 * 根据用户id获取通知
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<NoticeInfo> getNoticeInfos(Integer userId);
 }

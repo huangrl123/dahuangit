@@ -4,6 +4,15 @@
 <HEAD>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 <title></title>
+<script src="../plugin/jquery/jquery-1.11.2.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../plugin/jquery-easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../plugin/jquery-easyui/themes/icon.css">
+<script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../plugin/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui-util.js"></script>
+
+<script type="text/javascript" src="../js/frame/login.js"></script>
 
 <link href="../css/css_style.css" rel="stylesheet" type="text/css" />
 <!-- IE浏览器下的样式 -->
@@ -28,7 +37,6 @@
 </style>
 <![endif]-->
 <script type="text/javascript">
-<!--
 	function collapseMenu(target, ptarget, btnImage) {
 		if (parent) {
 			var targetObj = document.getElementById(target);
@@ -43,7 +51,75 @@
 			}
 		}
 	}
-//-->
+
+	function exitSystem() {
+		showConfirm('确认退出系统？', function() {
+			$.ajax({
+				url : '../userController/logout',
+				cache : false,
+				type : 'POST',
+				dataType : 'JSON',
+				data : {
+					userName : $('#userName').text()
+				},
+				success : function(result) {
+					if (result.success == true) {
+						parent.window.location.href = '../frame/login';
+					} else {
+						showAlert(result.msg);
+					}
+					hideLoading();
+				},
+				error : function(result) {
+					showAlert(result.msg);
+					hideLoading();
+				}
+			});
+		});
+	}
+
+	function heartAndReceiveNotice() {
+		$.ajax({
+			url : '../userController/heart',
+			cache : false,
+			type : 'POST',
+			dataType : 'JSON',
+			success : function(result) {
+				if (result.success == true) {
+					var noticeList = result.noticeInfos;
+
+					if (noticeList.length > 0) {
+
+						$('embed').remove();
+
+						var content = '';
+						for ( var i = 0; i < noticeList.length; i++) {
+							var info = noticeList[i];
+							content = content + '<div style="text-decoration:underline;cursor:hand;" onclick=""><span>【' + info.when + '】</span><span>设备(' + info.perceptionAddr + ')<span><span>'
+									+ info.paramDesc + '</span><span style="color:red;">' + info.paramValueDesc + '</span></div>';
+						}
+
+						var msg = '<div style="height:100px;width:420px;overflow:scroll;overflow-x:hidden;">' + content + '</div>';
+
+						$.messager.show({
+							title : '设备动作变化信息提示',
+							msg : msg,
+							width : 450,
+							height : 150,
+							timeout : 10 * 1000,
+							showType : 'slide'
+						});
+
+						$('body').append('<embed src="../media/appleline.mp3" loop="0" autostart="true" hidden="true"></embed>');
+					}
+				}
+			}
+		});
+	}
+
+	$(function() {
+		setInterval('heartAndReceiveNotice()', 4000);
+	})
 </script>
 
 </HEAD>
@@ -51,11 +127,9 @@
 	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
 		<tr>
 			<td>
-
 				<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td valign="top" style="width: 198px;">
-
 							<TABLE id="menuList" style="WIDTH: 198px; HEIGHT: 100%;" cellSpacing="0" cellPadding="0" align="left" border="0">
 								<TBODY>
 									<TR>
@@ -70,8 +144,8 @@
 								<tr>
 									<td width="100%" valign="top">
 										<div class="Position">
-											<span class="Position_1"><a>当前位置：</a><a><span class="gray" id="areaSpan"></span></a>
-											</span> <span class="Position_2"> <a>欢迎您：</a><a><span class="gray" style="padding-right: 50px;">admin</span></a><a style="padding-right: 20px;">今天是 ${today }</a><span class="gray"><a href="#">退出系统</a></span>
+											<span class="Position_1"><a>当前位置：</a><a><span class="gray" id="areaSpan"></span></a> </span> <span class="Position_2"> <a>欢迎您：</a><a><span id="userName" class="gray" style="padding-right: 50px;">${sessionScope.userName }</span></a><a
+												style="padding-right: 20px;">今天是 ${today }</a><span class="gray"><a href="#" onclick="exitSystem()">退出系统</a></span>
 											</span>
 										</div>
 									</td>
@@ -90,5 +164,6 @@
 	</td>
 	</tr>
 	</table>
+
 </body>
 </html>

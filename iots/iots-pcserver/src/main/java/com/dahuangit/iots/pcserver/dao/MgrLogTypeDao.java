@@ -3,7 +3,7 @@ package com.dahuangit.iots.pcserver.dao;
 import org.springframework.stereotype.Component;
 
 import com.dahuangit.base.dao.BaseDao;
-import com.dahuangit.iots.pcserver.entry.MgrLogType;
+import com.dahuangit.iots.perception.entry.MgrLogType;
 
 /**
  * 用户dao
