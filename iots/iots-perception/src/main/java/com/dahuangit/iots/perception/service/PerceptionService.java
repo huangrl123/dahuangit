@@ -5,7 +5,7 @@ import java.util.List;
 import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
-import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.perception.dto.request.SavePerceptionReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
@@ -15,6 +15,7 @@ import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionType;
@@ -26,7 +27,7 @@ public interface PerceptionService {
 	 * 
 	 * @param req
 	 */
-	public void addPerception(AddPerceptionReq req);
+	public void addPerception(SavePerceptionReq req);
 
 	/**
 	 * 通过地址查询设备
@@ -133,4 +134,27 @@ public interface PerceptionService {
 	 * @return
 	 */
 	public List<NoticeInfo> getNoticeInfos(Integer userId);
+
+	/**
+	 * 删除设备
+	 * 
+	 * @param perceptionId
+	 */
+	public void deletePerception(Integer perceptionId);
+
+	/**
+	 * 修改设备
+	 * 
+	 * @param req
+	 */
+	public void updatePerception(SavePerceptionReq req);
+
+	public List<QueryUserByPageResponse> getRelateUser(Integer perceptionId);
+
+	/**
+	 * 修改设备管理员
+	 * 
+	 * @param req
+	 */
+	public void updatePerceptionManagers(Integer perceptionId, List<Integer> userIdList);
 }

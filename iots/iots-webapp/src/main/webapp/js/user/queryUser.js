@@ -4,6 +4,7 @@ $(function() {
 			parent.window['leftMenu'].updateArea('用户查询');
 
 			var grid = $('#user-datagrid').datagrid({
+						title : '用户列表',
 						singleSelect : true,
 						fitColumns : true,
 						rownumbers : true,

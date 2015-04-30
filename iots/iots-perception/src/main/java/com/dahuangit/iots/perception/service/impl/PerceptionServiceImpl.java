@@ -20,18 +20,20 @@ import com.dahuangit.iots.perception.dao.PerceptionParamDao;
 import com.dahuangit.iots.perception.dao.PerceptionParamValueDao;
 import com.dahuangit.iots.perception.dao.PerceptionRuntimeLogDao;
 import com.dahuangit.iots.perception.dao.PerceptionTypeDao;
-import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.perception.dao.UserDao;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.ParamInfo;
 import com.dahuangit.iots.perception.dto.request.ParamInfoList;
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.request.SavePerceptionReq;
 import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
 import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionParam;
@@ -73,6 +75,9 @@ public class PerceptionServiceImpl implements PerceptionService {
 	private PerceptionTypeDao perceptionTypeDao = null;
 
 	@Autowired
+	private UserDao userDao = null;
+
+	@Autowired
 	private PerceptionProcessor perceptionProcessor = null;
 
 	/** 感知端连接池 */
@@ -90,13 +95,63 @@ public class PerceptionServiceImpl implements PerceptionService {
 	 * 
 	 * @param req
 	 */
-	public void addPerception(AddPerceptionReq req) {
+	public void addPerception(SavePerceptionReq req) {
 		Perception p = new Perception();
-		p.setPerceptionAddr(req.getPercetionAddr());
+		p.setPerceptionAddr(req.getPerceptionAddr());
 		p.setPerceptionName(req.getPerceptionName());
 		p.setPerceptionTypeId(req.getPerceptionTypeId());
 		p.setCreateDateTime(new Date());
 		this.perceptionDao.addPerception(p);
+	}
+
+	/**
+	 * 修改设备
+	 * 
+	 * @param req
+	 */
+	public void updatePerception(SavePerceptionReq req) {
+		Perception p = this.perceptionDao.get(Perception.class, req.getPerceptionId());
+		p.setPerceptionAddr(req.getPerceptionAddr());
+		p.setPerceptionName(req.getPerceptionName());
+		p.setCreateDateTime(new Date());
+		this.perceptionDao.update(p);
+	}
+
+	/**
+	 * 修改设备管理员
+	 * 
+	 * @param req
+	 */
+	public void updatePerceptionManagers(Integer perceptionId, List<Integer> userIdList) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		if (null == userIdList || userIdList.isEmpty()) {
+			p.setManagers(null);
+		} else {
+			List<User> list = this.userDao.getUserListByIds(userIdList);
+			p.setManagers(list);
+		}
+		this.perceptionDao.update(p);
+	}
+
+	/**
+	 * 为设备分配管理人员
+	 * 
+	 * @param perceptionId
+	 * @param userIds
+	 */
+	public void allocationManagersForPerception(Integer perceptionId, List<Integer> userIds) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		// TODO
+	}
+
+	/**
+	 * 删除设备
+	 * 
+	 * @param perceptionId
+	 */
+	public void deletePerception(Integer perceptionId) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+		this.perceptionDao.delete(p);
 	}
 
 	/**
@@ -119,6 +174,20 @@ public class PerceptionServiceImpl implements PerceptionService {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		PerceptionOpResponse por = DtoBuilder.buildDto(PerceptionOpResponse.class, p);
 		return por;
+	}
+
+	public List<QueryUserByPageResponse> getRelateUser(Integer perceptionId) {
+		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
+
+		List<User> userList = p.getManagers();
+		List<QueryUserByPageResponse> list = new ArrayList<QueryUserByPageResponse>();
+
+		for (User u : userList) {
+			QueryUserByPageResponse response = DtoBuilder.buildDto(QueryUserByPageResponse.class, u);
+			list.add(response);
+		}
+
+		return list;
 	}
 
 	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(FindPerceptionByPageReq req) {
@@ -660,9 +729,9 @@ public class PerceptionServiceImpl implements PerceptionService {
 							long timeout = 10 * 60 * 1000;
 
 							List<NoticeInfo> delList = new ArrayList<NoticeInfo>();
-							
+
 							for (Map.Entry<Integer, List<NoticeInfo>> entry : noticeMap.entrySet()) {
-								
+
 								for (NoticeInfo dto : entry.getValue()) {
 
 									long when = dto.getWhenL();
@@ -673,7 +742,7 @@ public class PerceptionServiceImpl implements PerceptionService {
 									}
 								}
 							}
-							
+
 							noticeMap.values().removeAll(delList);
 						} catch (Exception e) {
 							e.printStackTrace();

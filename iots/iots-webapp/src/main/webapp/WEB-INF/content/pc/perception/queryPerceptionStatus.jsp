@@ -13,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="../plugin/jquery-easyui/themes/default/easyui.css">
 <script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../plugin/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui-util.js"></script>
 
 <script type="text/javascript" src="../js/perception/queryPerceptionStatus.js"></script>
 </head>
@@ -27,124 +28,129 @@
 				<td height="235" valign="top">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px #99BBE8 solid;">
 						<tr>
-							<td height="22" style="border-bottom: 1px #99BBE8 solid; background-color: #DFE8F6; padding: 3px 0px 3px 10px;">设备状态</td>
+							<td height="22" style="border-bottom: 1px #99BBE8 solid; background-color: #DFE8F6; padding: 3px 0px 3px 10px; font-size: 12px;">设备状态</td>
+						</tr>
+
+						<tr>
+							<td height="22" style="background-color: #f4f4f4; padding: 3px 0px 3px 15px; font-weight: bolder; font-size: 12px;">设备状态</td>
 						</tr>
 
 						<tr>
 							<td align="center" valign="middle" style="padding: 5px 5px 0px 5px;">
-								<fieldset style="color: #B7B7B7; border-style: groove;">
-									<legend style="font-size: 10pt;" id='legendUser'> 基本信息 </legend>
-									<table width="98%" border="0" bgcolor=#ffffff>
-										<tbody cellspacing="0">
-											<tr bgcolor=#ffffff>
-												<td class="color0366CB" width=100 align="right" height="23">设备地址：</td>
-												<td align="left" width=200>${ perceptionOpResponse.perceptionAddr}</td>
-												<td class="color0366CB" width=100 height="23" align="right">设备名称：</td>
-												<td align="left">${perceptionOpResponse.perceptionName }</td>
-											</tr>
-										</tbody>
-										<tbody cellspacing="0">
-											<tr bgcolor=#ffffff>
-												<td class="color0366CB" width=100 align="right" height="23">设备类型：</td>
-												<td align="left" width=200>${perceptionOpResponse.perceptionTypeName }</td>
-												<td class="color0366CB" width=100 height="23" align="right">在线状态：</td>
-												<td id="onlineStatus" align="left">${perceptionOpResponse.onlineStatusDesc }</td>
-											</tr>
-										</tbody>
-										<tbody cellspacing="0">
-											<tr bgcolor=#ffffff>
-												<td class="color0366CB" width=100 align="right" height="23">最后动作时间：</td>
-												<td id="lastCommTime" align="left" width=200>${perceptionOpResponse.lastCommTime }</td>
-												<td class="color0366CB" width=100 height="23" align="right"></td>
-												<td align="left"></td>
-											</tr>
-										</tbody>
+								<table width="98%" border="0" bgcolor=#ffffff>
+									<tbody cellspacing="0">
+										<tr bgcolor=#ffffff>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">设备地址：</a></td>
+											<td align="left" width=200>${ perceptionOpResponse.perceptionAddr}</td>
+											<td class="color0366CB" width=200 height="23" align="right"><a style="color:blue">设备名称：</a></td>
+											<td align="left">${perceptionOpResponse.perceptionName }</td>
+										</tr>
+									</tbody>
+									<tbody cellspacing="0">
+										<tr bgcolor=#ffffff>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">设备类型：</a></td>
+											<td align="left" width=200>${perceptionOpResponse.perceptionTypeName }</td>
+											<td class="color0366CB" width=200 height="23" align="right"><a style="color:blue">在线状态：</a></td>
+											<td id="onlineStatus" align="left">${perceptionOpResponse.onlineStatusDesc }</td>
+										</tr>
+									</tbody>
+									<tbody cellspacing="0">
+										<tr bgcolor=#ffffff>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">最后动作时间：</a></td>
+											<td id="lastCommTime" align="left" width=200>${perceptionOpResponse.lastCommTime }</td>
+											<td class="color0366CB" width=200 height="23" align="right"></td>
+											<td align="left"></td>
+										</tr>
+									</tbody>
 
-									</TABLE>
-								</fieldset>
-							</td>
-						</tr>
-						<tr>
-							<td align="center" valign="middle" style="padding: 5px 5px 0px 5px;">
-								<fieldset style="color: #B7B7B7; border-style: groove;">
-									<legend style="font-size: 10pt;" id='legendUser'> 告警信息 </legend>
-									<table width="98%" border="0" bgcolor=#ffffff>
-										<c:forEach items="${perceptionOpResponse.warningParamInfos }" var="warningParamInfo" varStatus="varStatus">
-											<c:choose>
-												<c:when test="${varStatus.index%2 == 0}">
-													<tbody cellspacing="0">
-														<tr bgcolor=#ffffff>
-															<td class="color0366CB" width=100 align="right" height="23">${warningParamInfo.paramDesc }：</td>
-															<td align="left" width=200><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}" style="color: blue; text-decoration: underline;">查看历史</a></td>
-												</c:when>
-												<c:otherwise>
-													<td class="color0366CB" width=100 height="23" align="right">${warningParamInfo.paramDesc }：</td>
-													<td align="left"><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span>&nbsp;<a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}" style="color: blue; text-decoration: underline;">查看历史</a></td>
-													</tr>
-													</tbody>
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</TABLE>
-								</fieldset>
+								</TABLE>
 							</td>
 						</tr>
 
 						<tr>
+							<td height="22" style="background-color: #f4f4f4; padding: 3px 0px 3px 15px; font-weight: bolder; font-size: 12px;">告警信息</td>
+						</tr>
+
+						<tr>
 							<td align="center" valign="middle" style="padding: 5px 5px 0px 5px;">
-								<fieldset style="color: #B7B7B7; border-style: groove;">
-									<legend style="font-size: 10pt;"> 操控信息 </legend>
-									<table width="98%" border="0" bgcolor=#ffffff>
-										<c:forEach items="${perceptionOpResponse.ctrlParamInfos }" var="ctrlParamInfo" varStatus="varStatus">
-											<c:choose>
-												<c:when test="${varStatus.index%2 == 0}">
-													<tbody cellspacing="0" id="no7" name="no7">
-														<tr bgcolor=#ffffff>
-															<td class="color0366CB" width=100 align="right" height="23">${ctrlParamInfo.paramDesc }：</td>
-															<td align="left" width=200><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))">
-																	<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
-																		<c:choose>
-																			<c:when test="${ctrlParamInfo.paramValue eq item.value }">
-																				<option value="${item.value }" selected="true">${item.text }</option>
-																			</c:when>
-																			<c:otherwise>
-																				<option value="${item.value }">${item.text }</option>
-																			</c:otherwise>
-																		</c:choose>
-																	</c:forEach>
-															</select></td>
-												</c:when>
-												<c:otherwise>
-													<td class="color0366CB" width=100 height="23" align="right">${ctrlParamInfo.paramDesc }：</td>
-													<td align="left"><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))">
-															<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
-																<c:choose>
-																	<c:when test="${ctrlParamInfo.paramValue eq item.value }">
-																		<option value="${item.value }" selected="true">${item.text }</option>
-																	</c:when>
-																	<c:otherwise>
-																		<option value="${item.value }">${item.text }</option>
-																	</c:otherwise>
-																</c:choose>
-															</c:forEach>
-													</select></td>
-													</tr>
-													</tbody>
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</TABLE>
+								<table width="98%" border="0" bgcolor=#ffffff>
+									<c:forEach items="${perceptionOpResponse.warningParamInfos }" var="warningParamInfo" varStatus="varStatus">
+										<c:choose>
+											<c:when test="${varStatus.index%2 == 0}">
+												<tbody cellspacing="0">
+													<tr bgcolor=#ffffff>
+														<td class="color0366CB" width=200 align="right" height="23"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}"
+															style="color: blue;">${warningParamInfo.paramDesc }</a>=></td>
+														<td align="left" width=200><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span></td>
+											</c:when>
+											<c:otherwise>
+												<td class="color0366CB" width=200 height="23" align="right"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${warningParamInfo.paramId}"
+													style="color: blue;">${warningParamInfo.paramDesc }</a>=></td>
+												<td align="left"><span id="${warningParamInfo.paramId }">${warningParamInfo.paramValueDesc }</span></td>
+												</tr>
+												</tbody>
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+								</TABLE>
 								</fieldset>
 							</td>
 						</tr>
 
 						<tr>
-							<td height="23" id="no6" name="no6" style="text-align: center; padding: 5px 0px 5px 0px;"><input id="backBtn" type="button" class="inp_L1" value="返回" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" />&nbsp;
+							<td height="22" style="background-color: #f4f4f4; padding: 3px 0px 3px 15px; font-weight: bolder; font-size: 12px;">控制信息</td>
+						</tr>
 
+						<tr>
+							<td align="center" valign="middle" style="padding: 5px 5px 0px 5px;">
+								<table width="98%" border="0" bgcolor=#ffffff>
+									<c:forEach items="${perceptionOpResponse.ctrlParamInfos }" var="ctrlParamInfo" varStatus="varStatus">
+										<c:choose>
+											<c:when test="${varStatus.index%2 == 0}">
+												<tbody cellspacing="0" id="no7" name="no7">
+													<tr bgcolor=#ffffff>
+														<td class="color0366CB" width=200 align="right" height="23"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${ctrlParamInfo.paramId}"
+													style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
+														<td align="left" width=200><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))" style="width: 200px;">
+																<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
+																	<c:choose>
+																		<c:when test="${ctrlParamInfo.paramValue eq item.value }">
+																			<option value="${item.value }" selected="true">${item.text }</option>
+																		</c:when>
+																		<c:otherwise>
+																			<option value="${item.value }">${item.text }</option>
+																		</c:otherwise>
+																	</c:choose>
+																</c:forEach>
+														</select></td>
+											</c:when>
+											<c:otherwise>
+												<td class="color0366CB" width=200 height="23" align="right"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${ctrlParamInfo.paramId}"
+													style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
+												<td align="left"><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))" style="width: 200px;">
+														<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
+															<c:choose>
+																<c:when test="${ctrlParamInfo.paramValue eq item.value }">
+																	<option value="${item.value }" selected="true">${item.text }</option>
+																</c:when>
+																<c:otherwise>
+																	<option value="${item.value }">${item.text }</option>
+																</c:otherwise>
+															</c:choose>
+														</c:forEach>
+												</select></td>
+												</tr>
+												</tbody>
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+								</TABLE>
+								</fieldset>
+							</td>
+						</tr>
 
-
-
-							
+						<tr>
+							<td height="23" id="no6" name="no6" style="text-align: center; padding: 5px 0px 5px 0px;"><input id="backBtn" type="button" class="inp_L1" value="返回" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" />
 						</tr>
 					</table>
 

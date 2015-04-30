@@ -1,7 +1,9 @@
 $(function() {
 			parent.window['leftMenu'].updateArea('设备动作查询');
 
+			var title = '设备(' + $('#perceptionAddr').val() + ')' + $('#perceptionParamDescName').val() + '日志列表';
 			var grid = $('#perceptionParam-datagrid').datagrid({
+						title : title,
 						singleSelect : true,
 						fitColumns : true,
 						columns : [[{

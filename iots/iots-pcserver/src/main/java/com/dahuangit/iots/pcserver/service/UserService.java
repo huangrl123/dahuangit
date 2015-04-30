@@ -1,12 +1,15 @@
 package com.dahuangit.iots.pcserver.service;
 
+import java.util.List;
+
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dto.request.SaveUserRequest;
 import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
-import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
+import com.dahuangit.iots.perception.entry.User;
 
 public interface UserService {
 	/**
@@ -57,4 +60,8 @@ public interface UserService {
 	 * @param userId
 	 */
 	public void deleteUser(Integer userId);
+
+	public User getUser(Integer userId);
+
+	public List<QueryUserByPageResponse> getAllUser();
 }

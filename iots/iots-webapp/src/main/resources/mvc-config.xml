@@ -15,6 +15,7 @@
 	<mvc:resources location="/js/**" mapping="/js/"/>
 	<mvc:resources location="/image/**" mapping="/image/"/>
 	<mvc:resources location="/media/**" mapping="/media/"/>
+	<mvc:resources location="/apk/**" mapping="/apk/"/>
 	
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>

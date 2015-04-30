@@ -1,11 +1,10 @@
-package com.dahuangit.iots.pcserver.dao;
+package com.dahuangit.iots.perception.dao;
 
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import com.dahuangit.base.dao.BaseDao;
-import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.perception.entry.User;
 
 /**
@@ -33,6 +32,11 @@ public class UserDao extends BaseDao<User, Integer> {
 	public List<User> getOnlineUserList() {
 		String hql = "from User u where u.isOnline=?";
 		List<User> userList = this.find(hql, true);
+		return userList;
+	}
+	
+	public List<User> getUserListByIds(List<Integer> idList) {
+		List<User> userList = this.findByIds(idList);
 		return userList;
 	}
 }

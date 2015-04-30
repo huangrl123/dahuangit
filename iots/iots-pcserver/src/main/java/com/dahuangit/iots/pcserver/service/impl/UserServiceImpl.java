@@ -17,16 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dao.MgrLogDao;
-import com.dahuangit.iots.pcserver.dao.UserDao;
 import com.dahuangit.iots.pcserver.dto.request.SaveUserRequest;
 import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
-import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
+import com.dahuangit.iots.perception.dao.UserDao;
 import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.entry.MgrLog;
 import com.dahuangit.iots.perception.entry.User;
 import com.dahuangit.iots.perception.service.PerceptionService;
@@ -126,8 +126,17 @@ public class UserServiceImpl implements UserService, InitializingBean {
 	 */
 	public void updateUser(SaveUserRequest request) {
 		User u = this.userDao.get(User.class, request.getUserId());
-		u.setUserName(request.getUserName());
-		u.setUserAbbr(request.getUserAbbr());
+		if (null != request.getUserName() && !"".equals(request.getUserName())) {
+			u.setUserName(request.getUserName());
+		}
+
+		if (null != request.getUserAbbr() && !"".equals(request.getUserAbbr())) {
+			u.setUserAbbr(request.getUserAbbr());
+		}
+
+		if (null != request.getPassword() && !"".equals(request.getPassword())) {
+			u.setPassword(request.getPassword());
+		}
 		this.userDao.update(u);
 	}
 
@@ -255,4 +264,21 @@ public class UserServiceImpl implements UserService, InitializingBean {
 
 		return pageQueryResult;
 	}
+
+	public User getUser(Integer userId) {
+		User u = this.userDao.get(User.class, userId);
+		return u;
+	}
+
+	public List<QueryUserByPageResponse> getAllUser() {
+		List<User> userList = this.userDao.getAll();
+		List<QueryUserByPageResponse> list = new ArrayList<QueryUserByPageResponse>();
+		for (User u : userList) {
+			QueryUserByPageResponse response = DtoBuilder.buildDto(QueryUserByPageResponse.class, u);
+			list.add(response);
+		}
+		
+		return list;
+	}
+	
 }

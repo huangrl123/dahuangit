@@ -2,9 +2,11 @@ package com.dahuangit.iots.pcserver.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,9 +18,10 @@ import com.dahuangit.iots.pcserver.dto.request.QueryUserByPageRequest;
 import com.dahuangit.iots.pcserver.dto.request.SaveUserRequest;
 import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
-import com.dahuangit.iots.pcserver.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
+import com.dahuangit.iots.perception.entry.User;
 
 /**
  * 用户controller
@@ -158,7 +161,7 @@ public class UserController extends BaseController {
 			if (userId.equals(curUserId)) {
 				throw new RuntimeException("不能删除当前登录的用户");
 			}
-			
+
 			this.userService.deleteUser(userId);
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -167,6 +170,19 @@ public class UserController extends BaseController {
 		}
 
 		return response;
+	}
+
+	/**
+	 * 跳转到用户查询界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/toUpdatePasswordPage", method = RequestMethod.GET)
+	public String toUpdatePasswordPage(ModelMap map, HttpSession session) {
+		Integer userId = (Integer) session.getAttribute("userId");
+		User u = this.userService.getUser(userId);
+		map.put("user", u);
+		return "/pc/user/updatePasswordPage";
 	}
 
 	/**

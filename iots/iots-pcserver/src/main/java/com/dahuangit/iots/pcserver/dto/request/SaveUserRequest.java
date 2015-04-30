@@ -8,6 +8,8 @@ public class SaveUserRequest {
 
 	private String userAbbr = null;
 
+	private String password = null;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -30,6 +32,14 @@ public class SaveUserRequest {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

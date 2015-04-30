@@ -74,14 +74,14 @@ function remoteCtrl(select) {
 					$.messager.progress('close');
 
 					if (result.success == false) {
-						alert(result.msg);
+						showAlert(result.msg);
 					} else {
-						alert('远程控制成功');
+						showAlert('远程控制成功');
 					}
 				},
 				error : function(result) {
 					$.messager.progress('close');
-					alert(result.msg);
+					showAlert(result.msg);
 				}
 			});
 }

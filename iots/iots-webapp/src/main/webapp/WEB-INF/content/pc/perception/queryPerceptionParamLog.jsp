@@ -22,6 +22,8 @@
 	<form id="queryForm">
 		<input id="perceptionParamId" type="hidden" value="${perceptionParamId }">
 		<input id="perceptionId" type="hidden" value="${perceptionId }">
+		<input id="perceptionParamDescName" type="hidden" value="${perceptionParam.perceptionParamDesc }">
+		<input id="perceptionAddr" type="hidden" value="${perception.perceptionAddr }">
 		<table width='100%' border="0" cellspacing="0" cellpadding="0" class="inquiry" style="margin: 0px 0px 4px 0px;">
 			<tr>
 				<td align="left" style="padding: 0px 0px 2px 0px;"><a class="blue"><span class="blue">&nbsp;&nbsp;&nbsp;&nbsp; 动作类型：</span></a> <select id="perceptionParamValue" style="margin-top: 1px;">

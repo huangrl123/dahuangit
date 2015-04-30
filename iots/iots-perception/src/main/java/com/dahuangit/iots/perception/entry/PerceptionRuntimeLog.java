@@ -2,6 +2,7 @@ package com.dahuangit.iots.perception.entry;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,7 +61,7 @@ public class PerceptionRuntimeLog extends BaseModel {
 	private String hex = null;
 
 	/** 所属设备 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "p_id", insertable = false, updatable = false)
 	private Perception perception = null;
 

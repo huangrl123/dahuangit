@@ -200,19 +200,17 @@
 			//设备管理
 			if (name == "设备查询") {
 				parent.document.getElementById("areaSpan").innerHTML = "设备管理 &gt; " + name;
-			} else if (name == "设备添加") {
-				parent.document.getElementById("areaSpan").innerHTML = "设备管理 &gt; " + name;
 			} else if (name == "设备状态查询") {
 				parent.document.getElementById("areaSpan").innerHTML = "设备管理 &gt; " + name;
 			} else if (name == "设备动作查询") {
 				parent.document.getElementById("areaSpan").innerHTML = "设备管理 &gt; " + name;
-			} else if(name == "用户查询") {
+			} else if (name == "用户查询") {
 				parent.document.getElementById("areaSpan").innerHTML = "用户管理 &gt; " + name;
-			} else if(name == "用户添加") {
+			} else if (name == "密码修改") {
 				parent.document.getElementById("areaSpan").innerHTML = "用户管理 &gt; " + name;
-			} else if(name == "app下载") {
+			} else if (name == "app下载") {
 				parent.document.getElementById("areaSpan").innerHTML = "app管理 &gt; " + name;
-			} 
+			}
 		}
 		var outlookbar = new outlook();
 		var tempinnertext1, tempinnertext2, outlooksmoothstat
@@ -223,18 +221,15 @@
 
 		outlookbar.additem('设备查询', t, '../perception/queryPerceptionPage')
 
-		outlookbar.additem('设备添加', t, '../perception/addPerceptionPage')
-		
 		t = outlookbar.addtitle('用户管理')
 
 		outlookbar.additem('用户查询', t, '../userController/toQueryUserPage')
 
-		outlookbar.additem('用户添加', t, '../perception/addPerceptionPage')
-		
+		outlookbar.additem('密码修改', t, '../userController/toUpdatePasswordPage')
+
 		t = outlookbar.addtitle('app管理')
 
-		outlookbar.additem('app下载', t, '../perception/queryPerceptionPage')
-
+		outlookbar.additem('app下载', t, '../app/toAppDownloadPage')
 	//-->
 	</script>
 

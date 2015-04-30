@@ -24,6 +24,12 @@ public class PerceptionDao extends BaseDao<Perception, Integer> {
 
 	public List<Perception> findPerceptionByPage(FindPerceptionByPageReq req) {
 		StringBuffer hql = new StringBuffer("from Perception p where 1=1 ");
+
+		if (req.getUserId() != null) {
+			hql = new StringBuffer("select p from Perception p join p.managers u where u.userId=");
+			hql.append(req.getUserId() + " ");
+		}
+
 		if (req.getPerceptionAddr() != null && !"".equals(req.getPerceptionAddr())) {
 			hql.append(" and p.perceptionAddr like'%");
 			hql.append(req.getPerceptionAddr());
@@ -47,6 +53,12 @@ public class PerceptionDao extends BaseDao<Perception, Integer> {
 
 	public Long findPerceptionCount(FindPerceptionByPageReq req) {
 		StringBuffer hql = new StringBuffer("select count(*) from Perception p  where 1=1");
+		
+		if (req.getUserId() != null) {
+			hql = new StringBuffer("select count(*) from Perception p join p.managers u where u.userId=");
+			hql.append(req.getUserId() + " ");
+		}
+		
 		if (req.getPerceptionAddr() != null && !"".equals(req.getPerceptionAddr())) {
 			hql.append(" and p.perceptionAddr like'%");
 			hql.append(req.getPerceptionAddr());

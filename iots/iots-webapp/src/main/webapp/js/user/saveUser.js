@@ -1,21 +1,24 @@
 function showSaveUserWin(userJsonStr) {
 	var user;
 	var url;
+	var title;
 	if (userJsonStr) {
 		user = JSON.parse(userJsonStr);
+		title = '修改用户';
 		url = '../userController/updateUser';
 		$('#userId').val(user.userId);
 		$('#userName').val(user.userName);
 		$('#userAbbr').val(user.userAbbr);
 	} else {
 		url = '../userController/addUser';
+		title = '添加用户';
 		$('#userId').val('');
 		$('#userName').val('');
 		$('#userAbbr').val('');
 	}
 
-	var addUserWin = $('#saveUserWin').window({
-				title : '用户添加',
+	var saveUserWin = $('#saveUserWin').window({
+				title : title,
 				width : 300,
 				height : 160,
 				collapsible : false,
@@ -27,6 +30,7 @@ function showSaveUserWin(userJsonStr) {
 				modal : true
 			});
 
+	$('#saveUserBtn').unbind('click');
 	$('#saveUserBtn').bind('click', function() {
 				showLoading();
 
@@ -39,7 +43,7 @@ function showSaveUserWin(userJsonStr) {
 							success : function(result) {
 								if (result.success == true) {
 									load();
-									addUserWin.window('close');
+									saveUserWin.window('close');
 								} else {
 									showAlert(result.msg);
 								}
@@ -52,7 +56,8 @@ function showSaveUserWin(userJsonStr) {
 						});
 			});
 
+	$('#saveUserCloseBtn').unbind('click');
 	$('#saveUserCloseBtn').bind('click', function() {
-				addUserWin.window('close');
+				saveUserWin.window('close');
 			});
 }

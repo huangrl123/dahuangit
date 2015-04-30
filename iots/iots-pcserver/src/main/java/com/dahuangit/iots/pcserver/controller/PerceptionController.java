@@ -1,6 +1,9 @@
 package com.dahuangit.iots.pcserver.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +20,27 @@ import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
 import com.dahuangit.iots.pcserver.dto.request.QueryPerceptionParamLogReq;
-import com.dahuangit.iots.perception.dto.request.AddPerceptionReq;
+import com.dahuangit.iots.pcserver.service.UserService;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
+import com.dahuangit.iots.perception.dto.request.GetRelateUserRequest;
 import com.dahuangit.iots.perception.dto.request.PerceptionParamStatusRequest;
 import com.dahuangit.iots.perception.dto.request.PerceptionVediaFileUploadNoticeRequest;
 import com.dahuangit.iots.perception.dto.request.RemoteCtrlPerceptionRequest;
+import com.dahuangit.iots.perception.dto.request.SavePerceptionReq;
 import com.dahuangit.iots.perception.dto.request.UploadCurStatusParamRequest;
+import com.dahuangit.iots.perception.dto.response.GetRelateUserResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionOpResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionParamStatusQueryResponse;
 import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
+import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
 import com.dahuangit.iots.perception.entry.Perception;
+import com.dahuangit.iots.perception.entry.PerceptionParam;
 import com.dahuangit.iots.perception.entry.PerceptionType;
+import com.dahuangit.iots.perception.service.PerceptionParamService;
 import com.dahuangit.iots.perception.service.PerceptionService;
 import com.dahuangit.iots.perception.service.PerceptionVediaService;
 import com.dahuangit.util.log.Log4jUtils;
@@ -47,6 +56,12 @@ public class PerceptionController extends BaseController {
 
 	@Autowired
 	private PerceptionVediaService perceptionVediaService = null;
+
+	@Autowired
+	private PerceptionParamService perceptionParamService = null;
+
+	@Autowired
+	private UserService userService = null;
 
 	/**
 	 * 2+2远程控制
@@ -88,7 +103,7 @@ public class PerceptionController extends BaseController {
 			} else {
 				Response r = this.perceptionService.remoteOperateMachine(req.getPerceptionId(), req.getParamId(),
 						req.getParamValue());
-				if(!r.getSuccess()) {
+				if (!r.getSuccess()) {
 					response.setSuccess(false);
 					response.setMsg(r.getMsg());
 				}
@@ -134,11 +149,11 @@ public class PerceptionController extends BaseController {
 	 */
 	@RequestMapping(value = "/addPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public OpResponse addPerception(AddPerceptionReq req) {
+	public OpResponse addPerception(SavePerceptionReq req) {
 		OpResponse response = new OpResponse();
 
 		try {
-			String perceptionAddr = req.getPercetionAddr();
+			String perceptionAddr = req.getPerceptionAddr();
 
 			Perception p = this.perceptionService.findPerceptionByAddr(perceptionAddr);
 			if (null != p) {
@@ -148,6 +163,57 @@ public class PerceptionController extends BaseController {
 			}
 
 			this.perceptionService.addPerception(req);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 修改设备
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePerception", method = RequestMethod.POST)
+	@ResponseBody
+	public OpResponse updatePerception(SavePerceptionReq req) {
+		OpResponse response = new OpResponse();
+
+		try {
+			String perceptionAddr = req.getPerceptionAddr();
+
+			Perception p = this.perceptionService.findPerceptionByAddr(perceptionAddr);
+			if (null != p && !p.getPerceptionId().equals(req.getPerceptionId())) {
+				response.setSuccess(false);
+				response.setMsg("设备地址已本占用");
+				return response;
+			}
+
+			this.perceptionService.updatePerception(req);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+
+	/**
+	 * 删除设备
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/deletePerception", method = RequestMethod.POST)
+	@ResponseBody
+	public OpResponse deletePerception(Integer perceptionId) {
+		OpResponse response = new OpResponse();
+
+		try {
+			this.perceptionService.deletePerception(perceptionId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
@@ -185,7 +251,11 @@ public class PerceptionController extends BaseController {
 
 		ComboboxData data = new ComboboxData();
 		try {
+			PerceptionOpResponse p = this.perceptionService.getPerception(req.getPerceptionId());
 			data = this.perceptionService.getPerceptionParamValueListByParam(req.getPerceptionParamId());
+			PerceptionParam perceptionParam = perceptionParamService.getPerceptionParam(req.getPerceptionParamId());
+			modelMap.put("perception", p);
+			modelMap.put("perceptionParam", perceptionParam);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -232,10 +302,77 @@ public class PerceptionController extends BaseController {
 	 * @param opRequest
 	 * @return
 	 */
+	@RequestMapping(value = "/getRelateUser", method = RequestMethod.POST)
+	@ResponseBody
+	public GetRelateUserResponse getRelateUser(Integer perceptionId) {
+		GetRelateUserResponse response = new GetRelateUserResponse();
+
+		List<QueryUserByPageResponse> allUserList = this.userService.getAllUser();
+		List<QueryUserByPageResponse> relateUserList = this.perceptionService.getRelateUser(perceptionId);
+
+		List<Integer> list = new ArrayList<Integer>();
+		for (QueryUserByPageResponse q : relateUserList) {
+			list.add(q.getUserId());
+		}
+
+		List<QueryUserByPageResponse> delList = new ArrayList<QueryUserByPageResponse>();
+		for (QueryUserByPageResponse q : allUserList) {
+			if (list.contains(q.getUserId())) {
+				delList.add(q);
+			}
+		}
+
+		allUserList.removeAll(delList);
+
+		response.setAllUserList(allUserList);
+		response.setRelateUserList(relateUserList);
+
+		return response;
+	}
+
+	/**
+	 * 修改设备管理员
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePerceptionManagers", method = RequestMethod.POST)
+	@ResponseBody
+	public Response updatePerceptionManagers(GetRelateUserRequest req) {
+		Response response = new Response();
+
+		try {
+			List<Integer> list = new ArrayList<Integer>();
+			String[] strArr = req.getUserIds().split(",");
+			for (String s : strArr) {
+				if (null == s || "".equals(s)) {
+					continue;
+				}
+
+				list.add(Integer.valueOf(s));
+			}
+
+			this.perceptionService.updatePerceptionManagers(req.getPerceptionId(), list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+		}
+
+		return response;
+	}
+
+	/**
+	 * 分页查询感知端
+	 * 
+	 * @param opRequest
+	 * @return
+	 */
 	@RequestMapping(value = "/findPerceptionByPage", method = RequestMethod.POST)
 	@ResponseBody
-	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(FindPerceptionByPageReq opRequest) {
-
+	public PageQueryResult<PerceptionOpResponse> findPerceptionByPage(HttpSession session,
+			FindPerceptionByPageReq opRequest) {
+		Integer userId = (Integer) session.getAttribute("userId");
+		opRequest.setUserId(userId);
 		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(opRequest);
 		return result;
 	}
