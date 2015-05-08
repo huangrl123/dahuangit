@@ -15,6 +15,7 @@
 <script type="text/javascript" src="../plugin/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui-util.js"></script>
 
+<script type="text/javascript" src="../js/perception/videoList.js"></script>
 <script type="text/javascript" src="../js/perception/queryPerceptionStatus.js"></script>
 </head>
 
@@ -22,6 +23,7 @@
 <body style="background-color: #FFFFFF;">
 	<input id="perceptionId" type="hidden" value="${perceptionOpResponse.perceptionId }">
 	<input id="perceptionTypeId" type="hidden" value="${perceptionOpResponse.perceptionTypeId }">
+	<input id="perceptionAddr" type="hidden" value="${perceptionOpResponse.perceptionAddr }">
 	<form id="frm" name="frm">
 		<table width="100%" height="100%" cellspacing="5">
 			<tr>
@@ -40,23 +42,23 @@
 								<table width="98%" border="0" bgcolor=#ffffff>
 									<tbody cellspacing="0">
 										<tr bgcolor=#ffffff>
-											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">设备地址：</a></td>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color: blue">设备地址：</a></td>
 											<td align="left" width=200>${ perceptionOpResponse.perceptionAddr}</td>
-											<td class="color0366CB" width=200 height="23" align="right"><a style="color:blue">设备名称：</a></td>
+											<td class="color0366CB" width=200 height="23" align="right"><a style="color: blue">设备名称：</a></td>
 											<td align="left">${perceptionOpResponse.perceptionName }</td>
 										</tr>
 									</tbody>
 									<tbody cellspacing="0">
 										<tr bgcolor=#ffffff>
-											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">设备类型：</a></td>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color: blue">设备类型：</a></td>
 											<td align="left" width=200>${perceptionOpResponse.perceptionTypeName }</td>
-											<td class="color0366CB" width=200 height="23" align="right"><a style="color:blue">在线状态：</a></td>
+											<td class="color0366CB" width=200 height="23" align="right"><a style="color: blue">在线状态：</a></td>
 											<td id="onlineStatus" align="left">${perceptionOpResponse.onlineStatusDesc }</td>
 										</tr>
 									</tbody>
 									<tbody cellspacing="0">
 										<tr bgcolor=#ffffff>
-											<td class="color0366CB" width=200 align="right" height="23"><a style="color:blue">最后动作时间：</a></td>
+											<td class="color0366CB" width=200 align="right" height="23"><a style="color: blue">最后动作时间：</a></td>
 											<td id="lastCommTime" align="left" width=200>${perceptionOpResponse.lastCommTime }</td>
 											<td class="color0366CB" width=200 height="23" align="right"></td>
 											<td align="left"></td>
@@ -110,7 +112,7 @@
 												<tbody cellspacing="0" id="no7" name="no7">
 													<tr bgcolor=#ffffff>
 														<td class="color0366CB" width=200 align="right" height="23"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${ctrlParamInfo.paramId}"
-													style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
+															style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
 														<td align="left" width=200><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))" style="width: 200px;">
 																<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
 																	<c:choose>
@@ -125,8 +127,7 @@
 														</select></td>
 											</c:when>
 											<c:otherwise>
-												<td class="color0366CB" width=200 height="23" align="right"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${ctrlParamInfo.paramId}"
-													style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
+												<td class="color0366CB" width=200 height="23" align="right"><a href="../perception/queryPerceptionParamLog?perceptionId=${perceptionOpResponse.perceptionId }&perceptionParamId=${ctrlParamInfo.paramId}" style="color: blue;">${ctrlParamInfo.paramDesc }</a>=></td>
 												<td align="left"><select id="${ctrlParamInfo.paramId }" onchange="remoteCtrl($(this))" style="width: 200px;">
 														<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
 															<c:choose>
@@ -150,7 +151,13 @@
 						</tr>
 
 						<tr>
-							<td height="23" id="no6" name="no6" style="text-align: center; padding: 5px 0px 5px 0px;"><input id="backBtn" type="button" class="inp_L1" value="返回" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" />
+							<td height="23" id="no6" name="no6" style="text-align: center; padding: 5px 0px 5px 0px;">
+								<a id="backBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">返回</a>
+								<c:if test="${perceptionOpResponse.perceptionTypeId==2}">
+									<a id="videoListLookBtn" class="easyui-linkbutton" style="width: 90px;">视频列表查看</a>
+									<a id="realTimeVideoLookBtn" class="easyui-linkbutton" style="width: 90px;">实时视频查看</a>
+								</c:if>
+							</td>
 						</tr>
 					</table>
 
@@ -159,5 +166,15 @@
 		</table>
 
 	</form>
+	
+	<div style="display: none;">
+		<div id="videoListWin">
+			<div id="perception-video-list-datagrid" style="width: 100%;height:300px;border:0px;">
+			</div>
+			<div style="text-align: center; margin: 25px 5px 0px 5px;">
+				<a id="videoListWinCloseBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">关闭</a>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

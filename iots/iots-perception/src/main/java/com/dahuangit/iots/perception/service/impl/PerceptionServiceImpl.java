@@ -1,5 +1,7 @@
 package com.dahuangit.iots.perception.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ import com.dahuangit.iots.perception.dao.PerceptionParamValueDao;
 import com.dahuangit.iots.perception.dao.PerceptionRuntimeLogDao;
 import com.dahuangit.iots.perception.dao.PerceptionTypeDao;
 import com.dahuangit.iots.perception.dao.UserDao;
+import com.dahuangit.iots.perception.dto.request.DelPerceptionVideoRequest;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.ParamInfo;
@@ -53,6 +57,7 @@ import com.dahuangit.iots.perception.tcpserver.processor.PerceptionProcessor;
 import com.dahuangit.util.bean.dto.DtoBuilder;
 import com.dahuangit.util.coder.ByteUtils;
 import com.dahuangit.util.date.DateUtils;
+import com.dahuangit.util.net.ftp.FTPHelper;
 import com.dahuangit.util.xml.XmlUtils;
 
 @Component
@@ -90,18 +95,39 @@ public class PerceptionServiceImpl implements PerceptionService {
 
 	private boolean threadStarted = false;
 
+	@Value("${perception.ftpHost}")
+	private String ftpHost = null;
+	@Value("${perception.ftpUserName}")
+	private String ftpUserName = null;
+	@Value("${perception.ftpPassword}")
+	private String ftpPassword = null;
+	@Value("${perception.ftpPort}")
+	private Integer ftpPort = null;
+	@Value("${perception.ftpDir}")
+	private String perceptionFtpDir = null;
+
 	/**
 	 * 添加设备
 	 * 
 	 * @param req
+	 * @throws IOException
 	 */
-	public void addPerception(SavePerceptionReq req) {
+	public void addPerception(SavePerceptionReq req) throws IOException {
 		Perception p = new Perception();
 		p.setPerceptionAddr(req.getPerceptionAddr());
 		p.setPerceptionName(req.getPerceptionName());
 		p.setPerceptionTypeId(req.getPerceptionTypeId());
 		p.setCreateDateTime(new Date());
+
+		User u = this.userDao.get(User.class, req.getUserId());
+		List<User> list = new ArrayList<User>();
+		list.add(u);
+		p.setManagers(list);
+
 		this.perceptionDao.addPerception(p);
+
+		File f = new File(this.perceptionFtpDir + "\\" + p.getPerceptionAddr());
+		f.mkdir();
 	}
 
 	/**
@@ -152,6 +178,9 @@ public class PerceptionServiceImpl implements PerceptionService {
 	public void deletePerception(Integer perceptionId) {
 		Perception p = this.perceptionDao.get(Perception.class, perceptionId);
 		this.perceptionDao.delete(p);
+
+		File f = new File(this.perceptionFtpDir + "\\" + p.getPerceptionAddr());
+		f.delete();
 	}
 
 	/**
@@ -849,5 +878,16 @@ public class PerceptionServiceImpl implements PerceptionService {
 		}
 
 		return response;
+	}
+
+	/**
+	 * 从ftp服务器上删除设备的视频文件
+	 * 
+	 * @param req
+	 * @throws Exception
+	 */
+	public void delPerceptionVideo(DelPerceptionVideoRequest req) throws Exception {
+		FTPHelper ftpHelper = new FTPHelper(ftpHost, ftpUserName, ftpPassword, ftpPort);
+		ftpHelper.deleteFile(req.getPerceptionAddr(), req.getFileName());
 	}
 }

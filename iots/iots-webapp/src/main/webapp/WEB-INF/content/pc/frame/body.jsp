@@ -110,7 +110,7 @@
 							showType : 'slide'
 						});
 
-						$('body').append('<embed src="../media/appleline.mp3" loop="0" autostart="true" hidden="true"></embed>');
+						$('body').append('<embed src="../audio/msg.mp3" loop="0" autostart="true" hidden="true"></embed>');
 					}
 				}
 			}

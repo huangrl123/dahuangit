@@ -13,6 +13,14 @@ $(function() {
 			}
 
 			refreshByInterval();
+
+			var videoListLookBtn = $('#videoListLookBtn');
+			if (videoListLookBtn) {
+				videoListLookBtn.unbind('click');
+				videoListLookBtn.bind('click', function() {
+							showVideoListWin();
+						});
+			}
 		});
 
 function query() {

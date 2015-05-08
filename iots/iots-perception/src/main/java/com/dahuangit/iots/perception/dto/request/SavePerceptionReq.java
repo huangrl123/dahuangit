@@ -22,6 +22,8 @@ public class SavePerceptionReq extends OpRequest {
 	/** 设备名称 */
 	private String perceptionName = null;
 
+	private Integer userId = null;
+
 	public Integer getPerceptionTypeId() {
 		return perceptionTypeId;
 	}
@@ -52,6 +54,14 @@ public class SavePerceptionReq extends OpRequest {
 
 	public void setPerceptionId(Integer perceptionId) {
 		this.perceptionId = perceptionId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 }

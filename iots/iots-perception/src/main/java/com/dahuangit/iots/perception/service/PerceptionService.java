@@ -1,10 +1,12 @@
 package com.dahuangit.iots.perception.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.perception.dto.request.DelPerceptionVideoRequest;
 import com.dahuangit.iots.perception.dto.request.SavePerceptionReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
@@ -26,8 +28,9 @@ public interface PerceptionService {
 	 * 添加设备
 	 * 
 	 * @param req
+	 * @throws IOException
 	 */
-	public void addPerception(SavePerceptionReq req);
+	public void addPerception(SavePerceptionReq req) throws IOException;
 
 	/**
 	 * 通过地址查询设备
@@ -157,4 +160,12 @@ public interface PerceptionService {
 	 * @param req
 	 */
 	public void updatePerceptionManagers(Integer perceptionId, List<Integer> userIdList);
+
+	/**
+	 * 从ftp服务器上删除设备的视频文件
+	 * 
+	 * @param req
+	 * @throws Exception
+	 */
+	public void delPerceptionVideo(DelPerceptionVideoRequest req) throws Exception;
 }

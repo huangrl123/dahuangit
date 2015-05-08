@@ -1,12 +1,15 @@
 package com.dahuangit.iots.pcserver.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +24,7 @@ import com.dahuangit.base.dto.opm.response.PageQueryResult;
 import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
 import com.dahuangit.iots.pcserver.dto.request.QueryPerceptionParamLogReq;
 import com.dahuangit.iots.pcserver.service.UserService;
+import com.dahuangit.iots.perception.dto.request.DelPerceptionVideoRequest;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionRuntimeLogByPageReq;
 import com.dahuangit.iots.perception.dto.request.FindPerceptionVediaFileByPageRequest;
@@ -37,6 +41,7 @@ import com.dahuangit.iots.perception.dto.response.PerceptionRuntimeLogResponse;
 import com.dahuangit.iots.perception.dto.response.PercetionVediaFileResponse;
 import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.dto.response.RemoteQuery2j2MachineResponse;
+import com.dahuangit.iots.perception.dto.response.VedioResponse;
 import com.dahuangit.iots.perception.entry.Perception;
 import com.dahuangit.iots.perception.entry.PerceptionParam;
 import com.dahuangit.iots.perception.entry.PerceptionType;
@@ -62,6 +67,9 @@ public class PerceptionController extends BaseController {
 
 	@Autowired
 	private UserService userService = null;
+
+	@Value("${perception.ftpDir}")
+	private String perceptionFtpDir = null;
 
 	/**
 	 * 2+2远程控制
@@ -149,7 +157,7 @@ public class PerceptionController extends BaseController {
 	 */
 	@RequestMapping(value = "/addPerception", method = RequestMethod.POST)
 	@ResponseBody
-	public OpResponse addPerception(SavePerceptionReq req) {
+	public OpResponse addPerception(HttpSession session, SavePerceptionReq req) {
 		OpResponse response = new OpResponse();
 
 		try {
@@ -162,6 +170,7 @@ public class PerceptionController extends BaseController {
 				return response;
 			}
 
+			req.setUserId((Integer) session.getAttribute("userId"));
 			this.perceptionService.addPerception(req);
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -481,5 +490,54 @@ public class PerceptionController extends BaseController {
 		}
 
 		return this.responseToXml(response);
+	}
+
+	/**
+	 * 获取设备的视频文件列表
+	 * 
+	 * @param perceptionAddr
+	 * @return
+	 */
+	@RequestMapping(value = "/getPerceptionVedioList", method = RequestMethod.POST)
+	@ResponseBody
+	public PageQueryResult<VedioResponse> getPerceptionVedioList(HttpServletRequest request, String perceptionAddr) {
+		PageQueryResult<VedioResponse> queryResult = new PageQueryResult<VedioResponse>();
+
+		List<VedioResponse> list = new ArrayList<VedioResponse>();
+
+		File dir = new File(this.perceptionFtpDir + "\\" + perceptionAddr);
+		File[] files = dir.listFiles();
+		String url = request.getContextPath();
+		for (File f : files) {
+			VedioResponse response = new VedioResponse();
+			response.setFileName(f.getName());
+			response.setUrl(url + "/video/" + perceptionAddr + "/" + f.getName());
+			list.add(response);
+		}
+
+		queryResult.setRows(list);
+		queryResult.setTotal(list.size());
+
+		return queryResult;
+	}
+
+	/**
+	 * 从ftp服务器上删除设备的视频文件
+	 * 
+	 */
+	@RequestMapping(value = "/delPerceptionVideo", method = RequestMethod.POST)
+	@ResponseBody
+	public Response delPerceptionVideo(DelPerceptionVideoRequest req) {
+		Response response = new Response();
+
+		try {
+			this.perceptionService.delPerceptionVideo(req);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
 	}
 }
