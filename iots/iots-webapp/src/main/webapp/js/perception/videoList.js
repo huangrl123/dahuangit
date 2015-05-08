@@ -28,8 +28,8 @@ var showVideoListWin = function() {
 					width : 80,
 					align : 'center',
 					formatter : function(value, row) {
-						return '<a href="' + value + '" style="padding-right:10px;color:blue;">下载</a><a href="#" style="padding-right:10px;color:blue;" onclick="showSavePerceptionWin(\'' + value
-								+ '\')">播放</a><a style="color:blue;" onclick="delPerceptionVideo(\'' + row.fileName + '\')">删除</a>';
+						return '<a href="' + value + '" style="padding-right:10px;color:blue;">下载</a><a href="#" style="padding-right:10px;color:blue;" onclick="showPlayVideoWin(\'' + value
+								+ '\')">播放</a><a  href="#" style="color:blue;" onclick="delPerceptionVideo(\'' + row.fileName + '\')">删除</a>';
 					}
 				}]],
 		onClickRow : function(rowIndex, row) {
@@ -91,4 +91,32 @@ var delPerceptionVideo = function(fileName) {
 					showAlert(result.msg);
 				}
 			});
+}
+
+var showPlayVideoWin = function(url) {
+	var playVideoWin = $('#playVideoWin').window({
+				title : '视频列表',
+				width : 614,
+				height : 400,
+				collapsible : false,
+				minimizable : false,
+				maximizable : false,
+				closable : false,
+				resizable : false,
+				draggable : true,
+				modal : true
+			});
+
+	var src = $('#videoPlayerUrl').val();
+	src = src + '?url=' + url;
+	
+	$('#videoiframe').attr('src', src);
+
+	$('#playVideoWinCloseBtn').unbind('click');
+	$('#playVideoWinCloseBtn').bind('click', function() {
+				playVideoWin.window('close');
+				$('#videoiframe').attr('src', '');
+			});
+
+	playVideoWin.window('open');
 }

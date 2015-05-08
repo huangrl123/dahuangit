@@ -21,6 +21,14 @@ $(function() {
 							showVideoListWin();
 						});
 			}
+
+			var realTimeVideoLookBtn = $('#realTimeVideoLookBtn');
+			if (realTimeVideoLookBtn) {
+				realTimeVideoLookBtn.unbind('click');
+				realTimeVideoLookBtn.bind('click', function() {
+							showRealTimeVideoWin();
+						});
+			}
 		});
 
 function query() {

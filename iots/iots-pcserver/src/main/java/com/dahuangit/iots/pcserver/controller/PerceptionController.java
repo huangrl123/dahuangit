@@ -70,6 +70,14 @@ public class PerceptionController extends BaseController {
 
 	@Value("${perception.ftpDir}")
 	private String perceptionFtpDir = null;
+	@Value("${perception.videoPlayerUrl}")
+	private String videoPlayerUrl = null;
+	@Value("${local.server.baseUrl}")
+	private String serverBaseUrl = null;
+	@Value("${perception.realTimePlayerUrl}")
+	private String realTimePlayerUrl = null;
+	@Value("${rtmpBaseUrl}")
+	private String rtmpBaseUrl = null;
 
 	/**
 	 * 2+2远程控制
@@ -244,6 +252,10 @@ public class PerceptionController extends BaseController {
 
 		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
+
+		modelMap.put("videoPlayerUrl", videoPlayerUrl);
+		modelMap.put("realTimePlayerUrl", realTimePlayerUrl);
+		modelMap.put("rtmpBaseUrl", rtmpBaseUrl);
 
 		return "/pc/perception/queryPerceptionStatus";
 	}
@@ -507,7 +519,7 @@ public class PerceptionController extends BaseController {
 
 		File dir = new File(this.perceptionFtpDir + "\\" + perceptionAddr);
 		File[] files = dir.listFiles();
-		String url = request.getContextPath();
+		String url = serverBaseUrl + request.getContextPath();
 		for (File f : files) {
 			VedioResponse response = new VedioResponse();
 			response.setFileName(f.getName());

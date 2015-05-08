@@ -16,6 +16,8 @@
 <script type="text/javascript" src="../plugin/jquery-easyui/jquery.easyui-util.js"></script>
 
 <script type="text/javascript" src="../js/perception/videoList.js"></script>
+<script type="text/javascript" src="../js/perception/realTimeVideo.js"></script>
+
 <script type="text/javascript" src="../js/perception/queryPerceptionStatus.js"></script>
 </head>
 
@@ -24,6 +26,10 @@
 	<input id="perceptionId" type="hidden" value="${perceptionOpResponse.perceptionId }">
 	<input id="perceptionTypeId" type="hidden" value="${perceptionOpResponse.perceptionTypeId }">
 	<input id="perceptionAddr" type="hidden" value="${perceptionOpResponse.perceptionAddr }">
+	<input id="videoPlayerUrl" type="hidden" value="${videoPlayerUrl }">
+	<input id="videoPlayerUrl" type="hidden" value="${videoPlayerUrl }">
+	<input id="realTimePlayerUrl" type="hidden" value="${realTimePlayerUrl }">
+	<input id="rtmpBaseUrl" type="hidden" value="${rtmpBaseUrl }">
 	<form id="frm" name="frm">
 		<table width="100%" height="100%" cellspacing="5">
 			<tr>
@@ -173,6 +179,24 @@
 			</div>
 			<div style="text-align: center; margin: 25px 5px 0px 5px;">
 				<a id="videoListWinCloseBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">关闭</a>
+			</div>
+		</div>
+		<div id="playVideoWin">
+			<div style="width: 100%;height:320px;border:0px;">
+				<iframe id="videoiframe" style="width: 100%;height:100%;border:0px;">
+				</iframe>
+				<div style="text-align: center; margin: 10px 5px 0px 5px;">
+					<a id="playVideoWinCloseBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">关闭</a>
+				</div>
+			</div>
+		</div>
+		<div id="realTimeVideoWin">
+			<div style="width: 100%;height:320px;border:0px;">
+				<iframe id="realTimeIframe" style="width: 100%;height:100%;border:0px;">
+				</iframe>
+				<div style="text-align: center; margin: 10px 5px 0px 5px;">
+					<a id="realTimeWinCloseBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">关闭</a>
+				</div>
 			</div>
 		</div>
 	</div>
