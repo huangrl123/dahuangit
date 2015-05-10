@@ -51,7 +51,8 @@ public class PerceptionClient66 {
 		// 等待连接创建完成
 		cf.awaitUninterruptibly();
 
-		String machineAddr = "huizhoueden";
+		String machineAddr = "t";
+//		String machineAddr = "huizhoueden";
 		IoSession session = cf.getSession();
 
 		byte[] content = new byte[72];

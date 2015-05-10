@@ -44,7 +44,6 @@ public class AppUserController extends BaseController {
 
 		try {
 			response = userService.login(request);
-			CookieUtils.addCookie(httpServletResponse, "curUserId", response.getUserId().toString(), -1);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

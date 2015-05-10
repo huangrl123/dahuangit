@@ -1,59 +1,66 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../../../common/base.jsp"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-<title>收支</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>功能列表</title>
+<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1">
 <meta http-equiv="content-language" content="zh-CN" />
-<link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
-<script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
-<script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
-
 <style type="text/css">
-.onlineStatus {
-	float: right;
-	padding-right: 40px;
-	color: green;
+
+#shuibiaoDiv {
+	height: 120px;
+	margin-top: -1;
 }
 
-.offlineStatus {
-	float: right;
-	padding-right: 40px;
-	color: red;
+#exit-link {
+	font-size: 16px;
+	color: #ffffff;
+	text-shadow: none;
+	padding-top: 3px;
 }
+
 </style>
+<link rel="stylesheet" href="../plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
+<script src="../plugin/jquery/jquery-2.1.3.min.js"></script>
+<script src="../plugin/jquery/jquery-utils.js"></script>
+<script src="../plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
+
+<link rel="stylesheet" href="../css/water.css" />
+
 </head>
-<body>
-
-	<div data-role="page">
-
-		<div data-role="header" data-position="fixed">
-			<a href="${ctx }/spring/appMgrPerceptionController/appLogin" data-icon="minus" data-ajax="false">退出</a>
-			<h1>感知端列表</h1>
-		</div>
-
-		<div data-role="content">
-
-			<ul data-role="listview">
-				<c:forEach var="perception" items="${perceptionList }" varStatus="status">
-					<li><a href="${ctx }/spring/appMgrPerceptionController/appPerceptionFunctionList?perceptionId=${perception.perceptionId}" data-ajax="false">${perception.perceptionName }(${perception.perceptionAddr }) 
-					        <c:choose>
-								<c:when test="${perception.isOnline eq true}">
-									<span class="onlineStatus">在线</span>
-								</c:when>
-								<c:otherwise>
-									<span class="offlineStatus">离线</span>
-								</c:otherwise>
-							</c:choose>
-					</a></li>
-
-				</c:forEach>
-			</ul>
-
+<body style="margin: 0px;">
+	<div id="appHeader" data-role="header" class="ui-fixed-hidden" data-position="fixed" data-tap-toggle="true" class="header-div" style="border-color:#2C3640;">
+		<div class="header-title1">
+			<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
 		</div>
 	</div>
+    
+	<div id="shuibiaoDiv">
+		<img id="imgtest" alt="" src="../image/shuibiao.png" height="120px" width="100%">
+	</div>
+	
+	<script type="text/javascript">
+	function exitToLogin() {
+		var userAgent = navigator.userAgent;
 
+		if (userAgent.indexOf("Android") > -1) {
+			window.app.exitSys();
+			return;
+		}
+
+		window.location.href = '${ctx }/spring/mobile/exitSys';
+	}
+
+	$(window).resize();
+	
+	$(function() {
+		$('body').bind('click', function() {
+			$('#appHeader').addClass('ui-fixed-hidden');
+		});
+		
+	});
+</script>
 </body>
 </html>
 

@@ -397,6 +397,22 @@ public class PerceptionController extends BaseController {
 		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(opRequest);
 		return result;
 	}
+	
+	/**
+	 * app分页查询感知端
+	 * 
+	 * @param opRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/appFindPerceptionByPage", method = RequestMethod.GET)
+	public String appFindPerceptionByPage(HttpSession session,
+			FindPerceptionByPageReq opRequest) {
+		
+//		PageQueryResult<PerceptionOpResponse> queryResult = new PageQueryResult<PerceptionOpResponse>();
+//		PageQueryResult<PerceptionOpResponse> result = this.perceptionService.findPerceptionByPage(opRequest);
+		
+		return "mobile/appPerceptionList";
+	}
 
 	/**
 	 * 分页查询感知端运行日志

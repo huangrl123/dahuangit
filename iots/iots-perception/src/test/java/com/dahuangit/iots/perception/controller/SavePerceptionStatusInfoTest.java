@@ -27,7 +27,8 @@ public class SavePerceptionStatusInfoTest {
 			sb.append("  </perception-param>");
 			sb.append("</request>");
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("perceptionAddr", "huizhoueden");
+//			map.put("perceptionAddr", "huizhoueden");
+			map.put("perceptionAddr", "t");
 			map.put("perceptionStatusInfoXml", sb.toString());
 
 			 //String s =	 HttpKit.getHttpRequestContent("http://120.24.86.107:8080/iots/perception/savePerceptionStatusInfo",
