@@ -4,8 +4,9 @@
 
 .header-title1 {
 	height: 40px;
-	padding-bottom: 2px;
+	padding-bottom: 1px;
 	background-color: #2C3640;
+	margin-top: -1px;
 	font-size: 22px;
 	font-weight: 900;
 	color: #000000;

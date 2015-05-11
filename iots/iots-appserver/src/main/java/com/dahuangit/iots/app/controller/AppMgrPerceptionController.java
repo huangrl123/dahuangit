@@ -109,7 +109,7 @@ public class AppMgrPerceptionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/appPerceptionFunctionList", method = RequestMethod.GET)
-	public String appPerceptionFunctionList(ModelMap modelMap, Integer perceptionId, Boolean isInit) {
+	public String appPerceptionFunctionList(ModelMap modelMap, Integer perceptionId, Boolean isInit, Integer userId) {
 		PerceptionParamStatusRequest req = new PerceptionParamStatusRequest();
 		if (null == isInit) {
 			req.setInit(true);
@@ -121,6 +121,8 @@ public class AppMgrPerceptionController extends BaseController {
 		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
 
+		modelMap.put("userId", userId);
+		
 		return "mobile/appPerceptionFunctionList";
 	}
 

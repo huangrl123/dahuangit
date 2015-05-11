@@ -32,6 +32,23 @@ function showSaveUserWin(userJsonStr) {
 
 	$('#saveUserBtn').unbind('click');
 	$('#saveUserBtn').bind('click', function() {
+				var userName = $('#userName').val();
+				userName = $.trim(userName);
+				if (!userName) {
+					showAlert('用户名不能为空');
+					return;
+				}
+
+				var userAbbr = $('#userAbbr').val();
+				userAbbr = $.trim(userAbbr);
+				if (!userAbbr) {
+					showAlert('用户昵称不能为空');
+					return;
+				}
+
+				$('#userName').val(userName);
+				$('#userAbbr').val(userAbbr);
+
 				showLoading();
 
 				$.ajax({

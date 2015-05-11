@@ -33,6 +33,23 @@ function showSavePerceptionWin(perceptionJsonStr) {
 
 	$('#savePerceptionBtn').unbind('click');
 	$('#savePerceptionBtn').bind('click', function() {
+				var perceptionAddr = $('#perceptionAddr').val();
+				perceptionAddr = $.trim(perceptionAddr);
+				if (!perceptionAddr) {
+					showAlert('设备地址不能为空');
+					return;
+				}
+
+				var perceptionName = $('#perceptionName').val();
+				perceptionName = $.trim(perceptionName);
+				if (!perceptionName) {
+					showAlert('设备名称不能为空');
+					return;
+				}
+
+				$('#perceptionAddr').val(perceptionAddr);
+				$('#perceptionName').val(perceptionName);
+
 				showLoading();
 
 				$.ajax({

@@ -6,10 +6,13 @@
 <title>感知端信息</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
-<link rel="stylesheet" href="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
-<script src="${ctx }/plugin/jquery/jquery-2.1.3.min.js"></script>
-<script src="${ctx }/plugin/jquery/jquery-utils.js"></script>
-<script src="${ctx }/plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
+<link rel="stylesheet" href="../plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
+<script src="../plugin/jquery/jquery-2.1.3.min.js"></script>
+<script src="../plugin/jquery/jquery-utils.js"></script>
+<script src="../plugin/jquerymobile/jquery.mobile-1.4.5.min.js"></script>
+
+<link rel="stylesheet" href="../css/water.css" />
+
 <style type="text/css">
 .liStatus {
 	line-height: 20px;
@@ -28,6 +31,7 @@
 .liLableSelect {
 	float: left;
 	color: #866E54;
+	font-weight:bold;
 	width: 65%;
 }
 
@@ -35,6 +39,7 @@
 	float: right;
 	color: #469E6F;
 }
+
 .liStatusValue-warning {
 	float: right;
 	color: red;
@@ -43,74 +48,71 @@
 </head>
 <body>
 
-<div data-role="page">
-	<div data-role="header" data-position="fixed">
-		<a href="${ctx }/spring/appMgrPerceptionController/appPerceptionList" data-icon="back" data-ajax="false">返回</a>
-		<h1>感知端信息</h1>
-	</div>
+	<div data-role="page">
+		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
+			<div class="header-title1">
+				<span class="header-title1-left" onclick="gotoFunction('../perception/appFindPerceptionByPage?userId=${userId}')"><img alt="" src="../image/home.png" height="25" width="25"></span> 
+				<span class="header-title1-center">设备状态</span>
+				<span class="header-title1-right"></span>
+			</div>
+		</div>
 
-	<div data-role="content">
-		<ul data-role="listview" id="perceptionFunctionList" data-inset="true">
-			<li data-role="list-divider">基本信息</li>
-			<li class="liStatus">
-				<span class="liLable">设备名称</span>
-				<span class="liStatusValue">${perceptionOpResponse.perceptionName }(${ perceptionOpResponse.perceptionAddr})</span>
-			</li>
-			<li class="liStatus">
-				<span class="liLable">在线状态</span>
-				<span id="onlineStatus" class="liStatusValue">${perceptionOpResponse.onlineStatusDesc }</span>
-			</li>
-			<li class="liStatus">
-				<span class="liLable">最后工作时间</span>
-				<span id="lastCommTime" class="liStatusValue">${perceptionOpResponse.lastCommTime }</span>
-			</li>
-			
-			<li data-role="list-divider">告警信息</li>
-			<c:forEach items="${perceptionOpResponse.warningParamInfos }" var="warningParamInfo">
-			    <c:choose>
-			    	<c:when test="${warningParamInfo.paramId == 183 }">
-						<li class="liStatus">
-							<a href="${ctx }/spring/appMgrPerceptionController/getRuntimeLogByParamId?perceptionId=${perceptionOpResponse.perceptionId }&perceptionName=${perceptionOpResponse.perceptionName }&paramId=${warningParamInfo.paramId}&paramDesc=${warningParamInfo.paramDesc}" data-ajax="false">
-								<span class="liLable">${warningParamInfo.paramDesc }</span>
-								<span id="${warningParamInfo.paramId }" class="liStatusValue">${warningParamInfo.paramValueDesc }</span>
-							</a>
-						</li>
-			    	</c:when>
-			    	<c:otherwise>
-			    		<li class="liStatus">
-							<span class="liLable">${warningParamInfo.paramDesc }</span><span id="${warningParamInfo.paramId }" class="liStatusValue">${warningParamInfo.paramValueDesc }</span>
-						</li>
-			    	</c:otherwise>
-			    </c:choose>
-			</c:forEach>
-			
-			<li data-role="list-divider">操作信息</li>
-			<c:forEach items="${perceptionOpResponse.ctrlParamInfos }" var="ctrlParamInfo">
-				<li class="liStatusSelect">
-					<span class="liLableSelect">${ctrlParamInfo.paramDesc }</span> 
-					<select class="liStatusValue" onchange="remoteCtrl($(this))" id="${ctrlParamInfo.paramId }">
-					    <c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
-	                           <c:choose>
-	                           	<c:when test="${ctrlParamInfo.paramValue eq item.value }">
-	                           		<option value="${item.value }" selected="true">${item.text }</option>
-	                           	</c:when>
-	                           	<c:otherwise>
-									<option value="${item.value }">${item.text }</option>
-	                           	</c:otherwise>
-	                           </c:choose>							
-					    </c:forEach>
-					</select>
-				</li>
-			</c:forEach>
-			
-		</ul>
+		<div data-role="content">
+			<ul data-role="listview" id="perceptionFunctionList">
+				<li data-role="list-divider">基本信息</li>
+				<li class="liStatus"><span class="liLable">设备名称</span> <span class="liStatusValue">${perceptionOpResponse.perceptionName }(${ perceptionOpResponse.perceptionAddr})</span></li>
+				<li class="liStatus"><span class="liLable">在线状态</span> <span id="onlineStatus" class="liStatusValue">${perceptionOpResponse.onlineStatusDesc }</span></li>
+				<li class="liStatus"><span class="liLable">最后工作时间</span> <span id="lastCommTime" class="liStatusValue">${perceptionOpResponse.lastCommTime }</span></li>
 
-	</div>
-    
-    <script type="text/javascript">
+				<li data-role="list-divider">告警信息</li>
+				<c:forEach items="${perceptionOpResponse.warningParamInfos }" var="warningParamInfo">
+					<li class="liStatus">
+						<a href="../appMgrPerceptionController/getRuntimeLogByParamId?perceptionId=${perceptionOpResponse.perceptionId }&perceptionName=${perceptionOpResponse.perceptionName }&paramId=${warningParamInfo.paramId}&paramDesc=${warningParamInfo.paramDesc}" data-ajax="false"> 
+							<span class="liLable">${warningParamInfo.paramDesc }</span> 
+							<span id="${warningParamInfo.paramId }" class="liStatusValue">${warningParamInfo.paramValueDesc }</span>
+						</a>
+					</li>
+				</c:forEach>
+
+				<li data-role="list-divider">操作信息</li>
+				<c:forEach items="${perceptionOpResponse.ctrlParamInfos }" var="ctrlParamInfo">
+					<li class="liStatusSelect">
+						<span class="liLableSelect">${ctrlParamInfo.paramDesc }</span> 
+						<select class="liStatusValue" onchange="remoteCtrl($(this))" id="${ctrlParamInfo.paramId }">
+							<c:forEach var="item" items="${ctrlParamInfo.comboboxData.root }">
+								<c:choose>
+									<c:when test="${ctrlParamInfo.paramValue eq item.value }">
+										<option value="${item.value }" selected="true">${item.text }</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${item.value }">${item.text }</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</select>
+						<span>
+							<a  data-ajax="false" href="../appMgrPerceptionController/getRuntimeLogByParamId?perceptionId=${perceptionOpResponse.perceptionId }&perceptionName=${perceptionOpResponse.perceptionName }&paramId=${ctrlParamInfo.paramId}&paramDesc=${ctrlParamInfo.paramDesc}">查看</a>
+						</span>
+					</li>
+				</c:forEach>
+				
+				<c:if test="${perceptionOpResponse.perceptionTypeId==2 }">
+					<li data-role="list-divider">视频信息</li>
+					<li>
+						<a data-ajax="false" href="#" style="color:#866E54;">视频列表查看</a>
+					</li>
+					<li>
+						<a data-ajax="false" href="#" style="color:#866E54;">实时视频查看</a>
+					</li>
+				</c:if>
+			</ul>
+
+		</div>
+
+		<script type="text/javascript">
         function query() {
     		$.ajax({
-    			url : '${ctx }/spring/appMgrPerceptionController/appPerceptionFunctionListAjax',
+    			url : '../appMgrPerceptionController/appPerceptionFunctionListAjax',
     			type : 'GET',
     			dataType : 'JSON',
     			data : {
@@ -153,7 +155,7 @@
     		showLoader('正在请求，请稍后...');
     		
     		$.ajax({
-    			url : '${ctx}/spring/perception/remoteCtrlPerception',
+    			url : '../perception/remoteCtrlPerception',
     			type : 'POST',
     			dataType : 'JSON',
     			data : {
