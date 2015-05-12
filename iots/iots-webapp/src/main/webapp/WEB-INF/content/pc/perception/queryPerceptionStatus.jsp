@@ -26,8 +26,6 @@
 	<input id="perceptionId" type="hidden" value="${perceptionOpResponse.perceptionId }">
 	<input id="perceptionTypeId" type="hidden" value="${perceptionOpResponse.perceptionTypeId }">
 	<input id="perceptionAddr" type="hidden" value="${perceptionOpResponse.perceptionAddr }">
-	<input id="videoPlayerUrl" type="hidden" value="${videoPlayerUrl }">
-	<input id="videoPlayerUrl" type="hidden" value="${videoPlayerUrl }">
 	<input id="realTimePlayerUrl" type="hidden" value="${realTimePlayerUrl }">
 	<input id="rtmpBaseUrl" type="hidden" value="${rtmpBaseUrl }">
 	<form id="frm" name="frm">
@@ -183,8 +181,7 @@
 		</div>
 		<div id="playVideoWin">
 			<div style="width: 100%;height:320px;border:0px;">
-				<iframe id="videoiframe" style="width: 100%;height:100%;border:0px;">
-				</iframe>
+			    <video id="videoUrl" width="100%" height="320px" controls preload></video>
 				<div style="text-align: center; margin: 10px 5px 0px 5px;">
 					<a id="playVideoWinCloseBtn" href="#" class="easyui-linkbutton" style="width: 90px;" onclick="">关闭</a>
 				</div>

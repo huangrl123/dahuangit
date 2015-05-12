@@ -99,7 +99,7 @@
 				<c:if test="${perceptionOpResponse.perceptionTypeId==2 }">
 					<li data-role="list-divider">视频信息</li>
 					<li>
-						<a data-ajax="false" href="#" style="color:#866E54;">视频列表查看</a>
+						<a data-ajax="false" href="../perception/appGetPerceptionVedioList?perceptionAddr=${perceptionOpResponse.perceptionAddr }&perceptionName=${perceptionOpResponse.perceptionName}&userId=${userId}&perceptionId=${perceptionOpResponse.perceptionId}" style="color:#866E54;">视频列表查看</a>
 					</li>
 					<li>
 						<a data-ajax="false" href="#" style="color:#866E54;">实时视频查看</a>

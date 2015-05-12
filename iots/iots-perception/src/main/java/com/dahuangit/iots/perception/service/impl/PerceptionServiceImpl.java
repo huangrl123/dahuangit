@@ -890,4 +890,5 @@ public class PerceptionServiceImpl implements PerceptionService {
 		FTPHelper ftpHelper = new FTPHelper(ftpHost, ftpUserName, ftpPassword, ftpPort);
 		ftpHelper.deleteFile(req.getPerceptionAddr(), req.getFileName());
 	}
+	
 }

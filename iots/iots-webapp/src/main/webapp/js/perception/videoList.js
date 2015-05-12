@@ -28,7 +28,8 @@ var showVideoListWin = function() {
 					width : 80,
 					align : 'center',
 					formatter : function(value, row) {
-						return '<a href="' + value + '" style="padding-right:10px;color:blue;">下载</a><a href="#" style="padding-right:10px;color:blue;" onclick="showPlayVideoWin(\'' + value
+						return '<a href="../perception/downloadVideoFile?perceptionAddr=' + $('#perceptionAddr').val() + '&fileName=' + row.fileName
+								+ '" style="padding-right:10px;color:blue;">下载</a><a href="#" style="padding-right:10px;color:blue;" onclick="showPlayVideoWin(\'' + value
 								+ '\')">播放</a><a  href="#" style="color:blue;" onclick="delPerceptionVideo(\'' + row.fileName + '\')">删除</a>';
 					}
 				}]],
@@ -107,16 +108,14 @@ var showPlayVideoWin = function(url) {
 				modal : true
 			});
 
-	var src = $('#videoPlayerUrl').val();
-	src = src + '?url=' + url;
-	
-	$('#videoiframe').attr('src', src);
+	$('#videoUrl').attr('src', url);
 
 	$('#playVideoWinCloseBtn').unbind('click');
 	$('#playVideoWinCloseBtn').bind('click', function() {
 				playVideoWin.window('close');
-				$('#videoiframe').attr('src', '');
+				$('#videoUrl').attr('src', '');
 			});
 
 	playVideoWin.window('open');
 }
+

@@ -1,15 +1,23 @@
 package com.dahuangit.iots.pcserver.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +29,7 @@ import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.pcserver.dto.request.AppPerceptionVideoPlayRequest;
 import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
 import com.dahuangit.iots.pcserver.dto.request.QueryPerceptionParamLogReq;
 import com.dahuangit.iots.pcserver.service.UserService;
@@ -70,8 +79,6 @@ public class PerceptionController extends BaseController {
 
 	@Value("${perception.ftpDir}")
 	private String perceptionFtpDir = null;
-	@Value("${perception.videoPlayerUrl}")
-	private String videoPlayerUrl = null;
 	@Value("${local.server.baseUrl}")
 	private String serverBaseUrl = null;
 	@Value("${perception.realTimePlayerUrl}")
@@ -253,7 +260,6 @@ public class PerceptionController extends BaseController {
 		PerceptionParamStatusQueryResponse perceptionOpResponse = this.perceptionService.queryPerceptionStatus(req);
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
 
-		modelMap.put("videoPlayerUrl", videoPlayerUrl);
 		modelMap.put("realTimePlayerUrl", realTimePlayerUrl);
 		modelMap.put("rtmpBaseUrl", rtmpBaseUrl);
 
@@ -547,6 +553,48 @@ public class PerceptionController extends BaseController {
 	}
 
 	/**
+	 * 获取设备的视频文件列表
+	 * 
+	 * @param perceptionAddr
+	 * @return
+	 */
+	@RequestMapping(value = "/appGetPerceptionVedioList", method = RequestMethod.GET)
+	public String appGetPerceptionVedioList(HttpServletRequest request, ModelMap map, String perceptionAddr,
+			String perceptionName, Integer userId, Integer perceptionId) {
+		PageQueryResult<VedioResponse> queryResult = new PageQueryResult<VedioResponse>();
+
+		List<VedioResponse> list = new ArrayList<VedioResponse>();
+
+		File dir = new File(this.perceptionFtpDir + "\\" + perceptionAddr);
+		File[] files = dir.listFiles();
+		String url = serverBaseUrl + request.getContextPath();
+		for (File f : files) {
+			VedioResponse response = new VedioResponse();
+			response.setFileName(f.getName());
+			response.setUrl(url + "/video/" + perceptionAddr + "/" + f.getName());
+			list.add(response);
+		}
+
+		queryResult.setRows(list);
+		queryResult.setTotal(list.size());
+
+		try {
+			perceptionName = new String(perceptionName.getBytes("ISO8859-1"), "UTF-8");
+			map.put("perceptionName", perceptionName);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		map.put("perceptionAddr", perceptionAddr);
+		map.put("perceptionId", perceptionId);
+		map.put("userId", userId);
+
+		map.put("queryResult", queryResult);
+
+		return "mobile/appPerceptionVideoList";
+	}
+
+	/**
 	 * 从ftp服务器上删除设备的视频文件
 	 * 
 	 */
@@ -564,5 +612,56 @@ public class PerceptionController extends BaseController {
 		}
 
 		return response;
+	}
+
+	/**
+	 * 下载设备视频文件
+	 * 
+	 * @param request
+	 * @param response
+	 * @param perceptionAddr
+	 * @param fileName
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/downloadVideoFile", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> downloadVideoFile(HttpServletRequest request, HttpServletResponse response,
+			String perceptionAddr, String fileName) throws IOException {
+
+		byte[] fileData = null;
+		HttpHeaders headers = null;
+		try {
+			String filePathName = perceptionFtpDir + "/" + perceptionAddr + "/" + fileName;
+			fileData = FileUtils.readFileToByteArray(new File(filePathName));
+
+			headers = new HttpHeaders();
+
+			MediaType mt = new MediaType("application", "octet-stream");
+			headers.setContentType(mt);
+
+			headers.setContentDispositionFormData("attachment", fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<byte[]>(fileData, headers, HttpStatus.OK);
+	}
+
+	/**
+	 * 跳转到视频播放界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/appPerceptionVideoPlay", method = RequestMethod.GET)
+	public String appPerceptionVideoPlay(ModelMap map, AppPerceptionVideoPlayRequest request) {
+
+		try {
+			String perceptionName = new String(request.getPerceptionName().getBytes("ISO8859-1"), "UTF-8");
+			request.setPerceptionName(perceptionName);
+			map.put("req", request);
+		} catch (Exception e) {
+		}
+
+		return "mobile/appPerceptionVideoPlay";
 	}
 }
