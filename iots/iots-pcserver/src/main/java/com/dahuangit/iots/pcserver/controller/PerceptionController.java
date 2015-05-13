@@ -29,6 +29,7 @@ import com.dahuangit.base.dto.ComboboxData;
 import com.dahuangit.base.dto.Response;
 import com.dahuangit.base.dto.opm.response.OpResponse;
 import com.dahuangit.base.dto.opm.response.PageQueryResult;
+import com.dahuangit.iots.pcserver.dto.request.AppPerceptionRealtimeVideoPlayRequest;
 import com.dahuangit.iots.pcserver.dto.request.AppPerceptionVideoPlayRequest;
 import com.dahuangit.iots.pcserver.dto.request.PerceptionStatusPageReq;
 import com.dahuangit.iots.pcserver.dto.request.QueryPerceptionParamLogReq;
@@ -664,4 +665,23 @@ public class PerceptionController extends BaseController {
 
 		return "mobile/appPerceptionVideoPlay";
 	}
+
+	/**
+	 * 跳转到实时视频播放界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/appPerceptionRealtimeVideoPlay", method = RequestMethod.GET)
+	public String appPerceptionRealtimeVideoPlay(ModelMap map, AppPerceptionRealtimeVideoPlayRequest request) {
+
+		try {
+			String perceptionName = new String(request.getPerceptionName().getBytes("ISO8859-1"), "UTF-8");
+			request.setPerceptionName(perceptionName);
+			map.put("req", request);
+		} catch (Exception e) {
+		}
+
+		return "mobile/appPerceptionRealtimeVideoPlay";
+	}
+
 }

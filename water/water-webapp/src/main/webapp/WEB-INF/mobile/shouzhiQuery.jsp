@@ -68,8 +68,8 @@
 			endTime = endTime.replaceAll('-', '/');
 		}
 
-		if (Date.parse(startTime) > Date.parse(endTime) || Date.parse(startTime) == Date.parse(endTime)) {
-			showAlertDialog('结束时间必须大于开始时间');
+		if (Date.parse(startTime) > Date.parse(endTime)) {
+			showAlertDialog('结束时间必须大于或等于开始时间');
 			return;
 		}
 

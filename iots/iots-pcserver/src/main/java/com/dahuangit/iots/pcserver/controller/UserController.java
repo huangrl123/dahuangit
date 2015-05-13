@@ -1,5 +1,7 @@
 package com.dahuangit.iots.pcserver.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ import com.dahuangit.iots.pcserver.dto.request.UserLoginRequest;
 import com.dahuangit.iots.pcserver.dto.response.HeartResponse;
 import com.dahuangit.iots.pcserver.dto.response.UserLoginResponse;
 import com.dahuangit.iots.pcserver.service.UserService;
+import com.dahuangit.iots.perception.dto.response.NoticeInfo;
 import com.dahuangit.iots.perception.dto.response.QueryUserByPageResponse;
 import com.dahuangit.iots.perception.entry.User;
 
@@ -88,7 +91,7 @@ public class UserController extends BaseController {
 	}
 
 	/**
-	 * 退出登录
+	 * 心跳
 	 */
 	@RequestMapping(value = "/heart", method = RequestMethod.POST)
 	@ResponseBody
@@ -107,6 +110,42 @@ public class UserController extends BaseController {
 		}
 
 		return response;
+	}
+
+	/**
+	 * app心跳
+	 */
+	@RequestMapping(value = "/appHeart", method = RequestMethod.POST)
+	@ResponseBody
+	public String appHeart(HttpServletRequest httpServletRequest, Integer userId) {
+		Response response = new Response();
+
+		try {
+			HeartResponse r = this.userService.heart(userId);
+			List<NoticeInfo> noticeInfos = r.getNoticeInfos();
+
+			if (null == noticeInfos || noticeInfos.isEmpty()) {
+				response.setMsg("");
+				return this.responseToXml(response);
+			}
+
+			String content = "";
+			for (NoticeInfo info : noticeInfos) {
+				content = content + "<div style=\"text-decoration:underline;cursor:hand;\"><span>【" + info.getWhen()
+						+ "】</span><span>设备(" + info.getPerceptionAddr() + ")<span><span>" + info.getParamDesc()
+						+ "</span><span style=\"color:red;\">" + info.getParamValueDesc() + "</span></div>";
+			}
+
+			String msg = "<div style=\"overflow:scroll;overflow-x:hidden;\">" + content + "</div>";
+
+			response.setMsg(msg);
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setMsg(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return this.responseToXml(response);
 	}
 
 	/**
