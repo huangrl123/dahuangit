@@ -3,6 +3,7 @@ package com.dahuangit.iots.app.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,9 @@ public class AppMgrPerceptionController extends BaseController {
 
 	@Autowired
 	private PerceptionService perceptionService = null;
+
+	@Value("${rtmpBaseUrl}")
+	private String rtmpBaseUrl = null;
 
 	/**
 	 * 跳转到app登录界面
@@ -122,7 +126,12 @@ public class AppMgrPerceptionController extends BaseController {
 		modelMap.put("perceptionOpResponse", perceptionOpResponse);
 
 		modelMap.put("userId", userId);
-		
+
+		if (perceptionOpResponse.getPerceptionTypeId().equals(2)) {
+			String videoUrl = rtmpBaseUrl + "/" + perceptionOpResponse.getPerceptionAddr();
+			modelMap.put("videoUrl", videoUrl);
+		}
+
 		return "mobile/appPerceptionFunctionList";
 	}
 
