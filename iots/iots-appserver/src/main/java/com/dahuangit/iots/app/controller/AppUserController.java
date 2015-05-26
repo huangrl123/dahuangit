@@ -59,11 +59,20 @@ public class AppUserController extends BaseController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	@ResponseBody
-	public String logout(Integer userId) {
+	public String logout(final Integer userId) {
 		Response response = new Response();
 
 		try {
-			this.userService.logout(userId);
+//			new Thread() {
+//				public void run() {
+//					try {
+						userService.logout(userId);
+//					} catch (Exception e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}.start();
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

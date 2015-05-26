@@ -31,8 +31,8 @@ public class SavePerceptionStatusInfoTest {
 			map.put("perceptionAddr", "t");
 			map.put("perceptionStatusInfoXml", sb.toString());
 
-			//String s =	 HttpKit.getHttpRequestContent("http://120.24.86.107:8080/iots/perception/savePerceptionStatusInfo",map, null);
-			String s = HttpKit.getHttpRequestContent("http://localhost:8080/iots/perception/savePerceptionStatusInfo",map, null);
+			String s =	 HttpKit.getHttpRequestContent("http://120.24.86.107:8080/iots/perception/savePerceptionStatusInfo",map, null);
+			//String s = HttpKit.getHttpRequestContent("http://localhost:8080/iots/perception/savePerceptionStatusInfo",map, null);
 			log.debug("测试完毕，返回报文:" + XmlUtils.formatXMLStr(s));
 
 		} catch (Exception e) {

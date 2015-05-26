@@ -131,14 +131,11 @@ public class UserController extends BaseController {
 
 			String content = "";
 			for (NoticeInfo info : noticeInfos) {
-				content = content + "<div style=\"text-decoration:underline;cursor:hand;\"><span>【" + info.getWhen()
-						+ "】</span><span>设备(" + info.getPerceptionAddr() + ")<span><span>" + info.getParamDesc()
-						+ "</span><span style=\"color:red;\">" + info.getParamValueDesc() + "</span></div>";
+				content = content + "【" + info.getWhen() + "】设备(" + info.getPerceptionAddr() + ")"
+						+ info.getParamDesc() + "" + info.getParamValueDesc() + "\r\n";
 			}
 
-			String msg = "<div style=\"overflow:scroll;overflow-x:hidden;\">" + content + "</div>";
-
-			response.setMsg(msg);
+			response.setMsg(content);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());
