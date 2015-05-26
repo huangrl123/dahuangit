@@ -6,6 +6,8 @@
 <title>感知端信息</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="content-language" content="zh-CN" />
+<meta name="format-detection" content="telephone=no" />
+
 <link rel="stylesheet" href="../plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="../plugin/jquery/jquery-2.1.3.min.js"></script>
 <script src="../plugin/jquery/jquery-utils.js"></script>
