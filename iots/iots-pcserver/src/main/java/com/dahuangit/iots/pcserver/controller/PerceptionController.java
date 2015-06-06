@@ -678,6 +678,10 @@ public class PerceptionController extends BaseController {
 			String perceptionName = new String(request.getPerceptionName().getBytes("ISO8859-1"), "UTF-8");
 			request.setPerceptionName(perceptionName);
 			map.put("req", request);
+
+			String rtmpUrl = realTimePlayerUrl + "?baseRtmpUrl=" + rtmpBaseUrl + "&rtmpPalyName="
+					+ request.getPerceptionAddr();
+			map.put("realTimePlayerUrl", rtmpUrl);
 		} catch (Exception e) {
 		}
 

@@ -18,21 +18,20 @@
 
 </head>
 <body>
-    <input id="rtmpUrl" type="hidden" value="">
-    <input id="fileName" type="hidden" value="${req.fileName }">
 	<div data-role="page">
 		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header-div">
 			<div class="header-title1">
 				<span class="header-title1-left" onclick="gotoFunction('../appMgrPerceptionController/appPerceptionFunctionList?userId=${req.userId}&perceptionId=${req.perceptionId }')">
 					<img alt="" src="../image/home.png" height="25" width="25">
 				</span> 
-				<span class="header-title1-center">[${req.perceptionName }]实时视频播放</span> 
+				<span class="header-title1-center">实时视频播放</span> 
 				<span class="header-title1-right"></span>
 			</div>
 		</div>
 
 		<div data-role="content">
-			<div id="mediaplayer">实时视频</div>
+			<iframe src="${realTimePlayerUrl }" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
+			</iframe>
 		</div>
 	</div>
 </body>
