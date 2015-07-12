@@ -104,7 +104,7 @@
 						<a data-ajax="false" href="../perception/appGetPerceptionVedioList?perceptionAddr=${perceptionOpResponse.perceptionAddr }&perceptionName=${perceptionOpResponse.perceptionName}&userId=${userId}&perceptionId=${perceptionOpResponse.perceptionId}" style="color:#866E54;">视频列表查看</a>
 					</li>
 					<li>
-						<a data-ajax="false" href="#" onclick="appPerceptionRealtimeVideoPlay()" style="color:#866E54;">实时视频查看</a>
+						<a href="#" onclick="appPerceptionRealtimeVideoPlay('${rtmpUrl}')" data-ajax="false" style="color:#866E54;">实时视频查看</a>
 					</li>
 				</c:if>
 			</ul>
@@ -112,18 +112,14 @@
 		</div>
 
 		<script type="text/javascript">
-		
-		function appPerceptionRealtimeVideoPlay() {
-			var url;
+		function appPerceptionRealtimeVideoPlay(url) {
 			var userAgent = navigator.userAgent;
 
 			if (userAgent.indexOf("Android") > -1) {
-				url = '../perception/appPerceptionRealtimeVideoPlay?perceptionAddr=${perceptionOpResponse.perceptionAddr }&perceptionName=${perceptionOpResponse.perceptionName}&userId=${userId}&perceptionId=${perceptionOpResponse.perceptionId}';
+				window.app.playRtmp(url);
 			} else {
-				url = '../perception/appPerceptionRealtimeVideoPlay?videoUrl=${videoUrl }';
+				window.location.href = url;
 			}
-			
-			window.location.href = url;
 		}
 		
         function query() {

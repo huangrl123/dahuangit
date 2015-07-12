@@ -18,6 +18,12 @@
 	text-shadow: none;
 	padding-top: 3px;
 }
+.header-title1-right1 {
+	float: right;
+	width: 15%;
+	padding-right: 10px;
+	margin-top: 8px;
+}
 </style>
 <link rel="stylesheet" href="../plugin/jquerymobile/jquery.mobile-1.4.5.min.css" />
 <script src="../plugin/jquery/jquery-2.1.3.min.js"></script>
@@ -33,7 +39,7 @@
     <input type="hidden" id="userId" value="${userId }">
 	<div data-role="header" data-position="fixed" data-tap-toggle="true" class="header-div" style="border-color: #2C3640; margin-top: -1px;">
 		<div class="header-title1">
-			<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right" onclick="exitToLogin();" id="exit-link">退出</span>
+			<span class="header-title1-left"></span> <span class="header-title1-center">首页</span> <span class="header-title1-right1" onclick="exitToLogin();" id="exit-link">退出</span>
 		</div>
 	</div>
 

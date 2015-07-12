@@ -129,7 +129,7 @@ public class AppMgrPerceptionController extends BaseController {
 
 		if (perceptionOpResponse.getPerceptionTypeId().equals(2)) {
 			String videoUrl = rtmpBaseUrl + "/" + perceptionOpResponse.getPerceptionAddr();
-			modelMap.put("videoUrl", videoUrl);
+			modelMap.put("rtmpUrl", videoUrl);
 		}
 
 		return "mobile/appPerceptionFunctionList";

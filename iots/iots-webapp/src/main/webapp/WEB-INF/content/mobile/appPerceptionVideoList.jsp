@@ -44,7 +44,7 @@
 					<c:when test="${fn:length(queryResult.rows) > 0}">
 						<c:forEach var="video" items="${queryResult.rows }" varStatus="status">
 							<li>
-								<a href="../perception/appPerceptionVideoPlay?userId=${userId }&perceptionId=${perceptionId}&perceptionAddr=${perceptionAddr}&perceptionName=${perceptionName}&videoUrl=${video.url}&fileName=${video.fileName }" data-ajax="false">${video.fileName }</a>
+								<a href="#" onclick="playVideo('${video.url}')" data-ajax="false">${video.fileName }</a>
 							</li>
 						</c:forEach>
 					</c:when>
@@ -55,6 +55,16 @@
 			</ul>
 		</div>
 	</div>
+	<script type="text/javascript">
+		function playVideo(url) {
+			var userAgent = navigator.userAgent;
+			if (userAgent.indexOf("Android") > -1){
+				window.app.playMp4(url);
+			} else {
+				window.location.href = '../perception/appPerceptionVideoPlay?videoUrl=' + url;
+			}
+		}
+	</script>
 </body>
 </html>
 

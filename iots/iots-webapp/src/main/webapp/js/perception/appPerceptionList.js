@@ -16,6 +16,7 @@ $(function() {
 							perceptionImg['3-1'] = '../image/5jia7online.jpg';
 
 							var s = '';
+
 							for (var i = 0; i < rows.length; i++) {
 								var p = rows[i];
 								var key = p.perceptionTypeId.toString() + '-' + p.onlineStatus.toString();
@@ -28,6 +29,9 @@ $(function() {
 								if (i % 2 == 0) {
 									s = s + '<tr>';
 									s = s + td;
+									if (rows.length == 1) {
+										s = s + '<td width="50%" height="50%" align="center"></td>';
+									}
 								} else {
 									s = s + td;
 									s = s + '</tr>';

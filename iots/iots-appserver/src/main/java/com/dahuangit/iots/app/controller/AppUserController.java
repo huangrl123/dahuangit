@@ -63,16 +63,7 @@ public class AppUserController extends BaseController {
 		Response response = new Response();
 
 		try {
-//			new Thread() {
-//				public void run() {
-//					try {
-						userService.logout(userId);
-//					} catch (Exception e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//			}.start();
+			userService.logout(userId);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMsg(e.getMessage());

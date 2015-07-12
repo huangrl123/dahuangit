@@ -30,15 +30,20 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 		byte[] data = (byte[]) message;
 		log.debug("客户端收到报文:" + ByteUtils.byteArrToHexString(data));
 		
-		String machineAddr = "DSFE432EWR";
+//		String machineAddr = "huizhoueden";
+		String machineAddr = "t";
 		
+		byte[] busType = new byte[4];
+		System.arraycopy(data, 68, busType, 0, 4);
+		
+		int i = ByteUtils.byteArrToInt(busType);
 		// 如果不是心跳请求的响应，则需要给服务器端一个成功响应
-		if (data[71] != 1) {
-			byte[] content = new byte[72];
+		if (i != 1) {
+			byte[] content = new byte[75];
 			// 帧序列号
-			content[0] = (byte) 0xA1;
-			content[1] = 0x08;
-			System.arraycopy(data, 0, content, 2, 8);//非常重要，一定要用原来的帧序号返回
+			//content[0] = (byte) 0xA1;
+			//content[1] = 0x08;
+			System.arraycopy(data, 0, content, 0, 10);//非常重要，一定要用原来的帧序号返回
 			// 帧总长度
 			content[10] = (byte) 0xA2;
 			content[11] = 0x04;
@@ -46,7 +51,7 @@ public class PerceptionTcpClientHandler extends IoHandlerAdapter {
 			// 业务类型
 			content[16] = (byte) 0xA3;
 			content[17] = 0x01;
-			content[18] = 0x01;
+			content[18] = 0x02;
 			// CRC32校验和
 			content[19] = (byte) 0xA4;
 			content[20] = 0x08;
