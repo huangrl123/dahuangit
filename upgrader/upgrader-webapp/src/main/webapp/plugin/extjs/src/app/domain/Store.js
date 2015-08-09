@@ -1,0 +1,1 @@
+Ext.define("Ext.app.domain.Store",{extend:"Ext.app.EventDomain",singleton:true,requires:["Ext.data.AbstractStore"],type:"store",idProperty:"storeId",constructor:function(){var A=this;A.callParent();A.monitor(Ext.data.AbstractStore)}});

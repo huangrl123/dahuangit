@@ -1,0 +1,1 @@
+Ext.define("Ext.app.domain.View",{extend:"Ext.app.EventDomain",isInstance:true,constructor:function(A){this.callParent(arguments);this.controller=A;this.monitoredClasses=[Ext.Component]},match:function(C,B,D){var A=false;if(B==="#"){A=D===C.getController()}else{A=C.is(B)}return A},destroy:function(){this.controller=null;this.callParent()}});

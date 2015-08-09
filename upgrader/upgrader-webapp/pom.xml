@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.dahuangit</groupId>
+		<artifactId>upgrader</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>upgrader-webapp</artifactId>
+	<packaging>war</packaging>
+	<name>upgrader-webapp Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.dahuangit</groupId>
+			<artifactId>upgrader-appmgr</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warName>upgrader</warName>
+					<maven.war.final.name>upgrader</maven.war.final.name>
+					<maven.war.webapp.dir>upgrader</maven.war.webapp.dir>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

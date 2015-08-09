@@ -1,0 +1,1 @@
+Ext.define("Ext.data.field.String",{extend:"Ext.data.field.Field",alias:"data.field.string",sortType:"asUCString",isStringField:true,convert:function(A){var B=this.allowNull?null:"";return(A===undefined||A===null)?B:String(A)},getType:function(){return"string"}});

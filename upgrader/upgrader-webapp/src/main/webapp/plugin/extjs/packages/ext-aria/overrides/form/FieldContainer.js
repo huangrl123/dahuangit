@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.form.FieldContainer",{override:"Ext.form.FieldContainer",requires:["Ext.aria.container.Container"],onAdd:function(A){A.isGroupedBy=this},ariaGetEl:function(){return this.getTargetEl()},ariaGetAfterRenderAttributes:function(){var B=this,A;A=B.callParent(arguments);if(B.fieldLabel&&B.labelEl){A["aria-labelledby"]=B.labelEl.id}return A}});

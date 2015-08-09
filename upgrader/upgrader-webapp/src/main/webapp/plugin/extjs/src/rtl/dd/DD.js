@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.dd.DD",{override:"Ext.dd.DD",getLocalX:function(A){return Ext.rootInheritedState.rtl?A.rtlGetLocalX():A.getLocalX()},setLocalXY:function(A,B,C){Ext.rootInheritedState.rtl?A.rtlSetLocalXY(B,C):A.setLocalXY(B,C)}});

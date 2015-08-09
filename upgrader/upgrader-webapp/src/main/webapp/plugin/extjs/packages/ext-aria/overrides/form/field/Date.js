@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.form.field.Date",{override:"Ext.form.field.Date",requires:["Ext.aria.form.field.Picker","Ext.aria.picker.Date"],formatText:"Expected date format {0}",onCollapse:function(){var A=this;if(!A.doCancelFieldFocus){A.focus(false,60)}}});

@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.dom.Element",{override:"Ext.dom.Element",needsTabIndex:function(){var A=this;if(A.getAttribute("tabIndex")===0){return false}return A.callParent(arguments)}});

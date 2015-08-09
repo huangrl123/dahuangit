@@ -1,0 +1,1 @@
+Ext.define("Ext.aria.tip.QuickTip",{override:"Ext.tip.QuickTip",showByTarget:function(D){var B=this,G,A,C,E,F;G=B.targets[D.id];if(!G){return}B.activeTarget=G;B.activeTarget.el=Ext.get(D).dom;B.anchor=B.activeTarget.anchor;A=D.getSize();C=D.getXY();B.showAt([C[0],C[1]+A.height])}});

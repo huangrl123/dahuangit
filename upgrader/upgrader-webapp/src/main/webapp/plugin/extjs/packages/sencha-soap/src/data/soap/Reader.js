@@ -1,0 +1,1 @@
+Ext.define("Ext.data.soap.Reader",{extend:"Ext.data.reader.Xml",alias:"reader.soap",getData:function(C){var B=C.documentElement,A=B.prefix;return Ext.DomQuery.selectNode(A+"|Body",C)}});

@@ -1,0 +1,1 @@
+Ext.define("Ext.chart.overrides.AbstractChart",{override:"Ext.chart.AbstractChart",updateLegend:function(A){this.callParent(arguments);if(A){this.add(A)}}});

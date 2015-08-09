@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.draw.Component",{override:"Ext.draw.Component",initSurfaceCfg:function(A){if(this.getInherited().rtl){A.isRtl=true}}});

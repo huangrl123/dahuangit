@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.chart.series.Cartesian",{override:"Ext.chart.series.Cartesian",initialize:function(){var A=this;A.callParent(arguments);A.axis=A.chart.invertPosition(A.axis);if(A.chart.getInherited().rtl){A.reverse=true}}});

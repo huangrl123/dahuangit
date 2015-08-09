@@ -1,0 +1,1 @@
+Ext.define("Ext.rtl.form.field.Spinner",{override:"Ext.form.field.Spinner",getTriggerData:function(){var A=this.callParent();if(this.getInherited().rtl){A.childElCls=this._rtlCls}return A}});
