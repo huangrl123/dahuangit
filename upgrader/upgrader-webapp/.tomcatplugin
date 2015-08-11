@@ -16,21 +16,6 @@
         <webClassPathEntry>/upgrader-appmgr/target/classes</webClassPathEntry>
         <webClassPathEntry>/upgrader-appmgr/target/test-classes</webClassPathEntry>
         <webClassPathEntry>/upgrader-webapp/target/classes</webClassPathEntry>
-        <webClassPathEntry>/upgrader-webapp/target/test-classes</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/charsets.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/access-bridge-64.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/dnsns.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/jaccess.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/localedata.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/sunec.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/sunjce_provider.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/sunmscapi.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/ext/zipfs.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/jce.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/jfr.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/jsse.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/resources.jar</webClassPathEntry>
-        <webClassPathEntry>D:/Java7/jdk1.7.0_60/jre/lib/rt.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.3.3/.m2/repository/antlr/antlr/2.7.6/antlr-2.7.6.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.3.3/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar</webClassPathEntry>
         <webClassPathEntry>D:/apache-maven-3.3.3/.m2/repository/asm/asm/3.2/asm-3.2.jar</webClassPathEntry>

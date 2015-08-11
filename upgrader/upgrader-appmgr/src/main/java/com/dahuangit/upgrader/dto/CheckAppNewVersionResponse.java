@@ -14,6 +14,8 @@ public class CheckAppNewVersionResponse {
 
 	private String appUrl = null;
 
+	private String version = null;
+
 	public Boolean getSuccess() {
 		return success;
 	}
@@ -36,6 +38,14 @@ public class CheckAppNewVersionResponse {
 
 	public void setAppUrl(String appUrl) {
 		this.appUrl = appUrl;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }

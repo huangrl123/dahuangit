@@ -48,13 +48,14 @@ public class AppVersionServiceImpl implements AppVersionService {
 		File[] arr = file.listFiles();
 
 		String appFileName = arr[1].getName();
-		String version = appFileName.substring(appFileName.indexOf(".") -1, appFileName.lastIndexOf("."));
+		String version = appFileName.substring(appFileName.indexOf(".") - 1, appFileName.lastIndexOf("."));
 
-		if (version.compareTo(request.getCurrentAppVersion()) > 0) {
-			String appUrl = "http://" + this.localIp + ":" + this.localPort + this.serverContext + "/appfile/"
-					+ appFileName;
-			response.setAppUrl(appUrl);
-		}
+		response.setVersion(version);
+
+		String appUrl = "http://" + this.localIp + ":" + this.localPort + this.serverContext + "/appfile/"
+				+ appFileName;
+		
+		response.setAppUrl(appUrl);
 
 		return response;
 	}

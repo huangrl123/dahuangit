@@ -11,9 +11,9 @@ public class CheckAppNewVersionTest {
 		try {
 
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("currentAppVersion", "2.20.1");
+			map.put("currentAppVersion", "1.20.1");
 
-			String s = HttpKit.getHttpRequestContent("http://192.168.1.107:8080/upgrader/appUpgrade/checkAppNewVersion",
+			String s = HttpKit.getHttpRequestContent("http://127.0.0.1:8080/upgrader/appUpgrade/checkAppNewVersion",
 					map, null);
 
 			System.out.println(s);
